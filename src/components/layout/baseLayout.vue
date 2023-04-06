@@ -38,7 +38,7 @@
                 <Icon type="md-lock" size="15"/>
                 {{mainMenu4}}
               </template>
-              <MenuItem name="4-1"><router-link to="/manage/loginmanage/logout">{{mainMenu4_01}}</router-link></MenuItem>
+              <MenuItem name="4-1"><span @click="logout" style="color: #72ff17">{{mainMenu4_01}}</span></MenuItem>
             </Submenu>
           </Menu>
         </Sider>
@@ -53,7 +53,7 @@
 </template>
 
 <script>
-  import {querySelectedShop} from "../../api/ApiList";
+  import {querySelectedShop,logout} from "../../api/ApiList";
 
   export default {
     name:"baseLayout",
@@ -75,8 +75,11 @@
       }
     },
     methods:{
-      logout:function () {
-        this.$router.push({path:'/login'});
+      logout: async function () {
+        let res = await logout();
+        if (res.code === '0000') {
+          this.$router.push({path:'/login'});
+        }
       },
     },
     mounted:async function () {
