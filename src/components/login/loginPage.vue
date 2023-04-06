@@ -1,11 +1,15 @@
 <template>
-  <div id="login_area">
-    <div>
-      <Input v-model="username" size="large" placeholder="手机 / 邮箱..." type="text" style="width: 300px;height: 40px;margin: 15px 0 0 0; padding: 0 20px 0 20px"/>
-      <Input v-model="passwd" size="large" placeholder="密码..." type="password" style="width: 300px;height: 40px;margin: 15px 0 0 0; padding: 0 20px 0 20px"/>
-      <Button type="success" long @click="login" style="width: 260px;height: 40px;margin: 15px 0 0 20px; ">登录</Button>
+    <div id="login_bg">
+
+      <div id="login_area">
+        <div>
+          <Input v-model="username" size="large" placeholder="请输入账号" type="text" style="width: 300px;height: 40px;margin: 15px 0 0 0; padding: 0 20px 0 20px"/>
+          <Input v-model="password" size="large" placeholder="请输入密码" type="password" style="width: 300px;height: 40px;margin: 15px 0 0 0; padding: 0 20px 0 20px"/>
+          <Button type="primary" size="large" long @click="login" style="width: 260px;height: 40px;margin: 15px 0 0 20px;">登   录</Button>
+        </div>
+      </div>
+
     </div>
-  </div>
 </template>
 
 <script>
@@ -14,12 +18,12 @@
     data() {
       return {
         username:'',
-        passwd:'',
+        password:'',
       }
     },
     methods: {
       login: async function () {
-        if (this.username === 'zhoupeng' && this.passwd==='123456789') {
+        if (this.username === 'zhoupeng' && this.password==='123456789') {
           this.$Message.success("登录成功");
           this.$router.push({path: '/manage/shopmanage/shopList'});
         }else{
@@ -34,13 +38,19 @@
 </script>
 
 <style scoped>
+  #login_bg {
+    height: 100vh;
+    width: 100%;
+    background: url("../../../static/img/login/lijiang.png")  0px 0px no-repeat;
+    background-size: 100%;
+  }
   #login_area {
     width: 300px;
     height: 200px;
-    background: lightyellow;
-    margin-top: 150px;
+    background: #fdfffd;
     position: absolute;
     left: 50%;
-    transform: translateX(-50%);
+    top: 50%;
+    transform: translate(-50%,-70%);
   }
 </style>
