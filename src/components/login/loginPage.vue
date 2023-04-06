@@ -31,7 +31,8 @@
         };
         let res = await userLogin(params);
         if (res.code === '0000') {
-            this.$router.push({path: '/manage/shopmanage/shopList'});
+          this.$Message.success("登录成功");
+          this.$router.push({path: '/manage/shopmanage/shopList'});
         }else {
           this.$Message.error(res.msg);
         }
