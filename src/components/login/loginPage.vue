@@ -13,6 +13,8 @@
 </template>
 
 <script>
+  import {userLogin} from "../../api/ApiList";
+
   export default {
     name: "loginPage",
     data() {
@@ -23,11 +25,14 @@
     },
     methods: {
       login: async function () {
-        if (this.username === 'zhoupeng' && this.password==='123456789') {
-          this.$Message.success("登录成功");
-          this.$router.push({path: '/manage/shopmanage/shopList'});
-        }else{
-          this.$Message.error("用户名或密码错误");
+        let params = {
+          'username':this.username,
+          'password':this.password
+        };
+        let res = await userLogin(params);
+        if (res.code === '0000') {
+            this.$Message.success("登录成功");
+            this.$router.push({path: '/manage/shopmanage/shopList'});
         }
       },
     },

@@ -2,6 +2,9 @@
 import {POST} from './POST'
 const baseUrl = '/crmWebApi';
 
+//登录
+export const userLogin = (params) => POST(baseUrl+'/login/userLogin',params);
+
 //店铺
 export const queryShopList = (params) => POST(baseUrl+'/shop/queryShopList',params);
 export const addShop = (params) => POST(baseUrl+'/shop/addShop',params);
