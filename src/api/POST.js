@@ -1,23 +1,35 @@
 // 所有POST请求在此发送
 import axios from 'axios'
 import Qs from 'qs'
+import router from '../router'
 
 export function POST(url, params) {
+
   //返回异步请求结果
   return new Promise(function(resolve,reject){
     //发送请求并返回数据
-    axios.post(url, Qs.stringify(params))
-      .then(res => {
-        // console.log(res.data);
-        resolve(res.data);
-      })
-      .catch(err => {
-        console.log(err);
-        reject(err);
-      });
+    axios({
+      url: url,
+      method: 'post',
+      data: Qs.stringify(params),
+      //数据转换
+      headers: {
+        'token': 'testtoken'
+      }
+
+    }).then(function(res){
+      //正常返回数据
+      resolve(res.data);
+
+    }).catch(error => {
+      console.log("请求错误" + "-服务器响应码: "+error.response.status);
+      if (error.response.status===403){
+        console.log("403错误,请重新登录");
+        router.push('/login/loginPage');
+      }
+      reject(error);
+    });
   });
 
-
 }
-
 
