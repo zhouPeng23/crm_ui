@@ -17,6 +17,7 @@
 
 <script>
   import {login} from "../../api/ApiList";
+  import * as md5 from "md5";
 
   export default {
     name: "loginPage",
@@ -30,7 +31,7 @@
       login: async function () {
         let params = {
           'username':this.username,
-          'password':this.password
+          'password':md5(this.password)
         };
         let res = await login(params);
         if (res.code === '0000') {
