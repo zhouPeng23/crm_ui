@@ -2,6 +2,9 @@
     <div id="login_bg">
 
       <div id="login_area">
+        <div style="font-size:20px; margin: 20px 0 0 0;text-align: center">
+          会员管理系统
+        </div>
         <div>
           <Input v-model="username" size="large" placeholder="请输入账号" type="text" style="width: 300px;height: 40px;margin: 15px 0 0 0; padding: 0 20px 0 20px"/>
           <Input v-model="password" size="large" placeholder="请输入密码" type="password" style="width: 300px;height: 40px;margin: 15px 0 0 0; padding: 0 20px 0 20px"/>
@@ -13,7 +16,7 @@
 </template>
 
 <script>
-  import {userLogin} from "../../api/ApiList";
+  import {login} from "../../api/ApiList";
 
   export default {
     name: "loginPage",
@@ -29,7 +32,7 @@
           'username':this.username,
           'password':this.password
         };
-        let res = await userLogin(params);
+        let res = await login(params);
         if (res.code === '0000') {
           this.$Message.success("登录成功");
           this.$router.push({path: '/manage/shopmanage/shopList'});
@@ -53,7 +56,7 @@
   }
   #login_area {
     width: 300px;
-    height: 200px;
+    height: 250px;
     background: #fdfffd;
     position: absolute;
     left: 50%;

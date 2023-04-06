@@ -2,6 +2,7 @@
 import axios from 'axios'
 import Qs from 'qs'
 import router from '../router'
+let token = "";
 
 export function POST(url, params) {
 
@@ -14,10 +15,13 @@ export function POST(url, params) {
       data: Qs.stringify(params),
       //数据转换
       headers: {
-        'token': 'testtoken'
+        'token': token
       }
 
     }).then(function(res){
+      //响应成功后设置token
+      token = res.headers.token;
+
       //正常返回数据
       resolve(res.data);
 
