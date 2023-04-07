@@ -223,6 +223,11 @@
             title: '所属员工姓名',
             key: 'belongToEmployeeName',
             width: 200,
+            render: (h,params)=>{
+              return h('div',
+                this.renderBelongToEmployeeName(params.row.belongToEmployeeId)
+              )
+            }
           },
           {
             title: '创建人',
@@ -320,7 +325,6 @@
         let res = await getAllCustomerMassLevelList(params);
         this.allCustomerMassLevelList = res.data;
       },
-
       /**
        * 渲染顾客等级
        * @param str
@@ -330,6 +334,18 @@
         for(let i = 0; i < this.allCustomerMassLevelList.length; i++){
           if (str === this.allCustomerMassLevelList[i].code.toString()) {
             return this.allCustomerMassLevelList[i].msg;
+          }
+        }
+      },
+      /**
+       * 渲染顾客所属员工姓名
+       * @param str
+       * @returns {string}
+       */
+      renderBelongToEmployeeName : function(str){
+        for(let i = 0; i < this.employeeList.length; i++){
+          if (str === this.employeeList[i].employeeId) {
+            return this.employeeList[i].employeeName;
           }
         }
       },
