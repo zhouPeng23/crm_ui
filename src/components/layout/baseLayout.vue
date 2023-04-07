@@ -38,7 +38,7 @@
                 <Icon type="md-lock" size="15"/>
                 {{mainMenu4}}
               </template>
-              <MenuItem name="4-1"><span @click="logout" style="color: #72ff17">{{mainMenu4_01}}</span></MenuItem>
+              <MenuItem name="4-1"><span @click="logout" style="color: #2ecc41">{{mainMenu4_01}}</span></MenuItem>
             </Submenu>
           </Menu>
         </Sider>
@@ -77,9 +77,7 @@
     methods:{
       logout: async function () {
         let res = await logout();
-        if (res.code === '0000') {
-          this.$router.push({path:'/login'});
-        }
+        this.$router.push({path:'/login'});
       },
     },
     mounted:async function () {
