@@ -47,7 +47,8 @@
         };
         let res = await login(params);
         if (res.code === '0000') {
-          this.$Message.success("登录成功");
+          localStorage.setItem("loginUserName",res.data.employeeName);
+          this.$Message.success("欢迎您: " + res.data.employeeName);
           this.$router.push({path: '/manage/shopmanage/shopList'});
         }else {
           this.$Message.error(res.msg);

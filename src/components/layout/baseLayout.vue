@@ -3,9 +3,13 @@
     <Layout>
       <Header>
         <Menu mode="horizontal" theme="dark" active-name="1">
-          <MenuItem name="1" style="color: chartreuse;text-align: center">
+          <MenuItem name="1" style="color: chartreuse;text-align: center;float: left">
             <Icon type="md-cloud-outline" />
             当前店铺:<span style="font-size: 25px;margin-left:10px; font-weight: bold;color: chartreuse">{{selectedShopName}}</span>
+          </MenuItem>
+          <MenuItem name="2" style="color: #f2852a;text-align: center;float: right">
+            <Avatar style="background-color: #87d068" icon="ios-person" />
+            <span style="font-size: 18px;font-weight: bold">{{loginUserName}}</span>
           </MenuItem>
         </Menu>
       </Header>
@@ -72,6 +76,9 @@
         //已选择的应用
         selectedShopId:"",
         selectedShopName:"",
+
+        //登录人信息
+        loginUserName:"",
       }
     },
     methods:{
@@ -86,6 +93,10 @@
         this.selectedShopId = res.data.shopId;
         this.selectedShopName = res.data.shopName;
       }
+
+      //设置登录人姓名
+      this.loginUserName = localStorage.getItem("loginUserName")
+
     }
   }
 </script>
