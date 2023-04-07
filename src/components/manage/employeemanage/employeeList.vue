@@ -169,6 +169,11 @@
             title: '角色名称',
             key: 'roleName',
             width: 200,
+            render: (h,params)=>{
+              return h('div',
+                this.renderRoleName(params.row.roleId)
+              )
+            }
           },
           {
             title: '创建人',
@@ -228,6 +233,17 @@
         };
         let res = await queryEmployeeList(params);
         this.data = res.data;
+      },
+      /**
+       * 渲染员工角色名称
+       * @param str
+       */
+      renderRoleName :function(str){
+        for(let i = 0; i < this.roleList.length; i++){
+          if (str === this.roleList[i].roleId) {
+            return this.roleList[i].roleName;
+          }
+        }
       },
       // 显示添加员工弹框
       showAddModal:function(){
