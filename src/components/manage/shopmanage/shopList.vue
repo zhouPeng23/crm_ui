@@ -8,8 +8,8 @@
       </Col>
       <Col span="8">
         <div v-if="selectedShopId" style="margin: 12px 0 0 0">
-          <span style="font-size: 13px;font-weight: lighter;">当前选择的店铺:</span>
-          <span style="font-size: 15px;font-weight: bold;color: #00b33a">{{selectedShopName}}</span>
+          <!--<span style="font-size: 13px;font-weight: lighter;">当前选择的店铺:</span>-->
+          <!--<span style="font-size: 15px;font-weight: bold;color: #00b33a">{{selectedShopName}}</span>-->
         </div>
         <div v-else style="margin: 12px 0 0 0">
           <span style="font-size: 13px;font-weight: bold; color: red;">请选择店铺^_^</span>

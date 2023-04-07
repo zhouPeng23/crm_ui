@@ -3,10 +3,10 @@
 
       <div id="login_area">
         <div style="font-size:20px; margin: 20px 0 0 0;text-align: center">
-          会员管理系统
+          餐厅管理系统
         </div>
         <div>
-          <Input v-model="username" size="large" placeholder="请输入账号" type="text" style="width: 300px;height: 40px;margin: 15px 0 0 0; padding: 0 20px 0 20px"/>
+          <Input v-model="phoneNumber" size="large" placeholder="请输入手机号" type="text" style="width: 300px;height: 40px;margin: 15px 0 0 0; padding: 0 20px 0 20px"/>
           <Input v-model="password" size="large" placeholder="请输入密码" type="password" style="width: 300px;height: 40px;margin: 15px 0 0 0; padding: 0 20px 0 20px"/>
           <Button type="primary" size="large" long @click="login" style="width: 260px;height: 40px;margin: 15px 0 0 20px;">登   录</Button>
         </div>
@@ -23,14 +23,26 @@
     name: "loginPage",
     data() {
       return {
-        username:'',
+        phoneNumber:'',
         password:'',
       }
     },
     methods: {
       login: async function () {
+        //非空校验
+        if (this.phoneNumber.trim() === "") {
+          this.phoneNumber = "";
+          this.$Message.warning("手机号不能为空");
+          return;
+        }
+        if (this.password.trim() === "") {
+          this.password = "";
+          this.$Message.warning("密码不能为空");
+          return;
+        }
+
         let params = {
-          'username':this.username,
+          'phoneNumber':this.phoneNumber,
           'password':md5(this.password)
         };
         let res = await login(params);
