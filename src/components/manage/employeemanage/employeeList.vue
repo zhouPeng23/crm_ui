@@ -326,12 +326,15 @@
 
         //查询到选中的shop，再查员工
         this.queryEmployeeList();
-      }
 
-      //查询角色集合
-      let roleDataRes = await queryRoleList();
-      if (roleDataRes.code === '0000' && roleDataRes.data!=null) {
-        this.roleList = roleDataRes.data;
+        //查询角色集合
+        let params = {
+          'shopId':this.selectedShopId
+        };
+        let roleDataRes = await queryRoleList(params);
+        if (roleDataRes.code === '0000' && roleDataRes.data!=null) {
+          this.roleList = roleDataRes.data;
+        }
       }
 
     }
