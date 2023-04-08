@@ -49,7 +49,7 @@
         if (res.code === '0000') {
           localStorage.setItem("loginUserName",res.data.employeeName);
           localStorage.setItem("loginUserId",res.data.employeeId);
-          this.$Message.success("欢迎您: " + res.data.employeeName);
+          // this.$Message.success("欢迎您: " + res.data.employeeName);
           this.$router.push({path: '/manage/shopmanage/shopList'});
         }else {
           this.$Message.error(res.msg);

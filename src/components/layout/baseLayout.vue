@@ -57,14 +57,22 @@
         </Layout>
       </Layout>
     </Layout>
+
+    <!--提示选择门店弹框-->
+    <confirmModal ref="tipSelectShopModalRef" modal-title="提示:" :modal-width="300">
+      <div style="font-size: 20px;;">欢迎你:{{loginUserName}}, 请选择门店^_^</div>
+    </confirmModal>
   </div>
 </template>
 
 <script>
+  import {validateEmpty} from "../../tools";
   import {logout} from "../../api/ApiList";
+  import confirmModal from "../utils/modal/confirmModal";
 
   export default {
     name:"baseLayout",
+    components: {confirmModal},
     data() {
       return {
         //菜单
@@ -101,6 +109,10 @@
 
       //设置登录人姓名
       this.loginUserName = localStorage.getItem("loginUserName");
+
+      if (!validateEmpty(this.selectedShopId)){
+        this.$refs.tipSelectShopModalRef.showModal();
+      }
     }
   }
 </script>

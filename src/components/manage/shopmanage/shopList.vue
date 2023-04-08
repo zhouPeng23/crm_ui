@@ -101,11 +101,6 @@
       <div style="font-size: 14px;;">确认删除: {{deleteShopForm.shopName}} ?</div>
     </confirmModal>
 
-    <!--提示选择门店弹框-->
-    <confirmModal ref="deleteShopModalRef" modal-title="提示:" :modal-width="260" @handleSubmit="deleteShop()">
-      <div style="font-size: 14px;;">确认删除: {{deleteShopForm.shopName}} ?</div>
-    </confirmModal>
-
   </div>
 </template>
 
