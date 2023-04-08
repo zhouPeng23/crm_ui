@@ -5,6 +5,7 @@ const baseUrl = '/crmWebApi';
 //登录
 export const login = (params) => POST(baseUrl+'/user/login',params);
 export const logout = (params) => POST(baseUrl+'/user/logout',params);
+export const modifyPassword = (params) => POST(baseUrl+'/user/modifyPassword',params);
 
 //店铺
 export const queryShopList = (params) => POST(baseUrl+'/shop/queryShopList',params);

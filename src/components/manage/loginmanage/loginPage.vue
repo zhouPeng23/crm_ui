@@ -16,7 +16,7 @@
 </template>
 
 <script>
-  import {login} from "../../api/ApiList";
+  import {login} from "../../../api/ApiList";
   import * as md5 from "md5";
 
   export default {
@@ -48,6 +48,7 @@
         let res = await login(params);
         if (res.code === '0000') {
           localStorage.setItem("loginUserName",res.data.employeeName);
+          localStorage.setItem("loginUserId",res.data.employeeId);
           this.$Message.success("欢迎您: " + res.data.employeeName);
           this.$router.push({path: '/manage/shopmanage/shopList'});
         }else {
@@ -65,7 +66,7 @@
   #login_bg {
     height: 100vh;
     width: 100%;
-    background: url("../../../static/img/login/lijiang.png")  0px 0px no-repeat;
+    background: url("../../../../static/img/login/lijiang.png")  0px 0px no-repeat;
     background-size: 100%;
   }
   #login_area {

@@ -9,7 +9,7 @@
             <span v-if="selectedShopId" style="font-size: 25px;margin-left:10px; font-weight: bold;color: chartreuse">{{selectedShopName}}</span>
             <span v-else style="font-size: 25px;margin-left:10px; font-weight: bold;color: #f22b2b">未选择</span>
           </MenuItem>
-          <MenuItem name="2" style="color: #f2852a;text-align: center;float: right">
+          <MenuItem name="2" style="color: #fdfffd;text-align: center;float: right">
             <Avatar style="background-color: #87d068" icon="ios-person" />
             <span style="font-size: 18px;font-weight: bold">{{loginUserName}}</span>
           </MenuItem>
@@ -45,12 +45,13 @@
                 <Icon type="md-lock" size="15"/>
                 {{mainMenu4}}
               </template>
-              <MenuItem name="4-1"><span @click="logout" style="color: #2ecc41">{{mainMenu4_01}}</span></MenuItem>
+              <MenuItem name="4-1"><router-link to="/manage/loginmanage/modifypassword">{{mainMenu4_01}}</router-link></MenuItem>
+              <MenuItem name="4-2"><span @click="logout">{{mainMenu4_02}}</span></MenuItem>
             </Submenu>
           </Menu>
         </Sider>
         <Layout :style="{padding: '0 24px 24px'}">
-          <Content :style="{padding: '0px', minHeight: '1200px', background: '#f5f7f9'}">
+          <Content :style="{padding: '0px', minHeight: '100vh', background: '#f5f7f9'}">
             <router-view></router-view>
           </Content>
         </Layout>
@@ -75,7 +76,8 @@
         mainMenu3:'顾客管理',
           mainMenu3_01:'顾客列表',
         mainMenu4:'登录管理',
-          mainMenu4_01:'退出系统',
+          mainMenu4_01:'修改密码',
+          mainMenu4_02:'安全退出',
 
         //已选择的应用
         selectedShopId:"",
