@@ -46,7 +46,7 @@
                 {{mainMenu4}}
               </template>
               <MenuItem name="4-1"><router-link to="/manage/loginmanage/modifypassword">{{mainMenu4_01}}</router-link></MenuItem>
-              <MenuItem name="4-2"><span @click="logout">{{mainMenu4_02}}</span></MenuItem>
+              <MenuItem name="4-2"><router-link to=""><span @click="logout">{{mainMenu4_02}}</span></router-link></MenuItem>
             </Submenu>
           </Menu>
         </Sider>
@@ -97,10 +97,10 @@
     },
     methods:{
       logout: async function () {
-        let res = await logout();
         this.$router.push({path:'/login'});
         //清除所有缓存
         localStorage.clear();
+        let res = await logout();
       },
     },
     mounted:async function () {
