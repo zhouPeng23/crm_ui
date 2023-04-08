@@ -100,7 +100,7 @@
       this.selectedShopName = localStorage.getItem('selectedShopName');
 
       //设置登录人姓名
-      this.loginUserName = localStorage.getItem("loginUserName")
+      this.loginUserName = localStorage.getItem("loginUserName");
     }
   }
 </script>
