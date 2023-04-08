@@ -1,6 +1,28 @@
-export const checkEmpty = function checkEmpty(checkStr) {
-  return checkStr == null || checkStr === undefined || checkStr === "";
-};
+/**
+ * 校验字符串是否为空
+ * @param checkStr
+ * @returns {boolean}
+ */
+export function validateEmpty(checkStr) {
+  return checkStr !== null && checkStr !== undefined && checkStr !== "";
+}
+
+
+/**
+ * 校验密码格式
+ * @param password
+ * @returns {boolean}
+ */
+export function validatePassword(password) {
+  // 先校验长度是否为6-20位
+  if (password.length < 6 || password.length > 20) {
+    return false;
+  }
+
+  // 再校验是否只包含字母和数字
+  return /^[a-zA-Z0-9]+$/.test(password);
+}
+
 
 /**
  * 将毫秒字符串转为日期类型
@@ -22,6 +44,7 @@ export function millisecondFormatDate_yymmddHHmmss(str) {
   }
 }
 
+
 /**
  * 将毫秒字符串转为日期类型
  * @param str
@@ -39,6 +62,7 @@ export function millisecondFormatDate_yymmdd(str) {
   }
 }
 
+
 //补零操作
 function addZero(num){
   if(parseInt(num) < 10){
@@ -46,6 +70,7 @@ function addZero(num){
   }
   return num;
 }
+
 
 /**
  * 格式化性别
@@ -66,6 +91,7 @@ export function formatHumanSexByNumber(str){
   }
 }
 
+
 /**
  * 校验金额格式
  * @param amount  金额
@@ -85,6 +111,7 @@ export function validateAmount(amount) {
   // 最后校验小数点后最多两位
   return /^\d+(\.\d{1,2})?$/.test(amount);
 }
+
 
 /**
  * 格式化金额

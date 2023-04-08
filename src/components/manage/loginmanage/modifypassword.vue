@@ -20,7 +20,7 @@
   import {modifyPassword,} from "../../../api/ApiList";
   import * as md5 from "md5";
   import confirmModal from "../../utils/modal/confirmModal";
-  import {checkEmpty} from "../../../tools";
+  import {validateEmpty,validatePassword} from "../../../tools";
 
   export default {
     name: "modifypassword",
@@ -35,16 +35,17 @@
     methods:{
       //修改密码
       modifyPassword:async function () {
-        if (checkEmpty(this.oldPassword)) {
-          this.$Message.warning("原密码不能为空");
+        if (!validatePassword(this.oldPassword)) {
+          this.$Message.warning("原密码格式不正确");
           return;
         }
-        if (checkEmpty(this.newPassword)) {
-          this.$Message.warning("新密码不能为空");
+
+        if (!validatePassword(this.newPassword)) {
+          this.$Message.warning("新密码格式不正确");
           return;
         }
-        if (checkEmpty(this.newPasswordSecond)) {
-          this.$Message.warning("第二次输入的新密码不能为空");
+        if (!validatePassword(this.newPasswordSecond)) {
+          this.$Message.warning("第二次输入的新密码格式不正确");
           return;
         }
         if (this.newPassword!==this.newPasswordSecond) {
@@ -73,7 +74,7 @@
       this.selectedShopName = localStorage.getItem('selectedShopName');
 
       //本页面没有其他请求，防止浏览器返回上一页面，所以做个特殊处理，回到登录页面
-      if (checkEmpty(localStorage.getItem('token'))) {
+      if (!validateEmpty(localStorage.getItem('token'))) {
         this.$router.push({path:'/login'});
       }
     }
