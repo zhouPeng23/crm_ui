@@ -87,6 +87,8 @@
       logout: async function () {
         let res = await logout();
         this.$router.push({path:'/login'});
+        //清除所有缓存
+        localStorage.clear();
       },
     },
     mounted:async function () {
