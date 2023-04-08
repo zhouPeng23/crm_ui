@@ -36,19 +36,19 @@
       //修改密码
       modifyPassword:async function () {
         if (checkEmpty(this.oldPassword)) {
-          this.$Message.info("原密码不能为空");
+          this.$Message.warning("原密码不能为空");
           return;
         }
         if (checkEmpty(this.newPassword)) {
-          this.$Message.info("新密码不能为空");
+          this.$Message.warning("新密码不能为空");
           return;
         }
         if (checkEmpty(this.newPasswordSecond)) {
-          this.$Message.info("第二次输入的新密码不能为空");
+          this.$Message.warning("第二次输入的新密码不能为空");
           return;
         }
         if (this.newPassword!==this.newPasswordSecond) {
-          this.$Message.info("两次输入的新密码不一样");
+          this.$Message.warning("两次输入的新密码不一样");
           return;
         }
         let params = {
@@ -71,6 +71,11 @@
     mounted:async function () {
       this.selectedShopId = localStorage.getItem('selectedShopId');
       this.selectedShopName = localStorage.getItem('selectedShopName');
+
+      //本页面没有其他请求，防止浏览器返回上一页面，所以做个特殊处理，回到登录页面
+      if (checkEmpty(localStorage.getItem('token'))) {
+        this.$router.push({path:'/login'});
+      }
     }
   }
 </script>
