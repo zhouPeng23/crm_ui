@@ -6,10 +6,10 @@
         <!--添加店铺按钮-->
         <Button type="success" style="margin: 10px 0 10px 0" @click="showAddModal">添加店铺</Button>
       </Col>
-      <Col span="8">
+      <Col span="20" style="text-align: center">
         <div v-if="selectedShopId" style="margin: 12px 0 0 0"></div>
-        <div v-else style="margin: 12px 0 0 0">
-          <span style="font-size: 13px;font-weight: bold; color: red;">请选择店铺^_^</span>
+        <div v-else style="margin: 15px 0 0 0">
+          <span style="font-size: 18px;font-weight: bold; color: red;">请选择店铺 ^_^</span>
         </div>
       </Col>
     </Row>

@@ -5,7 +5,9 @@
         <Menu mode="horizontal" theme="dark" active-name="1">
           <MenuItem name="1" style="color: chartreuse;text-align: center;float: left">
             <Icon type="md-cloud-outline" />
-            当前店铺:<span style="font-size: 25px;margin-left:10px; font-weight: bold;color: chartreuse">{{selectedShopName}}</span>
+            当前店铺:
+            <span v-if="selectedShopId" style="font-size: 25px;margin-left:10px; font-weight: bold;color: chartreuse">{{selectedShopName}}</span>
+            <span v-else style="font-size: 25px;margin-left:10px; font-weight: bold;color: #f22b2b">未选择</span>
           </MenuItem>
           <MenuItem name="2" style="color: #f2852a;text-align: center;float: right">
             <Avatar style="background-color: #87d068" icon="ios-person" />
