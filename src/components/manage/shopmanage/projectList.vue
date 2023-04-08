@@ -56,6 +56,7 @@
 
 <script>
   import {querySelectedShop,queryProjectList,addProject,deleteProject,updateProject} from "../../../api/ApiList";
+  import {checkPrice} from "../../../tools/regex";
   import confirmModal from "../../utils/modal/confirmModal";
 
   export default {
@@ -139,6 +140,10 @@
       },
       //添加项目
       addProject:async function(){
+        if (!checkPrice(this.addProjectForm.projectPrice)) {
+          this.$Message.error("金额格式错误");
+          return;
+        }
         let params = {
           'shopId':this.selectedShopId,
           'projectName':this.addProjectForm.projectName,
@@ -155,6 +160,10 @@
       },
       //修改项目
       updateProject:async function () {
+        if (!checkPrice(this.updateProjectForm.projectPrice)) {
+          this.$Message.error("金额格式错误");
+          return;
+        }
         let params = {
           'shopId':this.selectedShopId,
           'projectId':this.updateProjectForm.projectId,
