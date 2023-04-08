@@ -1,8 +1,4 @@
-import cronValidate from "./cron"
 import {checkAdminLogin, checkHasLogin, checkNotLogin, checkSSOLogin, getLoginUserName} from "./sso"
-import Storage from "./storage"
-
-export const _store = new Storage();
 
 export const checkEmpty = function checkEmpty(checkStr) {
   if (checkStr == null || checkStr == undefined || checkStr == "") {
@@ -386,8 +382,6 @@ export const CheckNotLogin = () => checkNotLogin();
 export const CheckHasLogin = () => checkHasLogin();
 export const GetLoginUserName = () => getLoginUserName();
 export const CheckAdminLogin = () => checkAdminLogin();
-
-export const validateCron = (cron) => cronValidate(cron);
 
 export function goToTargetLink(url) {
   // 打开新窗口跳转

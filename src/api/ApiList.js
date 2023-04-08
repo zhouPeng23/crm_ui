@@ -14,6 +14,12 @@ export const updateShop = (params) => POST(baseUrl+'/shop/updateShop',params);
 export const querySelectedShop = (params) => POST(baseUrl+'/shop/querySelectedShop',params);
 export const selectThisShop = (params) => POST(baseUrl+'/shop/selectThisShop',params);
 
+//项目
+export const queryProjectList = (params) => POST(baseUrl+'/project/queryProjectList',params);
+export const addProject = (params) => POST(baseUrl+'/project/addProject',params);
+export const updateProject = (params) => POST(baseUrl+'/project/updateProject',params);
+export const deleteProject = (params) => POST(baseUrl+'/project/deleteProject',params);
+
 //员工
 export const queryEmployeeList = (params) => POST(baseUrl+'/employee/queryEmployeeList',params);
 export const addEmployee = (params) => POST(baseUrl+'/employee/addEmployee',params);

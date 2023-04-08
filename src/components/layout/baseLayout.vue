@@ -22,6 +22,7 @@
                 {{mainMenu1}}
               </template>
               <MenuItem name="1-1"><router-link to="/manage/shopmanage/shopList">{{mainMenu1_01}}</router-link></MenuItem>
+              <MenuItem name="1-2"><router-link to="/manage/shopmanage/projectList">{{mainMenu1_02}}</router-link></MenuItem>
             </Submenu>
             <Submenu name="2">
               <template slot="title">
@@ -66,6 +67,7 @@
         //菜单
         mainMenu1:'店铺管理',
           mainMenu1_01:'店铺列表',
+          mainMenu1_02:'店内项目',
         mainMenu2:'员工管理',
           mainMenu2_01:'员工列表',
         mainMenu3:'顾客管理',
@@ -96,7 +98,6 @@
 
       //设置登录人姓名
       this.loginUserName = localStorage.getItem("loginUserName")
-
     }
   }
 </script>

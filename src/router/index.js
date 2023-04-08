@@ -5,6 +5,7 @@ const baseLayout = () => import('../components/layout/baseLayout');
 const loginPage  = () => import('../components/login/loginPage');
 //店铺管理
 const shopList  = () => import('../components/manage/shopmanage/shopList');
+const projectList  = () => import('../components/manage/shopmanage/projectList');
 //员工管理
 const employeeList  = () => import('../components/manage/employeemanage/employeeList');
 //顾客管理
@@ -16,6 +17,7 @@ Vue.use(Router);
 //店铺管理
 const shopManageRouters = [
   {path:'shopList',component:shopList},
+  {path:'projectList',component:projectList},
 ];
 //员工管理
 const employeeManageRouters = [
