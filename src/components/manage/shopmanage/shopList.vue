@@ -22,10 +22,10 @@
               <Col span="5"><Button type="primary" @click="showUpdateModal(index)">修改</Button></Col>
               <Col span="6"><Button type="error" @click="showDeleteModal(index)">删除</Button></Col>
               <Col span="7">
-                <Button v-if="selectedShopId === data[index].shopId" type="success" ghost>已选择店铺</Button>
+                <Button v-if="selectedShopId === data[index].shopId.toString()" type="success" ghost>已选择店铺</Button>
                 <Button v-else type="success" @click="selectThisShop(index)">选择此店铺</Button>
               </Col>
-              <Col span="6"><Icon v-if="selectedShopId === data[index].shopId" type="ios-undo" size="40" color="red"/></Col>
+              <Col span="6"><Icon v-if="selectedShopId === data[index].shopId.toString()" type="ios-undo" size="40" color="red"/></Col>
             </Row>
           </template>
         </Table>
@@ -291,10 +291,10 @@
           localStorage.setItem('selectedShopId',this.selectedShopId);
           localStorage.setItem('selectedShopName',this.selectedShopName);
 
-          // 选择成功延迟 1s 刷新页面
+          // 选择成功延迟 1 毫秒 刷新页面
           setTimeout(function () {
             window.location.href = "/manage/shopmanage/shopList";
-          }, 1000);
+          }, 1);
         },
         //添加店铺
         addShop:async function(){
