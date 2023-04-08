@@ -3,7 +3,7 @@ import Vue from 'vue'
 import Router from 'vue-router'
 const baseLayout = () => import('../components/layout/baseLayout');
 
-//店铺管理
+//门店管理
 const shopList  = () => import('../components/manage/shopmanage/shopList');
 const projectList  = () => import('../components/manage/shopmanage/projectList');
 
@@ -20,7 +20,7 @@ const modifypassword  = () => import('../components/manage/loginmanage/modifypas
 Vue.use(Router);
 
 //==============================================引入二级模块============================================================
-//店铺管理
+//门店管理
 const shopManageRouters = [
   {path:'shopList',component:shopList},
   {path:'projectList',component:projectList},
@@ -48,7 +48,7 @@ export default new Router({
   mode:'history',
   base:'crm_ui',
   routes: [
-    {path:'/manage/shopmanage',component:baseLayout,children:shopManageRouters},//店铺管理
+    {path:'/manage/shopmanage',component:baseLayout,children:shopManageRouters},//门店管理
     {path:'/manage/employeemanage',component:baseLayout,children:employeeManageRouters},//员工管理
     {path:'/manage/customermanage',component:baseLayout,children:customerManageRouters},//客户管理
     {path:'/manage/loginmanage',component:baseLayout,children:loginManageRouters},//登录管理

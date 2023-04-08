@@ -263,7 +263,7 @@
           //   width: 80,
           // },
           // {
-          //   title: '店铺id',
+          //   title: '门店id',
           //   key: 'shopId',
           //   width: 80,
           // },
@@ -281,7 +281,7 @@
       // 查询顾客集合
       queryCustomerList :async function () {
         let params = {
-          //店铺id - 少不了的参数
+          //门店id - 少不了的参数
           'shopId':this.selectedShopId,
           //查询条件
           'customerName':this.searchCustomerName,

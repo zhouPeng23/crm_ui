@@ -211,7 +211,7 @@
           //   width: 80,
           // },
           // {
-          //   title: '店铺id',
+          //   title: '门店id',
           //   key: 'shopId',
           //   width: 80,
           // },

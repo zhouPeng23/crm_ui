@@ -7,7 +7,7 @@ export const login = (params) => POST(baseUrl+'/user/login',params);
 export const logout = (params) => POST(baseUrl+'/user/logout',params);
 export const modifyPassword = (params) => POST(baseUrl+'/user/modifyPassword',params);
 
-//店铺
+//门店
 export const queryShopList = (params) => POST(baseUrl+'/shop/queryShopList',params);
 export const addShop = (params) => POST(baseUrl+'/shop/addShop',params);
 export const deleteShop = (params) => POST(baseUrl+'/shop/deleteShop',params);

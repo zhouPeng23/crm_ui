@@ -5,7 +5,7 @@
         <Menu mode="horizontal" theme="dark" active-name="1">
           <MenuItem name="1" style="color: chartreuse;text-align: center;float: left">
             <Icon type="md-cloud-outline" />
-            当前店铺:
+            当前门店:
             <span v-if="selectedShopId" style="font-size: 25px;margin-left:10px; font-weight: bold;color: chartreuse">{{selectedShopName}}</span>
             <span v-else style="font-size: 25px;margin-left:10px; font-weight: bold;color: #f22b2b">未选择</span>
           </MenuItem>
@@ -68,8 +68,8 @@
     data() {
       return {
         //菜单
-        mainMenu1:'店铺管理',
-          mainMenu1_01:'店铺列表',
+        mainMenu1:'门店管理',
+          mainMenu1_01:'门店列表',
           mainMenu1_02:'店内项目',
         mainMenu2:'员工管理',
           mainMenu2_01:'员工列表',

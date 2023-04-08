@@ -3,13 +3,13 @@
 
     <Row>
       <Col span="2">
-        <!--添加店铺按钮-->
-        <Button type="success" style="margin: 10px 0 10px 0" @click="showAddModal">添加店铺</Button>
+        <!--添加门店按钮-->
+        <Button type="success" style="margin: 10px 0 10px 0" @click="showAddModal">添加门店</Button>
       </Col>
       <Col span="20" style="text-align: center">
         <div v-if="selectedShopId" style="margin: 12px 0 0 0"></div>
         <div v-else style="margin: 15px 0 0 0">
-          <span style="font-size: 18px;font-weight: bold; color: red;">请选择店铺 ^_^</span>
+          <span style="font-size: 18px;font-weight: bold; color: red;">请选择门店 ^_^</span>
         </div>
       </Col>
     </Row>
@@ -22,8 +22,8 @@
               <Col span="5"><Button type="primary" @click="showUpdateModal(index)">修改</Button></Col>
               <Col span="6"><Button type="error" @click="showDeleteModal(index)">删除</Button></Col>
               <Col span="7">
-                <Button v-if="selectedShopId === data[index].shopId.toString()" type="success" ghost>已选择店铺</Button>
-                <Button v-else type="success" @click="selectThisShop(index)">选择此店铺</Button>
+                <Button v-if="selectedShopId === data[index].shopId.toString()" type="success" ghost>已选择门店</Button>
+                <Button v-else type="success" @click="selectThisShop(index)">选择此门店</Button>
               </Col>
               <Col span="6"><Icon v-if="selectedShopId === data[index].shopId.toString()" type="ios-undo" size="40" color="red"/></Col>
             </Row>
@@ -32,22 +32,22 @@
       </Col>
     </Row>
 
-    <!--添加店铺弹框-->
-    <confirmModal ref="addShopModalRef" modal-title="添加店铺:" :modal-width="600" @handleSubmit="addShop()">
+    <!--添加门店弹框-->
+    <confirmModal ref="addShopModalRef" modal-title="添加门店:" :modal-width="600" @handleSubmit="addShop()">
       <Form ref="addShopFormRef" :model="addShopForm" :label-width="100" @submit.native.prevent>
-        <FormItem label="店铺名称" prop="shopName" required>
+        <FormItem label="门店名称" prop="shopName" required>
           <Input type="text" v-model="addShopForm.shopName"></Input>
         </FormItem>
-        <FormItem label="店铺位置" prop="shopWeizhi" required>
+        <FormItem label="门店位置" prop="shopWeizhi" required>
           <Input type="text" v-model="addShopForm.shopWeizhi"></Input>
         </FormItem>
-        <FormItem label="店铺经营类型" prop="shopJingyingType" required>
+        <FormItem label="门店经营类型" prop="shopJingyingType" required>
           <Input type="text" v-model="addShopForm.shopJingyingType"></Input>
         </FormItem>
-        <FormItem label="店铺经营品牌" prop="shopJingyingBrand" required>
+        <FormItem label="门店经营品牌" prop="shopJingyingBrand" required>
           <Input type="text" v-model="addShopForm.shopJingyingBrand"></Input>
         </FormItem>
-        <FormItem label="店铺开业日期" prop="shopOpeningDate" required>
+        <FormItem label="门店开业日期" prop="shopOpeningDate" required>
           <DatePicker type="date" v-model="addShopForm.shopOpeningDate" placeholder="请选择" style="width: 200px" format="yyyy-MM-dd"/>
         </FormItem>
         <FormItem label="店长姓名" prop="shopLeaderName" required>
@@ -64,22 +64,22 @@
       </Form>
     </confirmModal>
 
-    <!--修改店铺弹框-->
-    <confirmModal ref="updateShopModalRef" modal-title="修改店铺:" :modal-width="600" @handleSubmit="updateShop()">
+    <!--修改门店弹框-->
+    <confirmModal ref="updateShopModalRef" modal-title="修改门店:" :modal-width="600" @handleSubmit="updateShop()">
       <Form ref="updateShopFormRef" :model="updateShopForm" :label-width="100" @submit.native.prevent>
-        <FormItem label="店铺名称" prop="shopName" required>
+        <FormItem label="门店名称" prop="shopName" required>
           <Input type="text" v-model="updateShopForm.shopName"></Input>
         </FormItem>
-        <FormItem label="店铺位置" prop="shopWeizhi" required>
+        <FormItem label="门店位置" prop="shopWeizhi" required>
           <Input type="text" v-model="updateShopForm.shopWeizhi"></Input>
         </FormItem>
-        <FormItem label="店铺经营类型" prop="shopJingyingType" required>
+        <FormItem label="门店经营类型" prop="shopJingyingType" required>
           <Input type="text" v-model="updateShopForm.shopJingyingType"></Input>
         </FormItem>
-        <FormItem label="店铺经营品牌" prop="shopJingyingBrand" required>
+        <FormItem label="门店经营品牌" prop="shopJingyingBrand" required>
           <Input type="text" v-model="updateShopForm.shopJingyingBrand"></Input>
         </FormItem>
-        <FormItem label="店铺开业日期" prop="shopOpeningDate" required>
+        <FormItem label="门店开业日期" prop="shopOpeningDate" required>
           <DatePicker type="date" v-model="updateShopForm.shopOpeningDate" placeholder="请选择" style="width: 200px" format="yyyy-MM-dd"/>
         </FormItem>
         <FormItem label="店长姓名" prop="shopLeaderName" required>
@@ -96,7 +96,12 @@
       </Form>
     </confirmModal>
 
-    <!--确认删除店铺弹框-->
+    <!--确认删除门店弹框-->
+    <confirmModal ref="deleteShopModalRef" modal-title="提示:" :modal-width="260" @handleSubmit="deleteShop()">
+      <div style="font-size: 14px;;">确认删除: {{deleteShopForm.shopName}} ?</div>
+    </confirmModal>
+
+    <!--提示选择门店弹框-->
     <confirmModal ref="deleteShopModalRef" modal-title="提示:" :modal-width="260" @handleSubmit="deleteShop()">
       <div style="font-size: 14px;;">确认删除: {{deleteShopForm.shopName}} ?</div>
     </confirmModal>
@@ -154,7 +159,7 @@
           ],
           columns: [
             {
-              title: '店铺名称',
+              title: '门店名称',
               key: 'shopName',
               width: 200,
               fixed: 'left',
@@ -165,22 +170,22 @@
               }
             },
             {
-              title: '店铺位置',
+              title: '门店位置',
               key: 'shopWeizhi',
               width: 300,
             },
             {
-              title: '店铺经营类型',
+              title: '门店经营类型',
               key: 'shopJingyingType',
               width: 200,
             },
             {
-              title: '店铺经营品牌',
+              title: '门店经营品牌',
               key: 'shopJingyingBrand',
               width: 200,
             },
             {
-              title: '店铺开业日期',
+              title: '门店开业日期',
               key: 'shopOpeningDate',
               width: 200,
               render: (h,params)=>{
@@ -240,7 +245,7 @@
               }
             },
             // {
-            //   title: '店铺id',
+            //   title: '门店id',
             //   key: 'shopId',
             //   width: 80,
             // },
@@ -255,17 +260,17 @@
         }
       },
       methods:{
-        // 查询店铺集合
+        // 查询门店集合
         queryShopList :async function () {
           let params = {};
           let res = await queryShopList(params);
           this.data = res.data;
         },
-        // 显示添加店铺弹框
+        // 显示添加门店弹框
         showAddModal:function(){
           this.$refs.addShopModalRef.showModal();
         },
-        // 显示修改店铺弹框
+        // 显示修改门店弹框
         showUpdateModal:function(index){
           this.updateShopForm.shopId = this.data[index].shopId;
           this.updateShopForm.shopName = this.data[index].shopName;
@@ -278,13 +283,13 @@
           this.updateShopForm.shopLeaderPhoneNumber = this.data[index].shopLeaderPhoneNumber;
           this.$refs.updateShopModalRef.showModal();
         },
-        // 显示删除店铺弹框
+        // 显示删除门店弹框
         showDeleteModal:function(index){
           this.deleteShopForm.shopId = this.data[index].shopId;
           this.deleteShopForm.shopName = this.data[index].shopName;
           this.$refs.deleteShopModalRef.showModal();
         },
-        // 选择此店铺
+        // 选择此门店
         selectThisShop:async function(index){
           this.selectedShopId = this.data[index].shopId;
           this.selectedShopName = this.data[index].shopName;
@@ -296,7 +301,7 @@
             window.location.href = "/manage/shopmanage/shopList";
           }, 1);
         },
-        //添加店铺
+        //添加门店
         addShop:async function(){
           let params = {
             'shopName':this.addShopForm.shopName,
@@ -317,7 +322,7 @@
             this.$Message.error(res.msg);
           }
         },
-        //修改店铺
+        //修改门店
         updateShop:async function () {
           let params = {
             'shopId':this.updateShopForm.shopId,
@@ -345,10 +350,10 @@
             this.$Message.error(res.msg);
           }
         },
-        //删除店铺
+        //删除门店
         deleteShop:async function () {
           if (this.deleteShopForm.shopId === this.selectedShopId) {
-            this.$Message.warning("无法删除，店铺正在被选择！");
+            this.$Message.warning("无法删除，门店正在被选择！");
             return;
           }
           let params = {
