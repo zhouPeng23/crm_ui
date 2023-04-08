@@ -56,7 +56,7 @@
 
 <script>
   import {querySelectedShop,queryProjectList,addProject,deleteProject,updateProject} from "../../../api/ApiList";
-  import {checkPrice} from "../../../tools/regex";
+  import {validateAmount,formatAmount} from "../../../tools/index";
   import confirmModal from "../../utils/modal/confirmModal";
 
   export default {
@@ -91,6 +91,11 @@
             title: '项目价格',
             key: 'projectPrice',
             width: 200,
+            render: (h,params)=>{
+              return h('div',
+                formatAmount(params.row.projectPrice)
+              )
+            }
           },
           // {
           //   title: '项目id',
@@ -140,7 +145,7 @@
       },
       //添加项目
       addProject:async function(){
-        if (!checkPrice(this.addProjectForm.projectPrice)) {
+        if (!validateAmount(this.addProjectForm.projectPrice)) {
           this.$Message.error("金额格式错误");
           return;
         }
@@ -160,7 +165,7 @@
       },
       //修改项目
       updateProject:async function () {
-        if (!checkPrice(this.updateProjectForm.projectPrice)) {
+        if (!validateAmount(this.updateProjectForm.projectPrice)) {
           this.$Message.error("金额格式错误");
           return;
         }

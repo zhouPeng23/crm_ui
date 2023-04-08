@@ -66,108 +66,44 @@ export function formatHumanSexByNumber(str){
   }
 }
 
-
 /**
- * @return {string}
+ * 校验金额格式
+ * @param amount  金额
+ * @returns {boolean} 是否正确
  */
-export function formatDate_yyyyMMdd(date0){
-  let yyyMMdd;
-  if (date0.length !== 8) {
-    if (date0.toString().indexOf('Z')!==-1){
-      // 如果是国际时间
-      yyyMMdd = formatUTCtime(date0,'yyyyMMdd')
-    }else {
-      // 否则就是中国时间
-      yyyMMdd = GetDate_yyyyMMdd_byDate(date0);
-    }
-  }else{
-    yyyMMdd = date0;
+export function validateAmount(amount) {
+  // 先校验是否为数字
+  if (isNaN(amount)) {
+    return false;
   }
-  return yyyMMdd;
-}
 
+  // 再校验是否为正数
+  if (amount <= 0) {
+    return false;
+  }
 
-/**
- * @return {string}
- */
-export function GetToday_yyyyMMdd(){
-  let date = new Date();
-  let year = date.getFullYear();
-  let month = date.getMonth()+1;
-  if (parseInt(month)<10) {
-    month =  '0'+month;
-  }
-  let today = date.getDate();
-  if (parseInt(today)<10) {
-    today =  '0'+today;
-  }
-  return year + '' + month + '' + today;
+  // 最后校验小数点后最多两位
+  return /^\d+(\.\d{1,2})?$/.test(amount);
 }
 
 /**
- * @return {string}
+ * 格式化金额
+ * @param amount
+ * @returns {string}
  */
-export function GetDate_yyyyMMdd_byDate(date0){
-  let date = new Date(date0);
-  let year = date.getFullYear();
-  let month = date.getMonth()+1;
-  if (parseInt(month)<10) {
-    month =  '0'+month;
-  }
-  let today = date.getDate();
-  if (parseInt(today)<10) {
-    today =  '0'+today;
-  }
-  return year + '' + month + '' + today;
+export function formatAmount(amount) {
+  // 先将金额转换为字符串，并去除前导零
+  amount = parseFloat(amount).toFixed(2).toString().replace(/^0+/, '');
+
+  // 分离整数部分和小数部分
+  let parts = amount.split('.');
+  let integerPart = parts[0];
+  let decimalPart = parts.length > 1 ? '.' + parts[1] : '';
+
+  // 将整数部分每三位加一个逗号
+  integerPart = integerPart.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+
+  // 返回格式化后的金额
+  return integerPart + decimalPart;
 }
 
-/**
- * @return {string}
- */
-export function GetTodayTime_yyyyMMddhhmmss(){
-  let date = new Date();
-  let year = date.getFullYear();
-  let month = date.getMonth()+1;
-  if (parseInt(month)<10) {
-    month =  '0'+month;
-  }
-  let day = date.getDate();
-  if (parseInt(day)<10) {
-    day =  '0'+day;
-  }
-  let hour = date.getHours();
-  if (parseInt(hour)<10) {
-    hour =  '0'+hour;
-  }
-  let minute = date.getMinutes();
-  if (parseInt(minute)<10) {
-    minute =  '0'+minute;
-  }
-  let second = date.getSeconds();
-  if (parseInt(second)<10) {
-    second =  '0'+second;
-  }
-  return year +''+ month +''+ day +''+ hour + '' + minute +''+ second;
-}
-
-// 格式化世界标准时间   2020-05-09T16:00:00.000Z
-export function formatUTCtime(time, format){
-  let t = new Date(time);
-  let tf = function (i) { return (i < 10 ? '0' : '') + i };
-  return format.replace(/yyyy|MM|dd|HH|mm|ss/g, function (a) {
-    switch (a) {
-      case 'yyyy':
-        return tf(t.getFullYear());
-      case 'MM':
-        return tf(t.getMonth() + 1);
-      case 'mm':
-        return tf(t.getMinutes());
-      case 'dd':
-        return tf(t.getDate());
-      case 'HH':
-        return tf(t.getHours());
-      case 'ss':
-        return tf(t.getSeconds());
-    }
-  })
-}
