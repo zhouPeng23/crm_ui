@@ -55,7 +55,7 @@
 </template>
 
 <script>
-  import {querySelectedShop,queryProjectList,addProject,deleteProject,updateProject} from "../../../api/ApiList";
+  import {queryProjectList,addProject,deleteProject,updateProject} from "../../../api/ApiList";
   import {validateAmount,formatAmount} from "../../../tools/index";
   import confirmModal from "../../utils/modal/confirmModal";
 
@@ -199,14 +199,11 @@
       },
     },
     mounted:async function () {
-      let res = await querySelectedShop();
-      if (res.code === '0000' && res.data!=null) {
-        this.selectedShopId = res.data.shopId;
-        this.selectedShopName = res.data.shopName;
+      this.selectedShopId = localStorage.getItem('selectedShopId');
+      this.selectedShopName = localStorage.getItem('selectedShopName');
 
-        //查询到选中的shop，再查项目
-        this.queryProjectList();
-      }
+      //查项目
+      this.queryProjectList();
     }
   }
 </script>

@@ -54,7 +54,7 @@
           <Input type="text" v-model="updateEmployeeForm.employeeName"></Input>
         </FormItem>
         <FormItem label="员工性别" prop="sex" required>
-          <Select v-model="updateEmployeeForm.sex.toString()" style="width:100px">
+          <Select v-model="updateEmployeeForm.sex" style="width:100px">
             <Option v-for="item in sexList" :value="item.value" :key="item.value">{{ item.label }}</Option>
           </Select>
         </FormItem>
@@ -82,7 +82,7 @@
 
 <script>
   import { millisecondFormatDate_yymmddHHmmss,millisecondFormatDate_yymmdd ,formatHumanSexByNumber} from "../../../tools";
-  import {querySelectedShop,queryRoleList,queryEmployeeList,addEmployee,deleteEmployee,updateEmployee} from "../../../api/ApiList";
+  import {queryRoleList,queryEmployeeList,addEmployee,deleteEmployee,updateEmployee} from "../../../api/ApiList";
   import confirmModal from "../../utils/modal/confirmModal";
 
   export default {
@@ -114,11 +114,11 @@
         },
         sexList: [
           {
-            value: '1',
+            value: 1,
             label: '男'
           },
           {
-            value: '0',
+            value: 0,
             label: '女'
           },
         ],
@@ -319,24 +319,20 @@
       },
     },
     mounted:async function () {
-      let res = await querySelectedShop();
-      if (res.code === '0000' && res.data!=null) {
-        this.selectedShopId = res.data.shopId;
-        this.selectedShopName = res.data.shopName;
+      this.selectedShopId = localStorage.getItem('selectedShopId');
+      this.selectedShopName = localStorage.getItem('selectedShopName');
 
-        //查询到选中的shop，再查员工
-        this.queryEmployeeList();
+      //查员工
+      this.queryEmployeeList();
 
-        //查询角色集合
-        let params = {
-          'shopId':this.selectedShopId
-        };
-        let roleDataRes = await queryRoleList(params);
-        if (roleDataRes.code === '0000' && roleDataRes.data!=null) {
-          this.roleList = roleDataRes.data;
-        }
+      //查询角色集合
+      let params = {
+        'shopId':this.selectedShopId
+      };
+      let roleDataRes = await queryRoleList(params);
+      if (roleDataRes.code === '0000' && roleDataRes.data!=null) {
+        this.roleList = roleDataRes.data;
       }
-
     }
   }
 </script>

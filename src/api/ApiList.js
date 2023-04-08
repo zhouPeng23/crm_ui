@@ -11,8 +11,6 @@ export const queryShopList = (params) => POST(baseUrl+'/shop/queryShopList',para
 export const addShop = (params) => POST(baseUrl+'/shop/addShop',params);
 export const deleteShop = (params) => POST(baseUrl+'/shop/deleteShop',params);
 export const updateShop = (params) => POST(baseUrl+'/shop/updateShop',params);
-export const querySelectedShop = (params) => POST(baseUrl+'/shop/querySelectedShop',params);
-export const selectThisShop = (params) => POST(baseUrl+'/shop/selectThisShop',params);
 
 //项目
 export const queryProjectList = (params) => POST(baseUrl+'/project/queryProjectList',params);

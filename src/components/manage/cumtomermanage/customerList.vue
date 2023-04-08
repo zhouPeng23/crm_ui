@@ -76,7 +76,7 @@
           <Input type="text" v-model="updateCustomerForm.customerName"></Input>
         </FormItem>
         <FormItem label="顾客性别" prop="sex" required>
-          <Select v-model="updateCustomerForm.sex.toString()" style="width:100px">
+          <Select v-model="updateCustomerForm.sex" style="width:100px">
             <Option v-for="item in sexList" :value="item.value" :key="item.value">{{ item.label }}</Option>
           </Select>
         </FormItem>
@@ -108,10 +108,8 @@
 </template>
 
 <script>
-  import { millisecondFormatDate_yymmddHHmmss,millisecondFormatDate_yymmdd ,
-    formatHumanSexByNumber} from "../../../tools";
-  import {querySelectedShop,queryEmployeeList,getAllCustomerMassLevelList,
-    queryCustomerList,addCustomer,deleteCustomer,updateCustomer} from "../../../api/ApiList";
+  import { millisecondFormatDate_yymmddHHmmss,millisecondFormatDate_yymmdd,formatHumanSexByNumber} from "../../../tools";
+  import {queryEmployeeList,getAllCustomerMassLevelList,queryCustomerList,addCustomer,deleteCustomer,updateCustomer} from "../../../api/ApiList";
   import confirmModal from "../../utils/modal/confirmModal";
 
   export default {
@@ -158,11 +156,11 @@
         },
         sexList: [
           {
-            value: '1',
+            value: 1,
             label: '男'
           },
           {
-            value: '0',
+            value: 0,
             label: '女'
           },
         ],
@@ -434,20 +432,17 @@
       },
     },
     mounted:async function () {
-      let res = await querySelectedShop();
-      if (res.code === '0000' && res.data!=null) {
-        this.selectedShopId = res.data.shopId;
-        this.selectedShopName = res.data.shopName;
+      this.selectedShopId = localStorage.getItem('selectedShopId');
+      this.selectedShopName = localStorage.getItem('selectedShopName');
 
-        //查询到选中的shop，再查会员等级
-        this.getAllCustomerMassLevelList();
+      //查会员等级
+      this.getAllCustomerMassLevelList();
 
-        //查询到选中的shop，再查员工
-        this.queryEmployeeList();
+      //查员工
+      this.queryEmployeeList();
 
-        //查询到选中的shop，再查顾客
-        this.queryCustomerList();
-      }
+      //查顾客
+      this.queryCustomerList();
 
     }
   }

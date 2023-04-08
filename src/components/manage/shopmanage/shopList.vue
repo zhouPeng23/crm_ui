@@ -7,10 +7,7 @@
         <Button type="success" style="margin: 10px 0 10px 0" @click="showAddModal">添加店铺</Button>
       </Col>
       <Col span="8">
-        <div v-if="selectedShopId" style="margin: 12px 0 0 0">
-          <!--<span style="font-size: 13px;font-weight: lighter;">当前选择的店铺:</span>-->
-          <!--<span style="font-size: 15px;font-weight: bold;color: #00b33a">{{selectedShopName}}</span>-->
-        </div>
+        <div v-if="selectedShopId" style="margin: 12px 0 0 0"></div>
         <div v-else style="margin: 12px 0 0 0">
           <span style="font-size: 13px;font-weight: bold; color: red;">请选择店铺^_^</span>
         </div>
@@ -89,7 +86,7 @@
           <Input type="text" v-model="updateShopForm.shopLeaderName"></Input>
         </FormItem>
         <FormItem label="店长性别" prop="shopLeaderSex" required>
-          <Select v-model="updateShopForm.shopLeaderSex.toString()" style="width:100px">
+          <Select v-model="updateShopForm.shopLeaderSex" style="width:100px">
             <Option v-for="item in sexList" :value="item.value" :key="item.value">{{ item.label }}</Option>
           </Select>
         </FormItem>
@@ -109,7 +106,7 @@
 
 <script>
     import { millisecondFormatDate_yymmddHHmmss,millisecondFormatDate_yymmdd ,formatHumanSexByNumber} from "../../../tools";
-    import {queryShopList,addShop,deleteShop,updateShop,querySelectedShop,selectThisShop} from "../../../api/ApiList";
+    import {queryShopList,addShop,deleteShop,updateShop} from "../../../api/ApiList";
     import confirmModal from "../../utils/modal/confirmModal";
 
     export default {
@@ -147,11 +144,11 @@
           },
           sexList: [
             {
-              value: '1',
+              value: 1,
               label: '男'
             },
             {
-              value: '0',
+              value: 0,
               label: '女'
             },
           ],
@@ -289,21 +286,15 @@
         },
         // 选择此店铺
         selectThisShop:async function(index){
-          let params = {
-            'shopId':this.data[index].shopId,
-          };
-          let res = await selectThisShop(params);
-          if (res.code === '0000') {
-            this.$Message.success(res.msg);
-            this.selectedShopId = res.data.shopId;
-            this.selectedShopName = res.data.shopName;
-            // 选择成功延迟 1s 刷新页面
-            setTimeout(function () {
-              window.location.href = "/manage/shopmanage/shopList";
-            }, 1000);
-          }else{
-            this.$Message.error(res.msg);
-          }
+          this.selectedShopId = this.data[index].shopId;
+          this.selectedShopName = this.data[index].shopName;
+          localStorage.setItem('selectedShopId',this.selectedShopId);
+          localStorage.setItem('selectedShopName',this.selectedShopName);
+
+          // 选择成功延迟 1s 刷新页面
+          setTimeout(function () {
+            window.location.href = "/manage/shopmanage/shopList";
+          }, 1000);
         },
         //添加店铺
         addShop:async function(){
@@ -373,12 +364,10 @@
         },
       },
       mounted:async function () {
+        this.selectedShopId = localStorage.getItem('selectedShopId');
+        this.selectedShopName = localStorage.getItem('selectedShopName');
+
         this.queryShopList();
-        let res = await querySelectedShop();
-        if (res.code === '0000' && res.data!=null) {
-          this.selectedShopId = res.data.shopId;
-          this.selectedShopName = res.data.shopName;
-        }
       }
     }
 </script>

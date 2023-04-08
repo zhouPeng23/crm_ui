@@ -58,7 +58,7 @@
 </template>
 
 <script>
-  import {querySelectedShop,logout} from "../../api/ApiList";
+  import {logout} from "../../api/ApiList";
 
   export default {
     name:"baseLayout",
@@ -90,11 +90,8 @@
       },
     },
     mounted:async function () {
-      let res = await querySelectedShop();
-      if (res.code === '0000' && res.data!=null) {
-        this.selectedShopId = res.data.shopId;
-        this.selectedShopName = res.data.shopName;
-      }
+      this.selectedShopId = localStorage.getItem('selectedShopId');
+      this.selectedShopName = localStorage.getItem('selectedShopName');
 
       //设置登录人姓名
       this.loginUserName = localStorage.getItem("loginUserName")
