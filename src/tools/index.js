@@ -1,8 +1,5 @@
 export const checkEmpty = function checkEmpty(checkStr) {
-  if (checkStr == null || checkStr == undefined || checkStr == "") {
-    return true;
-  }
-  return false;
+  return checkStr == null || checkStr === undefined || checkStr === "";
 };
 
 /**
@@ -161,22 +158,16 @@ export function formatUTCtime(time, format){
     switch (a) {
       case 'yyyy':
         return tf(t.getFullYear());
-        break;
       case 'MM':
         return tf(t.getMonth() + 1);
-        break;
       case 'mm':
         return tf(t.getMinutes());
-        break;
       case 'dd':
         return tf(t.getDate());
-        break;
       case 'HH':
         return tf(t.getHours());
-        break;
       case 'ss':
         return tf(t.getSeconds());
-        break;
     }
   })
 }
