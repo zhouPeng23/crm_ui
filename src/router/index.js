@@ -13,6 +13,9 @@ const employeeList  = () => import('../components/manage/employeemanage/employee
 //顾客管理
 const customerList  = () => import('../components/manage/cumtomermanage/customerList');
 
+//预约管理
+const appointmentList  = () => import('../components/manage/appointmentmanage/appointmentList');
+
 //登录管理
 const loginPage  = () => import('../components/manage/loginmanage/loginPage');
 const modifypassword  = () => import('../components/manage/loginmanage/modifypassword');
@@ -36,6 +39,11 @@ const customerManageRouters = [
   {path:'customerList',component:customerList},
 ];
 
+//预约管理
+const appointmentManageRouters = [
+  {path:'appointmentList',component:appointmentList},
+];
+
 //登录管理
 const loginManageRouters = [
   {path:'modifypassword',component:modifypassword},
@@ -51,6 +59,7 @@ export default new Router({
     {path:'/manage/shopmanage',component:baseLayout,children:shopManageRouters},//门店管理
     {path:'/manage/employeemanage',component:baseLayout,children:employeeManageRouters},//员工管理
     {path:'/manage/customermanage',component:baseLayout,children:customerManageRouters},//客户管理
+    {path:'/manage/appointmentmanage',component:baseLayout,children:appointmentManageRouters},//预约管理
     {path:'/manage/loginmanage',component:baseLayout,children:loginManageRouters},//登录管理
     {path: '/login', component:loginPage },
     {path: '*', component:loginPage },

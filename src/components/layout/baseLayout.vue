@@ -42,11 +42,18 @@
             </Submenu>
             <Submenu name="4">
               <template slot="title">
-                <Icon type="md-lock" size="15"/>
+                <Icon type="ios-paper-outline" size="15"/>
                 {{mainMenu4}}
               </template>
-              <MenuItem name="4-1"><router-link to="/manage/loginmanage/modifypassword">{{mainMenu4_01}}</router-link></MenuItem>
-              <MenuItem name="4-2"><router-link to=""><span @click="logout">{{mainMenu4_02}}</span></router-link></MenuItem>
+              <MenuItem name="4-1"><router-link to="/manage/appointmentmanage/appointmentList">{{mainMenu4_01}}</router-link></MenuItem>
+            </Submenu>
+            <Submenu name="5">
+              <template slot="title">
+                <Icon type="md-lock" size="15"/>
+                {{mainMenu5}}
+              </template>
+              <MenuItem name="5-1"><router-link to="/manage/loginmanage/modifypassword">{{mainMenu5_01}}</router-link></MenuItem>
+              <MenuItem name="5-2"><router-link to=""><span @click="logout">{{mainMenu5_02}}</span></router-link></MenuItem>
             </Submenu>
           </Menu>
         </Sider>
@@ -83,9 +90,11 @@
           mainMenu2_01:'员工列表',
         mainMenu3:'顾客管理',
           mainMenu3_01:'顾客列表',
-        mainMenu4:'登录管理',
-          mainMenu4_01:'修改密码',
-          mainMenu4_02:'安全退出',
+        mainMenu4:'预约管理',
+          mainMenu4_01:'预约列表',
+        mainMenu5:'登录管理',
+          mainMenu5_01:'修改密码',
+          mainMenu5_02:'安全退出',
 
         //已选择的应用
         selectedShopId:"",

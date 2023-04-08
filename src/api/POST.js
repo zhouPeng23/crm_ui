@@ -27,6 +27,7 @@ export function POST(url, params) {
     }).catch(error => {
       console.log("请求错误" + "-服务器响应码: "+error.response.status);
       if (error.response.status===403){
+        localStorage.clear();
         console.log("403错误,请重新登录");
         router.push('/login/loginPage');
       }
