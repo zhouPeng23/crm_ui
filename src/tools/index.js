@@ -75,6 +75,19 @@ export function millisecondFormatDate_yymmdd(str) {
 }
 
 
+/**
+ * 将日期格式化为 yyyy-MM-dd
+ * @param date
+ * @returns {string}
+ */
+export function formatDate_yyyyMMdd(date) {
+  const year = date.getFullYear();
+  const month = (date.getMonth() + 1).toString().padStart(2, '0');
+  const day = date.getDate().toString().padStart(2, '0');
+  return `${year}-${month}-${day}`;
+}
+
+
 //补零操作
 function addZero(num){
   if(parseInt(num) < 10){
