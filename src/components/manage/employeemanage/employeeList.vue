@@ -36,7 +36,7 @@
         <FormItem label="员工手机号码" prop="phoneNumber" required>
           <Input type="text" v-model="addEmployeeForm.phoneNumber" :maxlength="11"></Input>
         </FormItem>
-        <FormItem label="生日日期" prop="birthday" required>
+        <FormItem label="生日日期" prop="birthday">
           <DatePicker type="date" v-model="addEmployeeForm.birthday" placeholder="请选择" style="width: 200px" format="yyyy-MM-dd"/>
         </FormItem>
         <FormItem label="角色" prop="roleId" required>
@@ -61,7 +61,7 @@
         <FormItem label="员工手机号码" prop="phoneNumber" required>
           <Input type="text" v-model="updateEmployeeForm.phoneNumber" :maxlength="11"></Input>
         </FormItem>
-        <FormItem label="生日日期" prop="birthday" required>
+        <FormItem label="生日日期" prop="birthday">
           <DatePicker type="date" v-model="updateEmployeeForm.birthday" placeholder="请选择" style="width: 200px" format="yyyy-MM-dd"/>
         </FormItem>
         <FormItem label="角色" prop="roleId" required>

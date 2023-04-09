@@ -53,7 +53,7 @@
         <FormItem label="顾客手机号码" prop="phoneNumber" required>
           <Input type="text" v-model="addCustomerForm.phoneNumber" :maxlength="11"></Input>
         </FormItem>
-        <FormItem label="生日日期" prop="birthday" required>
+        <FormItem label="生日日期" prop="birthday">
           <DatePicker type="date" v-model="addCustomerForm.birthday" placeholder="请选择" style="width: 200px" format="yyyy-MM-dd"/>
         </FormItem>
         <FormItem label="会员等级" prop="customerMassLevel" required>
@@ -83,7 +83,7 @@
         <FormItem label="顾客手机号码" prop="phoneNumber" required>
           <Input type="text" v-model="updateCustomerForm.phoneNumber" :maxlength="11"></Input>
         </FormItem>
-        <FormItem label="生日日期" prop="birthday" required>
+        <FormItem label="生日日期" prop="birthday">
           <DatePicker type="date" v-model="updateCustomerForm.birthday" placeholder="请选择" style="width: 200px" format="yyyy-MM-dd"/>
         </FormItem>
         <FormItem label="会员等级" prop="customerMassLevel" required>
