@@ -67,7 +67,7 @@
 
     <!--提示选择门店弹框-->
     <confirmModal ref="tipSelectShopModalRef" modal-title="提示:" :modal-width="300">
-      <div style="font-size: 20px;;">欢迎你:{{loginUserName}}, 请选择门店^_^</div>
+      <div style="font-size: 20px;;">欢迎您:{{loginUserName}}, 请选择门店^_^</div>
     </confirmModal>
   </div>
 </template>

@@ -88,7 +88,7 @@
         </FormItem>
         <FormItem label="会员等级" prop="customerMassLevel" required>
           <Select v-model="updateCustomerForm.customerMassLevel" style="width:100px">
-            <Option v-for="item in allCustomerMassLevelList" :value="item.code.toString()" :key="item.code">{{ item.msg }}</Option>
+            <Option v-for="item in allCustomerMassLevelList" :value="item.code" :key="item.code">{{ item.msg }}</Option>
           </Select>
         </FormItem>
         <FormItem label="所属员工" prop="belongToEmployeeId" required>
@@ -330,7 +330,7 @@
        */
       renderCustomerMassLevel :function (str) {
         for(let i = 0; i < this.allCustomerMassLevelList.length; i++){
-          if (str === this.allCustomerMassLevelList[i].code.toString()) {
+          if (str === this.allCustomerMassLevelList[i].code) {
             return this.allCustomerMassLevelList[i].msg;
           }
         }
