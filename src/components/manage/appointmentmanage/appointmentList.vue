@@ -324,6 +324,9 @@
       resetQuery: function(){
         //查询条件设置为空
         this.searchPhoneNumber = "";
+        this.searchAppointmentDateStart = new Date();
+        this.searchAppointmentDateEnd = new Date();
+        this.searchAppointmentStatus = "";
         //页码设置为默认值
         this.currentPageNo = 1;
         //重置后，重新查询
