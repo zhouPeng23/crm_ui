@@ -153,14 +153,26 @@
         ],
         columns: [
           {
+            title: '预约状态',
+            key: 'appointmentStatus',
+            width: 200,
+            fixed: 'left',
+            render: (h,params)=>{
+              return h('div',
+                [
+                  h('strong',this.rendAppointmentStatus(params.row.appointmentStatus))
+                ]
+
+              )
+            }
+          },
+          {
             title: '顾客姓名',
             key: 'customerId',
             width: 200,
-            fixed: 'left',
             render: (h, params) => {
               return h('div', [
-                h('strong' ,
-                  this.renderCustomerName(params.row.customerId))
+                this.renderCustomerName(params.row.customerId)
               ]);
             }
           },
@@ -395,6 +407,19 @@
         for(let i = 0; i < this.customerList.length; i++){
           if (str === this.customerList[i].customerId) {
             return formatHumanSexByNumber(this.customerList[i].sex);
+          }
+        }
+      },
+
+      /**
+       * 渲染预约状态
+       * @param str
+       * @returns {string}
+       */
+      rendAppointmentStatus : function(str){
+        for(let i = 0; i < this.appointmentStatusList.length; i++){
+          if (str === this.appointmentStatusList[i].code) {
+            return this.appointmentStatusList[i].msg;
           }
         }
       },
