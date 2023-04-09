@@ -84,6 +84,13 @@ function addZero(num){
 }
 
 
+export function addDays(date, days) {
+  const result = new Date(date);
+  result.setDate(result.getDate() + days);
+  return result;
+}
+
+
 /**
  * 格式化性别
  * @param str

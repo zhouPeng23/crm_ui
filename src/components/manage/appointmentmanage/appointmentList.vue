@@ -93,7 +93,7 @@
 </template>
 
 <script>
-  import { validateEmpty,validatePhoneNumber,formatAmount,millisecondFormatDate_yymmddHHmmss,millisecondFormatDate_yymmdd,formatHumanSexByNumber} from "../../../tools";
+  import { validateEmpty,validatePhoneNumber,formatAmount,addDays,millisecondFormatDate_yymmddHHmmss,millisecondFormatDate_yymmdd,formatHumanSexByNumber} from "../../../tools";
   import {queryAppointmentList,queryShopAllCustomer,queryProjectList,queryAppointmentStatusList,
     addAppointment,updateAppointment,queryEmployeeList,addCustomer,deleteCustomer,updateCustomer} from "../../../api/ApiList";
   import confirmModal from "../../utils/modal/confirmModal";
@@ -114,7 +114,7 @@
         currentPageNo:1,
         searchPhoneNumber:"",
         searchAppointmentDateStart:new Date(),
-        searchAppointmentDateEnd:new Date(),
+        searchAppointmentDateEnd:addDays(new Date(),10),
         searchAppointmentStatus:"",
         employeeList: [],
         customerList:[],
@@ -325,7 +325,7 @@
         //查询条件设置为空
         this.searchPhoneNumber = "";
         this.searchAppointmentDateStart = new Date();
-        this.searchAppointmentDateEnd = new Date();
+        this.searchAppointmentDateEnd = addDays(new Date(),10);
         this.searchAppointmentStatus = "";
         //页码设置为默认值
         this.currentPageNo = 1;
