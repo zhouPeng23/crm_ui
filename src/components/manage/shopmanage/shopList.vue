@@ -335,7 +335,7 @@
             this.$refs.updateShopFormRef.resetFields();
             this.$Message.success(res.msg);
             this.queryShopList();
-            if (this.updateShopForm.shopId === this.selectedShopId) {
+            if (this.updateShopForm.shopId.toString() === this.selectedShopId) {
               // 修改成功延迟 1s 刷新页面
               setTimeout(function () {
                 window.location.href = "/manage/shopmanage/shopList";

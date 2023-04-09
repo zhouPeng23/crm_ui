@@ -84,6 +84,12 @@ function addZero(num){
 }
 
 
+/**
+ * 给定日期增加一定天数
+ * @param date
+ * @param days
+ * @returns {Date}
+ */
 export function addDays(date, days) {
   const result = new Date(date);
   result.setDate(result.getDate() + days);

@@ -11,7 +11,7 @@
           </MenuItem>
           <MenuItem name="2" style="color: #fdfffd;text-align: center;float: right">
             <Avatar style="background-color: #87d068" icon="ios-person" />
-            <span style="font-size: 18px;font-weight: bold">{{loginUserName}}</span>
+            <span style="font-size: 15px;font-weight: bold">{{loginUserName}}</span>
           </MenuItem>
         </Menu>
       </Header>
