@@ -3,21 +3,11 @@
 
     <Row style="margin: 10px 0 10px 0">
       <Col span="4" >
-        <Button type="warning" @click="showAddModal">添加顾客</Button>
+        <Button type="warning" @click="showAddModal">添加预约</Button>
       </Col>
       <Col span="20">
-        <Input v-model="searchCustomerName" placeholder="顾客姓名" clearable style="width: 150px" />
-        <Input v-model="searchPhoneNumber" placeholder="顾客手机号码" clearable style="width: 150px" :maxlength="11"/>
-        <Select v-model="searchSex" style="width:100px" clearable placeholder="性别">
-          <Option v-for="item in sexList" :value="item.value" :key="item.value">{{ item.label }}</Option>
-        </Select>
-        <Select v-model="searchCustomerMassLevel" style="width:100px" clearable placeholder="会员等级">
-          <Option v-for="item in allCustomerMassLevelList" :value="item.code" :key="item.code">{{ item.msg }}</Option>
-        </Select>
-        <Select v-model="searchBelongToEmployeeId" style="width:100px" clearable placeholder="所属员工">
-          <Option v-for="item in employeeList" :value="item.employeeId" :key="item.employeeId">{{ item.employeeName }}</Option>
-        </Select>
-        <Button type="primary" shape="circle" icon="ios-search" @click="queryCustomerList">查询</Button>
+        <Input v-model="searchPhoneNumber" placeholder="预约手机号码" clearable style="width: 150px" :maxlength="11"/>
+        <Button type="primary" shape="circle" icon="ios-search" @click="queryAppointmentList">查询</Button>
         <Button shape="circle" @click="resetQuery">重置</Button>
       </Col>
     </Row>
@@ -39,27 +29,22 @@
       </Col>
     </Row>
 
-    <!--添加顾客弹框-->
-    <confirmModal ref="addCustomerModalRef" modal-title="添加顾客:" :modal-width="600" @handleSubmit="addCustomer()">
+    <!--添加预约弹框-->
+    <confirmModal ref="addCustomerModalRef" modal-title="添加预约:" :modal-width="600" @handleSubmit="addCustomer()">
       <Form ref="addCustomerFormRef" :model="addCustomerForm" :label-width="100" @submit.native.prevent>
-        <FormItem label="顾客姓名" prop="customerName" required>
+        <FormItem label="预约姓名" prop="customerName" required>
           <Input type="text" v-model="addCustomerForm.customerName"></Input>
         </FormItem>
-        <FormItem label="顾客性别" prop="sex" required>
+        <FormItem label="预约性别" prop="sex" required>
           <Select v-model="addCustomerForm.sex" style="width:100px">
             <Option v-for="item in sexList" :value="item.value" :key="item.value">{{ item.label }}</Option>
           </Select>
         </FormItem>
-        <FormItem label="顾客手机号码" prop="phoneNumber" required>
+        <FormItem label="预约手机号码" prop="phoneNumber" required>
           <Input type="text" v-model="addCustomerForm.phoneNumber" :maxlength="11"></Input>
         </FormItem>
         <FormItem label="生日日期" prop="birthday" required>
           <DatePicker type="date" v-model="addCustomerForm.birthday" placeholder="请选择" style="width: 200px" format="yyyy-MM-dd"/>
-        </FormItem>
-        <FormItem label="会员等级" prop="customerMassLevel" required>
-          <Select v-model="addCustomerForm.customerMassLevel" style="width:100px">
-            <Option v-for="item in allCustomerMassLevelList" :value="item.code" :key="item.code">{{ item.msg }}</Option>
-          </Select>
         </FormItem>
         <FormItem label="所属员工" prop="belongToEmployeeId" required>
           <Select v-model="addCustomerForm.belongToEmployeeId" style="width:100px">
@@ -69,27 +54,22 @@
       </Form>
     </confirmModal>
 
-    <!--修改顾客弹框-->
-    <confirmModal ref="updateCustomerModalRef" modal-title="修改顾客:" :modal-width="600" @handleSubmit="updateCustomer()">
+    <!--修改预约弹框-->
+    <confirmModal ref="updateCustomerModalRef" modal-title="修改预约:" :modal-width="600" @handleSubmit="updateCustomer()">
       <Form ref="updateCustomerFormRef" :model="updateCustomerForm" :label-width="100" @submit.native.prevent>
-        <FormItem label="顾客姓名" prop="customerName" required>
+        <FormItem label="预约姓名" prop="customerName" required>
           <Input type="text" v-model="updateCustomerForm.customerName"></Input>
         </FormItem>
-        <FormItem label="顾客性别" prop="sex" required>
+        <FormItem label="预约性别" prop="sex" required>
           <Select v-model="updateCustomerForm.sex" style="width:100px">
             <Option v-for="item in sexList" :value="item.value" :key="item.value">{{ item.label }}</Option>
           </Select>
         </FormItem>
-        <FormItem label="顾客手机号码" prop="phoneNumber" required>
+        <FormItem label="预约手机号码" prop="phoneNumber" required>
           <Input type="text" v-model="updateCustomerForm.phoneNumber" :maxlength="11"></Input>
         </FormItem>
         <FormItem label="生日日期" prop="birthday" required>
           <DatePicker type="date" v-model="updateCustomerForm.birthday" placeholder="请选择" style="width: 200px" format="yyyy-MM-dd"/>
-        </FormItem>
-        <FormItem label="会员等级" prop="customerMassLevel" required>
-          <Select v-model="updateCustomerForm.customerMassLevel" style="width:100px">
-            <Option v-for="item in allCustomerMassLevelList" :value="item.code" :key="item.code">{{ item.msg }}</Option>
-          </Select>
         </FormItem>
         <FormItem label="所属员工" prop="belongToEmployeeId" required>
           <Select v-model="updateCustomerForm.belongToEmployeeId" style="width:100px">
@@ -99,7 +79,7 @@
       </Form>
     </confirmModal>
 
-    <!--确认删除顾客弹框-->
+    <!--确认删除预约弹框-->
     <confirmModal ref="deleteCustomerModalRef" modal-title="提示:" :modal-width="260" @handleSubmit="deleteCustomer()">
       <div style="font-size: 14px;;">确认删除: {{deleteCustomerForm.customerName}} ?</div>
     </confirmModal>
@@ -108,8 +88,9 @@
 </template>
 
 <script>
-  import { millisecondFormatDate_yymmddHHmmss,millisecondFormatDate_yymmdd,formatHumanSexByNumber} from "../../../tools";
-  import {queryEmployeeList,getAllCustomerMassLevelList,queryCustomerList,addCustomer,deleteCustomer,updateCustomer} from "../../../api/ApiList";
+  import { validateEmpty,formatAmount,millisecondFormatDate_yymmddHHmmss,millisecondFormatDate_yymmdd,formatHumanSexByNumber} from "../../../tools";
+  import {queryAppointmentList,queryShopAllCustomer,queryProjectList,
+    addAppointment,updateAppointment,queryEmployeeList,addCustomer,deleteCustomer,updateCustomer} from "../../../api/ApiList";
   import confirmModal from "../../utils/modal/confirmModal";
 
   export default {
@@ -126,13 +107,12 @@
         pageSize:10,
         // 当前页
         currentPageNo:1,
-        searchCustomerName:"",
         searchPhoneNumber:"",
-        searchSex:"",
-        searchCustomerMassLevel:"",
-        searchBelongToEmployeeId:"",
+        searchAppointmentDate:"",
+        searchAppointmentStatus:"",
         employeeList: [],
-        allCustomerMassLevelList: [],
+        customerList:[],
+        projectList:[],
         addCustomerForm:{
           customerName:"",
           sex:"",
@@ -164,16 +144,16 @@
             label: '女'
           },
         ],
-        roleList:[],
         columns: [
           {
             title: '顾客姓名',
-            key: 'customerName',
+            key: 'customerId',
             width: 200,
             fixed: 'left',
             render: (h, params) => {
               return h('div', [
-                h('strong' ,params.row.customerName)
+                h('strong' ,
+                  this.renderCustomerName(params.row.customerId))
               ]);
             }
           },
@@ -183,47 +163,47 @@
             width: 200,
             render: (h,params)=>{
               return h('div',
-                formatHumanSexByNumber(params.row.sex)
+                this.rendSexByCustomerId(params.row.customerId)
               )
             }
           },
           {
-            title: '手机号',
-            key: 'phoneNumber',
+            title: '预约日期',
+            key: 'appointmentDate',
             width: 200,
           },
           {
-            title: '生日日期',
-            key: 'birthday',
+            title: '预约时间',
+            key: 'appointmentTime',
             width: 200,
-            render: (h,params)=>{
-              return h('div',
-                millisecondFormatDate_yymmdd(params.row.birthday)
-              )
-            }
           },
           {
-            title: '会员等级',
-            key: 'customerMassLevel',
+            title: '项目',
+            key: 'projectId',
             width: 200,
             render: (h,params)=>{
               return h('div',
-                this.renderCustomerMassLevel(params.row.customerMassLevel)
+                this.rendProjectName(params.row.projectId)
               )
             }
           },
-          // {
-          //   title: '所属员工id',
-          //   key: 'belongToEmployeeId',
-          //   width: 200,
-          // },
+          {
+            title: '项目金额',
+            key: 'projectPrice',
+            width: 200,
+            render: (h,params)=>{
+              return h('div',
+                formatAmount(params.row.projectPrice)
+              )
+            }
+          },
           {
             title: '所属员工姓名',
-            key: 'belongToEmployeeName',
+            key: 'employeeId',
             width: 200,
             render: (h,params)=>{
               return h('div',
-                this.renderBelongToEmployeeName(params.row.belongToEmployeeId)
+                this.renderBelongToEmployeeName(params.row.employeeId)
               )
             }
           },
@@ -257,16 +237,6 @@
               )
             }
           },
-          // {
-          //   title: '顾客id',
-          //   key: 'customerId',
-          //   width: 80,
-          // },
-          // {
-          //   title: '门店id',
-          //   key: 'shopId',
-          //   width: 80,
-          // },
           {
             title: '操作',
             slot: 'action',
@@ -278,36 +248,34 @@
       }
     },
     methods:{
-      // 查询顾客集合
-      queryCustomerList :async function () {
+      // 查询预约集合
+      queryAppointmentList :async function () {
+        if (!validateEmpty(this.searchAppointmentDate)) {
+          //因为是今天写的这个页面，默认值就写今天
+          this.searchAppointmentDate = '2023-04-09';
+        }
         let params = {
           //门店id - 少不了的参数
           'shopId':this.selectedShopId,
           //查询条件
-          'customerName':this.searchCustomerName,
           'phoneNumber':this.searchPhoneNumber,
-          'sex':this.searchSex,
-          'customerMassLevel':this.searchCustomerMassLevel,
-          'belongToEmployeeId':this.searchBelongToEmployeeId,
+          'appointmentDate':this.searchAppointmentDate,
+          'appointmentStatus':this.searchAppointmentStatus,
           //页码
           'pageNo':this.currentPageNo,
           'pageSize':this.pageSize,
         };
-        let res = await queryCustomerList(params);
+        let res = await queryAppointmentList(params);
         this.data = res.data.records;
         this.total = res.data.total;
       },
       resetQuery: function(){
         //查询条件设置为空
-        this.searchCustomerName = "";
         this.searchPhoneNumber = "";
-        this.searchSex = "";
-        this.searchCustomerMassLevel = "";
-        this.searchBelongToEmployeeId = "";
         //页码设置为默认值
         this.currentPageNo = 1;
         //重置后，重新查询
-        this.queryCustomerList();
+        this.queryAppointmentList();
       },
       // 查询员工集合
       queryEmployeeList :async function () {
@@ -317,26 +285,24 @@
         let res = await queryEmployeeList(params);
         this.employeeList = res.data;
       },
-      //查询会员等级集合
-      getAllCustomerMassLevelList:async function(){
-        let params = {};
-        let res = await getAllCustomerMassLevelList(params);
-        this.allCustomerMassLevelList = res.data;
+      // 查询顾客集合
+      queryShopAllCustomer :async function () {
+        let params = {
+          'shopId': this.selectedShopId
+        };
+        let res = await queryShopAllCustomer(params);
+        this.customerList = res.data;
+      },
+      // 查询项目集合
+      queryProjectList :async function () {
+        let params = {
+          'shopId': this.selectedShopId
+        };
+        let res = await queryProjectList(params);
+        this.projectList = res.data;
       },
       /**
-       * 渲染顾客等级
-       * @param str
-       * @returns {string}
-       */
-      renderCustomerMassLevel :function (str) {
-        for(let i = 0; i < this.allCustomerMassLevelList.length; i++){
-          if (str === this.allCustomerMassLevelList[i].code.toString()) {
-            return this.allCustomerMassLevelList[i].msg;
-          }
-        }
-      },
-      /**
-       * 渲染顾客所属员工姓名
+       * 渲染预约所属员工姓名
        * @param str
        * @returns {string}
        */
@@ -347,11 +313,47 @@
           }
         }
       },
-      // 显示添加顾客弹框
+      /**
+       * 渲染顾客姓名
+       * @param str
+       * @returns {string}
+       */
+      renderCustomerName : function(str){
+        for(let i = 0; i < this.customerList.length; i++){
+          if (str === this.customerList[i].customerId) {
+            return this.customerList[i].customerName;
+          }
+        }
+      },
+      /**
+       * 渲染顾客性别
+       * @param str
+       * @returns {string}
+       */
+      rendSexByCustomerId : function(str){
+        for(let i = 0; i < this.customerList.length; i++){
+          if (str === this.customerList[i].customerId) {
+            return formatHumanSexByNumber(this.customerList[i].sex);
+          }
+        }
+      },
+      /**
+       * 渲染项目名称
+       * @param str
+       * @returns {string}
+       */
+      rendProjectName : function(str){
+        for(let i = 0; i < this.projectList.length; i++){
+          if (str === this.projectList[i].projectId) {
+            return this.projectList[i].projectName;
+          }
+        }
+      },
+      // 显示添加预约弹框
       showAddModal:function(){
         this.$refs.addCustomerModalRef.showModal();
       },
-      // 显示修改顾客弹框
+      // 显示修改预约弹框
       showUpdateModal:function(index){
         this.updateCustomerForm.customerId = this.data[index].customerId;
         this.updateCustomerForm.customerName = this.data[index].customerName;
@@ -362,13 +364,13 @@
         this.updateCustomerForm.belongToEmployeeId = this.data[index].belongToEmployeeId;
         this.$refs.updateCustomerModalRef.showModal();
       },
-      // 显示删除顾客弹框
+      // 显示删除预约弹框
       showDeleteModal:function(index){
         this.deleteCustomerForm.customerId = this.data[index].customerId;
         this.deleteCustomerForm.customerName = this.data[index].customerName;
         this.$refs.deleteCustomerModalRef.showModal();
       },
-      //添加顾客
+      //添加预约
       addCustomer:async function(){
         let params = {
           'shopId':this.selectedShopId,
@@ -383,12 +385,12 @@
         if (res.code === '0000') {
           this.$refs.addCustomerFormRef.resetFields();
           this.$Message.success(res.msg);
-          this.queryCustomerList();
+          this.queryAppointmentList();
         }else {
           this.$Message.error(res.msg);
         }
       },
-      //修改顾客
+      //修改预约
       updateCustomer:async function () {
         let params = {
           'customerId':this.updateCustomerForm.customerId,
@@ -404,12 +406,12 @@
         if (res.code === '0000') {
           this.$refs.updateCustomerFormRef.resetFields();
           this.$Message.success(res.msg);
-          this.queryCustomerList();
+          this.queryAppointmentList();
         }else {
           this.$Message.error(res.msg);
         }
       },
-      //删除顾客
+      //删除预约
       deleteCustomer:async function () {
         let params = {
           'customerId':this.deleteCustomerForm.customerId
@@ -417,32 +419,35 @@
         let res = await deleteCustomer(params);
         if (res.code === '0000') {
           this.$Message.success(res.msg);
-          this.queryCustomerList();
+          this.queryAppointmentList();
         }else {
           this.$Message.error(res.msg);
         }
       },
       handleChange(pageNo){
         this.currentPageNo = pageNo;
-        this.queryCustomerList();
+        this.queryAppointmentList();
       },
       handlePageSizeChange(pageSize){
         this.pageSize = pageSize;
-        this.queryCustomerList();
+        this.queryAppointmentList();
       },
     },
     mounted:async function () {
       this.selectedShopId = localStorage.getItem('selectedShopId');
       this.selectedShopName = localStorage.getItem('selectedShopName');
 
-      //查会员等级
-      this.getAllCustomerMassLevelList();
+      //查预约
+      this.queryAppointmentList();
 
-      //查员工
+      //查员工集合
       this.queryEmployeeList();
 
-      //查顾客
-      this.queryCustomerList();
+      //查顾客集合
+      this.queryShopAllCustomer();
+
+      //查项目集合
+      this.queryProjectList();
 
     }
   }

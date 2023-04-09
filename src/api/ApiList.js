@@ -30,10 +30,18 @@ export const queryRoleList = (params) => POST(baseUrl+'/role/queryRoleList',para
 
 //顾客
 export const queryCustomerList = (params) => POST(baseUrl+'/customer/queryCustomerList',params);
+export const queryShopAllCustomer = (params) => POST(baseUrl+'/customer/queryShopAllCustomer',params);
 export const addCustomer = (params) => POST(baseUrl+'/customer/addCustomer',params);
 export const updateCustomer = (params) => POST(baseUrl+'/customer/updateCustomer',params);
 export const deleteCustomer = (params) => POST(baseUrl+'/customer/deleteCustomer',params);
 export const getAllCustomerMassLevelList = (params) => POST(baseUrl+'/customer/getAllCustomerMassLevelList',params);
+
+//预约
+export const queryAppointmentList = (params) => POST(baseUrl+'/appointment/queryAppointmentList',params);
+export const addAppointment = (params) => POST(baseUrl+'/appointment/addAppointment',params);
+export const updateAppointment = (params) => POST(baseUrl+'/appointment/updateAppointment',params);
+
+
 
 
 
