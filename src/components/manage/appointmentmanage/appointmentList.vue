@@ -35,24 +35,27 @@
     </Row>
 
     <!--添加预约弹框-->
-    <confirmModal ref="addCustomerModalRef" modal-title="添加预约:" :modal-width="600" @handleSubmit="addCustomer()">
-      <Form ref="addCustomerFormRef" :model="addCustomerForm" :label-width="100" @submit.native.prevent>
-        <FormItem label="预约姓名" prop="customerName" required>
-          <Input type="text" v-model="addCustomerForm.customerName"></Input>
+    <confirmModal ref="addAppointmentModalRef" modal-title="添加预约:" :modal-width="600" @handleSubmit="addAppointment()">
+      <Form ref="addAppointmentFormRef" :model="addAppointmentForm" :label-width="100" @submit.native.prevent>
+        <FormItem label="顾客手机号码" prop="phoneNumber" required>
+          <Input type="text" v-model="addAppointmentForm.phoneNumber" :maxlength="11" style="width: 200px"></Input>
         </FormItem>
-        <FormItem label="预约性别" prop="sex" required>
-          <Select v-model="addCustomerForm.sex" style="width:100px">
+        <FormItem label="顾客姓名" prop="customerName" required>
+          <Input type="text" v-model="addAppointmentForm.customerName" style="width: 200px"></Input>
+        </FormItem>
+        <FormItem label="顾客性别" prop="sex" required>
+          <Select v-model="addAppointmentForm.sex" style="width:100px">
             <Option v-for="item in sexList" :value="item.value" :key="item.value">{{ item.label }}</Option>
           </Select>
         </FormItem>
-        <FormItem label="预约手机号码" prop="phoneNumber" required>
-          <Input type="text" v-model="addCustomerForm.phoneNumber" :maxlength="11"></Input>
+        <FormItem label="预约日期" prop="appointmentDate" required>
+          <DatePicker type="date" v-model="addAppointmentForm.appointmentDate" placeholder="请选择" style="width: 200px" format="yyyy-MM-dd"/>
         </FormItem>
-        <FormItem label="生日日期" prop="birthday" required>
-          <DatePicker type="date" v-model="addCustomerForm.birthday" placeholder="请选择" style="width: 200px" format="yyyy-MM-dd"/>
+        <FormItem label="预约时间" prop="appointmentTime" required>
+          <TimePicker format="HH:mm" v-model="addAppointmentForm.appointmentTime" placeholder="请选择" style="width: 100px" />
         </FormItem>
         <FormItem label="所属员工" prop="belongToEmployeeId" required>
-          <Select v-model="addCustomerForm.belongToEmployeeId" style="width:100px">
+          <Select v-model="addAppointmentForm.belongToEmployeeId" style="width:100px">
             <Option v-for="item in employeeList" :value="item.employeeId" :key="item.employeeId">{{ item.employeeName }}</Option>
           </Select>
         </FormItem>
@@ -60,24 +63,27 @@
     </confirmModal>
 
     <!--修改预约弹框-->
-    <confirmModal ref="updateCustomerModalRef" modal-title="修改预约:" :modal-width="600" @handleSubmit="updateCustomer()">
-      <Form ref="updateCustomerFormRef" :model="updateCustomerForm" :label-width="100" @submit.native.prevent>
-        <FormItem label="预约姓名" prop="customerName" required>
-          <Input type="text" v-model="updateCustomerForm.customerName"></Input>
+    <confirmModal ref="updateAppointmentModalRef" modal-title="修改预约:" :modal-width="600" @handleSubmit="updateAppointment()">
+      <Form ref="updateAppointmentFormRef" :model="updateAppointmentForm" :label-width="100" @submit.native.prevent>
+        <FormItem label="顾客手机号码" prop="phoneNumber" required>
+          <Input type="text" v-model="updateAppointmentForm.phoneNumber" :maxlength="11" style="width: 200px"></Input>
         </FormItem>
-        <FormItem label="预约性别" prop="sex" required>
-          <Select v-model="updateCustomerForm.sex" style="width:100px">
+        <FormItem label="顾客姓名" prop="customerName" required>
+          <Input type="text" v-model="updateAppointmentForm.customerName" style="width: 200px"></Input>
+        </FormItem>
+        <FormItem label="顾客性别" prop="sex" required>
+          <Select v-model="updateAppointmentForm.sex" style="width:100px">
             <Option v-for="item in sexList" :value="item.value" :key="item.value">{{ item.label }}</Option>
           </Select>
         </FormItem>
-        <FormItem label="预约手机号码" prop="phoneNumber" required>
-          <Input type="text" v-model="updateCustomerForm.phoneNumber" :maxlength="11"></Input>
+        <FormItem label="预约日期" prop="appointmentDate" required>
+          <DatePicker type="date" v-model="updateAppointmentForm.appointmentDate" placeholder="请选择" style="width: 200px" format="yyyy-MM-dd"/>
         </FormItem>
-        <FormItem label="生日日期" prop="birthday" required>
-          <DatePicker type="date" v-model="updateCustomerForm.birthday" placeholder="请选择" style="width: 200px" format="yyyy-MM-dd"/>
+        <FormItem label="预约时间" prop="appointmentTime" required>
+          <TimePicker format="HH:mm" v-model="updateAppointmentForm.appointmentTime" placeholder="请选择" style="width: 100px" />
         </FormItem>
         <FormItem label="所属员工" prop="belongToEmployeeId" required>
-          <Select v-model="updateCustomerForm.belongToEmployeeId" style="width:100px">
+          <Select v-model="updateAppointmentForm.belongToEmployeeId" style="width:100px">
             <Option v-for="item in employeeList" :value="item.employeeId" :key="item.employeeId">{{ item.employeeName }}</Option>
           </Select>
         </FormItem>
@@ -95,7 +101,7 @@
 <script>
   import { formatDate_yyyyMMdd,formatStrDate_yymmddHHmmss,validateEmpty,validatePhoneNumber,formatAmount,addDays,formatHumanSexByNumber} from "../../../tools";
   import {queryAppointmentList,queryShopAllCustomer,queryProjectList,queryAppointmentStatusList,
-    addAppointment,updateAppointment,queryEmployeeList,addCustomer,updateCustomer,zuofeiAppointment} from "../../../api/ApiList";
+    addAppointment,updateAppointment,queryEmployeeList,zuofeiAppointment} from "../../../api/ApiList";
   import confirmModal from "../../utils/modal/confirmModal";
 
   export default {
@@ -120,21 +126,21 @@
         customerList:[],
         projectList:[],
         appointmentStatusList:[],
-        addCustomerForm:{
+        addAppointmentForm:{
+          phoneNumber:"",
           customerName:"",
           sex:"",
-          phoneNumber:"",
-          birthday:"",
-          customerMassLevel:"",
+          appointmentDate:"",
+          appointmentTime:"",
           belongToEmployeeId:"",
         },
-        updateCustomerForm:{
-          customerId:"",
+        updateAppointmentForm:{
+          appointmentId:"",
+          phoneNumber:"",
           customerName:"",
           sex:"",
-          phoneNumber:"",
-          birthday:"",
-          customerMassLevel:"",
+          appointmentDate:"",
+          appointmentTime:"",
           belongToEmployeeId:"",
         },
         zuofeiAppointmentForm:{
@@ -449,18 +455,18 @@
       },
       // 显示添加预约弹框
       showAddModal:function(){
-        this.$refs.addCustomerModalRef.showModal();
+        this.$refs.addAppointmentModalRef.showModal();
       },
       // 显示修改预约弹框
       showUpdateModal:function(index){
-        this.updateCustomerForm.customerId = this.data[index].customerId;
-        this.updateCustomerForm.customerName = this.data[index].customerName;
-        this.updateCustomerForm.sex = this.data[index].sex;
-        this.updateCustomerForm.phoneNumber = this.data[index].phoneNumber;
-        this.updateCustomerForm.birthday = this.data[index].birthday;
-        this.updateCustomerForm.customerMassLevel = this.data[index].customerMassLevel;
-        this.updateCustomerForm.belongToEmployeeId = this.data[index].belongToEmployeeId;
-        this.$refs.updateCustomerModalRef.showModal();
+        this.updateAppointmentForm.customerId = this.data[index].customerId;
+        this.updateAppointmentForm.customerName = this.data[index].customerName;
+        this.updateAppointmentForm.sex = this.data[index].sex;
+        this.updateAppointmentForm.phoneNumber = this.data[index].phoneNumber;
+        this.updateAppointmentForm.birthday = this.data[index].birthday;
+        this.updateAppointmentForm.customerMassLevel = this.data[index].customerMassLevel;
+        this.updateAppointmentForm.belongToEmployeeId = this.data[index].belongToEmployeeId;
+        this.$refs.updateAppointmentModalRef.showModal();
       },
       // 显示作废预约弹框
       showZuofeiModal:function(index){
@@ -469,19 +475,19 @@
         this.$refs.zuofeiAppointmentModalRef.showModal();
       },
       //添加预约
-      addCustomer:async function(){
+      addAppointment:async function(){
         let params = {
           'shopId':this.selectedShopId,
-          'customerName':this.addCustomerForm.customerName,
-          'sex':this.addCustomerForm.sex,
-          'phoneNumber':this.addCustomerForm.phoneNumber,
-          'birthday':this.addCustomerForm.birthday.length!==0 ? new Date(this.addCustomerForm.birthday).getTime() : "",
-          'customerMassLevel':this.addCustomerForm.customerMassLevel,
-          'belongToEmployeeId':this.addCustomerForm.belongToEmployeeId,
+          'phoneNumber':this.addAppointmentForm.phoneNumber,
+          'customerName':this.addAppointmentForm.customerName,
+          'sex':this.addAppointmentForm.sex,
+          'appointmentDate':this.addAppointmentForm.appointmentDate,
+          'appointmentTime':this.addAppointmentForm.appointmentTime,
+          'belongToEmployeeId':this.addAppointmentForm.belongToEmployeeId,
         };
-        let res = await addCustomer(params);
+        let res = await addAppointment(params);
         if (res.code === '0000') {
-          this.$refs.addCustomerFormRef.resetFields();
+          this.$refs.addAppointmentFormRef.resetFields();
           this.$Message.success(res.msg);
           this.queryAppointmentList();
         }else {
@@ -489,20 +495,20 @@
         }
       },
       //修改预约
-      updateCustomer:async function () {
+      updateAppointment:async function () {
         let params = {
-          'customerId':this.updateCustomerForm.customerId,
+          'customerId':this.updateAppointmentForm.customerId,
           'shopId':this.selectedShopId,
-          'customerName':this.updateCustomerForm.customerName,
-          'sex':this.updateCustomerForm.sex,
-          'phoneNumber':this.updateCustomerForm.phoneNumber,
-          'birthday':this.updateCustomerForm.birthday.length!==0 ? new Date(this.updateCustomerForm.birthday).getTime() : "",
-          'customerMassLevel':this.updateCustomerForm.customerMassLevel,
-          'belongToEmployeeId':this.updateCustomerForm.belongToEmployeeId,
+          'customerName':this.updateAppointmentForm.customerName,
+          'sex':this.updateAppointmentForm.sex,
+          'phoneNumber':this.updateAppointmentForm.phoneNumber,
+          'birthday':this.updateAppointmentForm.birthday.length!==0 ? new Date(this.updateAppointmentForm.birthday).getTime() : "",
+          'customerMassLevel':this.updateAppointmentForm.customerMassLevel,
+          'belongToEmployeeId':this.updateAppointmentForm.belongToEmployeeId,
         };
-        let res = await updateCustomer(params);
+        let res = await updateAppointment(params);
         if (res.code === '0000') {
-          this.$refs.updateCustomerFormRef.resetFields();
+          this.$refs.updateAppointmentFormRef.resetFields();
           this.$Message.success(res.msg);
           this.queryAppointmentList();
         }else {

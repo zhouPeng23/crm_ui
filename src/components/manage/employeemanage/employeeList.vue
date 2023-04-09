@@ -26,7 +26,7 @@
     <confirmModal ref="addEmployeeModalRef" modal-title="添加员工:" :modal-width="600" @handleSubmit="addEmployee()">
       <Form ref="addEmployeeFormRef" :model="addEmployeeForm" :label-width="100" @submit.native.prevent>
         <FormItem label="员工姓名" prop="employeeName" required>
-          <Input type="text" v-model="addEmployeeForm.employeeName"></Input>
+          <Input type="text" v-model="addEmployeeForm.employeeName" style="width: 200px"></Input>
         </FormItem>
         <FormItem label="员工性别" prop="sex" required>
           <Select v-model="addEmployeeForm.sex" style="width:100px">
@@ -34,7 +34,7 @@
           </Select>
         </FormItem>
         <FormItem label="员工手机号码" prop="phoneNumber" required>
-          <Input type="text" v-model="addEmployeeForm.phoneNumber" :maxlength="11"></Input>
+          <Input type="text" v-model="addEmployeeForm.phoneNumber" :maxlength="11" style="width: 200px"></Input>
         </FormItem>
         <FormItem label="生日日期" prop="birthday">
           <DatePicker type="date" v-model="addEmployeeForm.birthday" placeholder="请选择" style="width: 200px" format="yyyy-MM-dd"/>
@@ -51,7 +51,7 @@
     <confirmModal ref="updateEmployeeModalRef" modal-title="修改员工:" :modal-width="600" @handleSubmit="updateEmployee()">
       <Form ref="updateEmployeeFormRef" :model="updateEmployeeForm" :label-width="100" @submit.native.prevent>
         <FormItem label="员工姓名" prop="employeeName" required>
-          <Input type="text" v-model="updateEmployeeForm.employeeName"></Input>
+          <Input type="text" v-model="updateEmployeeForm.employeeName" style="width: 200px"></Input>
         </FormItem>
         <FormItem label="员工性别" prop="sex" required>
           <Select v-model="updateEmployeeForm.sex" style="width:100px">
@@ -59,7 +59,7 @@
           </Select>
         </FormItem>
         <FormItem label="员工手机号码" prop="phoneNumber" required>
-          <Input type="text" v-model="updateEmployeeForm.phoneNumber" :maxlength="11"></Input>
+          <Input type="text" v-model="updateEmployeeForm.phoneNumber" :maxlength="11" style="width: 200px"></Input>
         </FormItem>
         <FormItem label="生日日期" prop="birthday">
           <DatePicker type="date" v-model="updateEmployeeForm.birthday" placeholder="请选择" style="width: 200px" format="yyyy-MM-dd"/>

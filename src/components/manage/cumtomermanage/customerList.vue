@@ -43,7 +43,7 @@
     <confirmModal ref="addCustomerModalRef" modal-title="添加顾客:" :modal-width="600" @handleSubmit="addCustomer()">
       <Form ref="addCustomerFormRef" :model="addCustomerForm" :label-width="100" @submit.native.prevent>
         <FormItem label="顾客姓名" prop="customerName" required>
-          <Input type="text" v-model="addCustomerForm.customerName"></Input>
+          <Input type="text" v-model="addCustomerForm.customerName" style="width: 200px"></Input>
         </FormItem>
         <FormItem label="顾客性别" prop="sex" required>
           <Select v-model="addCustomerForm.sex" style="width:100px">
@@ -51,7 +51,7 @@
           </Select>
         </FormItem>
         <FormItem label="顾客手机号码" prop="phoneNumber" required>
-          <Input type="text" v-model="addCustomerForm.phoneNumber" :maxlength="11"></Input>
+          <Input type="text" v-model="addCustomerForm.phoneNumber" :maxlength="11" style="width: 200px"></Input>
         </FormItem>
         <FormItem label="生日日期" prop="birthday">
           <DatePicker type="date" v-model="addCustomerForm.birthday" placeholder="请选择" style="width: 200px" format="yyyy-MM-dd"/>
@@ -73,7 +73,7 @@
     <confirmModal ref="updateCustomerModalRef" modal-title="修改顾客:" :modal-width="600" @handleSubmit="updateCustomer()">
       <Form ref="updateCustomerFormRef" :model="updateCustomerForm" :label-width="100" @submit.native.prevent>
         <FormItem label="顾客姓名" prop="customerName" required>
-          <Input type="text" v-model="updateCustomerForm.customerName"></Input>
+          <Input type="text" v-model="updateCustomerForm.customerName" style="width: 200px"></Input>
         </FormItem>
         <FormItem label="顾客性别" prop="sex" required>
           <Select v-model="updateCustomerForm.sex" style="width:100px">
@@ -81,7 +81,7 @@
           </Select>
         </FormItem>
         <FormItem label="顾客手机号码" prop="phoneNumber" required>
-          <Input type="text" v-model="updateCustomerForm.phoneNumber" :maxlength="11"></Input>
+          <Input type="text" v-model="updateCustomerForm.phoneNumber" :maxlength="11" style="width: 200px"></Input>
         </FormItem>
         <FormItem label="生日日期" prop="birthday">
           <DatePicker type="date" v-model="updateCustomerForm.birthday" placeholder="请选择" style="width: 200px" format="yyyy-MM-dd"/>

@@ -36,22 +36,22 @@
     <confirmModal ref="addShopModalRef" modal-title="添加门店:" :modal-width="600" @handleSubmit="addShop()">
       <Form ref="addShopFormRef" :model="addShopForm" :label-width="100" @submit.native.prevent>
         <FormItem label="门店名称" prop="shopName" required>
-          <Input type="text" v-model="addShopForm.shopName"></Input>
+          <Input type="text" v-model="addShopForm.shopName" style="width: 200px"></Input>
         </FormItem>
         <FormItem label="门店位置" prop="shopWeizhi" required>
           <Input type="text" v-model="addShopForm.shopWeizhi"></Input>
         </FormItem>
         <FormItem label="门店经营类型" prop="shopJingyingType" required>
-          <Input type="text" v-model="addShopForm.shopJingyingType"></Input>
+          <Input type="text" v-model="addShopForm.shopJingyingType" style="width: 200px"></Input>
         </FormItem>
         <FormItem label="门店经营品牌" prop="shopJingyingBrand" required>
-          <Input type="text" v-model="addShopForm.shopJingyingBrand"></Input>
+          <Input type="text" v-model="addShopForm.shopJingyingBrand" style="width: 200px"></Input>
         </FormItem>
         <FormItem label="门店开业日期" prop="shopOpeningDate" required>
           <DatePicker type="date" v-model="addShopForm.shopOpeningDate" placeholder="请选择" style="width: 200px" format="yyyy-MM-dd"/>
         </FormItem>
         <FormItem label="店长姓名" prop="shopLeaderName" required>
-          <Input type="text" v-model="addShopForm.shopLeaderName"></Input>
+          <Input type="text" v-model="addShopForm.shopLeaderName" style="width: 200px"></Input>
         </FormItem>
         <FormItem label="店长性别" prop="shopLeaderSex" required>
           <Select v-model="addShopForm.shopLeaderSex" style="width:100px">
@@ -59,7 +59,7 @@
           </Select>
         </FormItem>
         <FormItem label="店长手机号" prop="shopLeaderPhoneNumber" required>
-          <Input type="text" v-model="addShopForm.shopLeaderPhoneNumber" :maxlength="11"></Input>
+          <Input type="text" v-model="addShopForm.shopLeaderPhoneNumber" :maxlength="11" style="width: 200px"></Input>
         </FormItem>
       </Form>
     </confirmModal>
@@ -68,22 +68,22 @@
     <confirmModal ref="updateShopModalRef" modal-title="修改门店:" :modal-width="600" @handleSubmit="updateShop()">
       <Form ref="updateShopFormRef" :model="updateShopForm" :label-width="100" @submit.native.prevent>
         <FormItem label="门店名称" prop="shopName" required>
-          <Input type="text" v-model="updateShopForm.shopName"></Input>
+          <Input type="text" v-model="updateShopForm.shopName" style="width: 200px"></Input>
         </FormItem>
         <FormItem label="门店位置" prop="shopWeizhi" required>
           <Input type="text" v-model="updateShopForm.shopWeizhi"></Input>
         </FormItem>
         <FormItem label="门店经营类型" prop="shopJingyingType" required>
-          <Input type="text" v-model="updateShopForm.shopJingyingType"></Input>
+          <Input type="text" v-model="updateShopForm.shopJingyingType" style="width: 200px"></Input>
         </FormItem>
         <FormItem label="门店经营品牌" prop="shopJingyingBrand" required>
-          <Input type="text" v-model="updateShopForm.shopJingyingBrand"></Input>
+          <Input type="text" v-model="updateShopForm.shopJingyingBrand" style="width: 200px"></Input>
         </FormItem>
         <FormItem label="门店开业日期" prop="shopOpeningDate" required>
           <DatePicker type="date" v-model="updateShopForm.shopOpeningDate" placeholder="请选择" style="width: 200px" format="yyyy-MM-dd"/>
         </FormItem>
         <FormItem label="店长姓名" prop="shopLeaderName" required>
-          <Input type="text" v-model="updateShopForm.shopLeaderName"></Input>
+          <Input type="text" v-model="updateShopForm.shopLeaderName" style="width: 200px"></Input>
         </FormItem>
         <FormItem label="店长性别" prop="shopLeaderSex" required>
           <Select v-model="updateShopForm.shopLeaderSex" style="width:100px">
@@ -91,7 +91,7 @@
           </Select>
         </FormItem>
         <FormItem label="店长手机号" prop="shopLeaderPhoneNumber" required>
-          <Input type="text" v-model="updateShopForm.shopLeaderPhoneNumber" :maxlength="11"></Input>
+          <Input type="text" v-model="updateShopForm.shopLeaderPhoneNumber" :maxlength="11" style="width: 200px"></Input>
         </FormItem>
       </Form>
     </confirmModal>
