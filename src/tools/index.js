@@ -37,54 +37,38 @@ export function validatePassword(password) {
 
 
 /**
- * 将毫秒字符串转为日期类型
- * @param str
- * @returns {string}
- */
-export function millisecondFormatDate_yymmddHHmmss(str) {
-  if (str==null || str.length===0){
-    return "";
-  }else{
-    let oDate = new Date(str);
-    let oYear = oDate.getFullYear();
-    let oMonth = oDate.getMonth()+1;
-    let oDay = oDate.getDate();
-    let oHour = oDate.getHours();
-    let oMin = oDate.getMinutes();
-    let oSen = oDate.getSeconds();
-    return oYear +'-'+ addZero(oMonth) +'-'+ addZero(oDay) +' '+ addZero(oHour) +':'+ addZero(oMin) +':'+addZero(oSen);
-  }
-}
-
-
-/**
- * 将毫秒字符串转为日期类型
- * @param str
- * @returns {string}
- */
-export function millisecondFormatDate_yymmdd(str) {
-  if (str==null || str.length===0){
-    return "";
-  }else{
-    let oDate = new Date(str);
-    let oYear = oDate.getFullYear();
-    let oMonth = oDate.getMonth()+1;
-    let oDay = oDate.getDate();
-    return oYear +'-'+ addZero(oMonth) +'-'+ addZero(oDay);
-  }
-}
-
-
-/**
- * 将日期格式化为 yyyy-MM-dd
+ * 将"日期"格式化为 yyyy-MM-dd
  * @param date
  * @returns {string}
  */
 export function formatDate_yyyyMMdd(date) {
+  if (!validateEmpty(date)) {
+    return "";
+  }
   const year = date.getFullYear();
   const month = (date.getMonth() + 1).toString().padStart(2, '0');
   const day = date.getDate().toString().padStart(2, '0');
   return `${year}-${month}-${day}`;
+}
+
+
+/**
+ * 将"字符串"日期格式化为 yyyy-MM-dd HH:mm:ss
+ * @param str
+ * @returns {string}
+ */
+export function formatStrDate_yymmddHHmmss(str) {
+  if (!validateEmpty(str)) {
+    return "";
+  }
+  const date = new Date(str);
+  const year = date.getFullYear();
+  const month = (date.getMonth() + 1).toString().padStart(2, '0');
+  const day = date.getDate().toString().padStart(2, '0');
+  const hours = date.getHours().toString().padStart(2, '0');
+  const minutes = date.getMinutes().toString().padStart(2, '0');
+  const seconds = date.getSeconds().toString().padStart(2, '0');
+  return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
 }
 
 

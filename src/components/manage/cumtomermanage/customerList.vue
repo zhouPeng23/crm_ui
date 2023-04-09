@@ -108,7 +108,7 @@
 </template>
 
 <script>
-  import { millisecondFormatDate_yymmddHHmmss,millisecondFormatDate_yymmdd,formatHumanSexByNumber} from "../../../tools";
+  import { formatDate_yyyyMMdd,formatStrDate_yymmddHHmmss,validateEmpty,formatHumanSexByNumber} from "../../../tools";
   import {queryEmployeeList,getAllCustomerMassLevelList,queryCustomerList,addCustomer,deleteCustomer,updateCustomer} from "../../../api/ApiList";
   import confirmModal from "../../utils/modal/confirmModal";
 
@@ -198,7 +198,7 @@
             width: 200,
             render: (h,params)=>{
               return h('div',
-                millisecondFormatDate_yymmdd(params.row.birthday)
+                params.row.birthday
               )
             }
           },
@@ -238,7 +238,7 @@
             width: 200,
             render: (h,params)=>{
               return h('div',
-                millisecondFormatDate_yymmddHHmmss(params.row.createTime)
+                formatStrDate_yymmddHHmmss(params.row.createTime)
               )
             }
           },
@@ -253,7 +253,7 @@
             width: 200,
             render: (h,params)=>{
               return h('div',
-                millisecondFormatDate_yymmddHHmmss(params.row.updateTime)
+                formatStrDate_yymmddHHmmss(params.row.updateTime)
               )
             }
           },
@@ -357,7 +357,7 @@
         this.updateCustomerForm.customerName = this.data[index].customerName;
         this.updateCustomerForm.sex = this.data[index].sex;
         this.updateCustomerForm.phoneNumber = this.data[index].phoneNumber;
-        this.updateCustomerForm.birthday = millisecondFormatDate_yymmdd(this.data[index].birthday);
+        this.updateCustomerForm.birthday = this.data[index].birthday;
         this.updateCustomerForm.customerMassLevel = this.data[index].customerMassLevel;
         this.updateCustomerForm.belongToEmployeeId = this.data[index].belongToEmployeeId;
         this.$refs.updateCustomerModalRef.showModal();
@@ -370,15 +370,30 @@
       },
       //添加顾客
       addCustomer:async function(){
-        let params = {
-          'shopId':this.selectedShopId,
-          'customerName':this.addCustomerForm.customerName,
-          'sex':this.addCustomerForm.sex,
-          'phoneNumber':this.addCustomerForm.phoneNumber,
-          'birthday':this.addCustomerForm.birthday.length!==0 ? new Date(this.addCustomerForm.birthday).getTime() : "",
-          'customerMassLevel':this.addCustomerForm.customerMassLevel,
-          'belongToEmployeeId':this.addCustomerForm.belongToEmployeeId,
-        };
+        let params = {};
+        //生日日期特殊处理，分两种情况
+        if (!validateEmpty(this.addCustomerForm.birthday)) {
+          params = {
+            'shopId':this.selectedShopId,
+            'customerName':this.addCustomerForm.customerName,
+            'sex':this.addCustomerForm.sex,
+            'phoneNumber':this.addCustomerForm.phoneNumber,
+            //生日为空就不传生日字段
+            'customerMassLevel':this.addCustomerForm.customerMassLevel,
+            'belongToEmployeeId':this.addCustomerForm.belongToEmployeeId,
+          };
+        }else {
+          params = {
+            'shopId':this.selectedShopId,
+            'customerName':this.addCustomerForm.customerName,
+            'sex':this.addCustomerForm.sex,
+            'phoneNumber':this.addCustomerForm.phoneNumber,
+            'birthday':formatDate_yyyyMMdd(this.addCustomerForm.birthday),
+            'customerMassLevel':this.addCustomerForm.customerMassLevel,
+            'belongToEmployeeId':this.addCustomerForm.belongToEmployeeId,
+          };
+        }
+
         let res = await addCustomer(params);
         if (res.code === '0000') {
           this.$refs.addCustomerFormRef.resetFields();
@@ -390,16 +405,32 @@
       },
       //修改顾客
       updateCustomer:async function () {
-        let params = {
-          'customerId':this.updateCustomerForm.customerId,
-          'shopId':this.selectedShopId,
-          'customerName':this.updateCustomerForm.customerName,
-          'sex':this.updateCustomerForm.sex,
-          'phoneNumber':this.updateCustomerForm.phoneNumber,
-          'birthday':this.updateCustomerForm.birthday.length!==0 ? new Date(this.updateCustomerForm.birthday).getTime() : "",
-          'customerMassLevel':this.updateCustomerForm.customerMassLevel,
-          'belongToEmployeeId':this.updateCustomerForm.belongToEmployeeId,
-        };
+        let params = {};
+        //生日日期特殊处理，分两种情况
+        if (!validateEmpty(this.updateCustomerForm.birthday)) {
+          params = {
+            'customerId':this.updateCustomerForm.customerId,
+            'shopId':this.selectedShopId,
+            'customerName':this.updateCustomerForm.customerName,
+            'sex':this.updateCustomerForm.sex,
+            'phoneNumber':this.updateCustomerForm.phoneNumber,
+            //生日为空就不传生日字段
+            'customerMassLevel':this.updateCustomerForm.customerMassLevel,
+            'belongToEmployeeId':this.updateCustomerForm.belongToEmployeeId,
+          };
+        }else {
+          params = {
+            'customerId':this.updateCustomerForm.customerId,
+            'shopId':this.selectedShopId,
+            'customerName':this.updateCustomerForm.customerName,
+            'sex':this.updateCustomerForm.sex,
+            'phoneNumber':this.updateCustomerForm.phoneNumber,
+            'birthday':formatDate_yyyyMMdd(this.updateCustomerForm.birthday),
+            'customerMassLevel':this.updateCustomerForm.customerMassLevel,
+            'belongToEmployeeId':this.updateCustomerForm.belongToEmployeeId,
+          };
+        }
+
         let res = await updateCustomer(params);
         if (res.code === '0000') {
           this.$refs.updateCustomerFormRef.resetFields();

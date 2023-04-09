@@ -105,7 +105,7 @@
 </template>
 
 <script>
-    import { millisecondFormatDate_yymmddHHmmss,millisecondFormatDate_yymmdd ,formatHumanSexByNumber} from "../../../tools";
+    import { formatDate_yyyyMMdd,formatStrDate_yymmddHHmmss ,validateEmpty,formatHumanSexByNumber} from "../../../tools";
     import {queryShopList,addShop,deleteShop,updateShop} from "../../../api/ApiList";
     import confirmModal from "../../utils/modal/confirmModal";
 
@@ -185,7 +185,7 @@
               width: 200,
               render: (h,params)=>{
                 return h('div',
-                  millisecondFormatDate_yymmdd(params.row.shopOpeningDate)
+                  params.row.shopOpeningDate
                 )
               }
             },
@@ -220,7 +220,7 @@
               width: 200,
               render: (h,params)=>{
                 return h('div',
-                  millisecondFormatDate_yymmddHHmmss(params.row.createTime)
+                  formatStrDate_yymmddHHmmss(params.row.createTime)
                 )
               }
             },
@@ -235,7 +235,7 @@
               width: 200,
               render: (h,params)=>{
                 return h('div',
-                  millisecondFormatDate_yymmddHHmmss(params.row.updateTime)
+                  formatStrDate_yymmddHHmmss(params.row.updateTime)
                 )
               }
             },
@@ -272,7 +272,7 @@
           this.updateShopForm.shopWeizhi = this.data[index].shopWeizhi;
           this.updateShopForm.shopJingyingType = this.data[index].shopJingyingType;
           this.updateShopForm.shopJingyingBrand = this.data[index].shopJingyingBrand;
-          this.updateShopForm.shopOpeningDate = millisecondFormatDate_yymmdd(this.data[index].shopOpeningDate);
+          this.updateShopForm.shopOpeningDate = this.data[index].shopOpeningDate;
           this.updateShopForm.shopLeaderName = this.data[index].shopLeaderName;
           this.updateShopForm.shopLeaderSex = this.data[index].shopLeaderSex;
           this.updateShopForm.shopLeaderPhoneNumber = this.data[index].shopLeaderPhoneNumber;
@@ -298,16 +298,32 @@
         },
         //添加门店
         addShop:async function(){
-          let params = {
-            'shopName':this.addShopForm.shopName,
-            'shopWeizhi':this.addShopForm.shopWeizhi,
-            'shopJingyingType':this.addShopForm.shopJingyingType,
-            'shopJingyingBrand':this.addShopForm.shopJingyingBrand,
-            'shopOpeningDate':this.addShopForm.shopOpeningDate.length!==0 ? new Date(this.addShopForm.shopOpeningDate).getTime() : "",
-            'shopLeaderName':this.addShopForm.shopLeaderName,
-            'shopLeaderSex':this.addShopForm.shopLeaderSex,
-            'shopLeaderPhoneNumber':this.addShopForm.shopLeaderPhoneNumber,
-          };
+          let params = {};
+          //开业日期特殊处理，分两种情况
+          if (!validateEmpty(this.addShopForm.shopOpeningDate)) {
+            params = {
+              'shopName':this.addShopForm.shopName,
+              'shopWeizhi':this.addShopForm.shopWeizhi,
+              'shopJingyingType':this.addShopForm.shopJingyingType,
+              'shopJingyingBrand':this.addShopForm.shopJingyingBrand,
+              //开业日期为空就不传该字段
+              'shopLeaderName':this.addShopForm.shopLeaderName,
+              'shopLeaderSex':this.addShopForm.shopLeaderSex,
+              'shopLeaderPhoneNumber':this.addShopForm.shopLeaderPhoneNumber,
+            };
+          }else {
+            params = {
+              'shopName':this.addShopForm.shopName,
+              'shopWeizhi':this.addShopForm.shopWeizhi,
+              'shopJingyingType':this.addShopForm.shopJingyingType,
+              'shopJingyingBrand':this.addShopForm.shopJingyingBrand,
+              'shopOpeningDate':formatDate_yyyyMMdd(this.addShopForm.shopOpeningDate),
+              'shopLeaderName':this.addShopForm.shopLeaderName,
+              'shopLeaderSex':this.addShopForm.shopLeaderSex,
+              'shopLeaderPhoneNumber':this.addShopForm.shopLeaderPhoneNumber,
+            };
+          }
+
           let res = await addShop(params);
           if (res.code === '0000') {
             this.$refs.addShopFormRef.resetFields();
@@ -319,17 +335,34 @@
         },
         //修改门店
         updateShop:async function () {
-          let params = {
-            'shopId':this.updateShopForm.shopId,
-            'shopName':this.updateShopForm.shopName,
-            'shopWeizhi':this.updateShopForm.shopWeizhi,
-            'shopJingyingType':this.updateShopForm.shopJingyingType,
-            'shopJingyingBrand':this.updateShopForm.shopJingyingBrand,
-            'shopOpeningDate':this.updateShopForm.shopOpeningDate.length!==0 ? new Date(this.updateShopForm.shopOpeningDate).getTime() : "",
-            'shopLeaderName':this.updateShopForm.shopLeaderName,
-            'shopLeaderSex':this.updateShopForm.shopLeaderSex,
-            'shopLeaderPhoneNumber':this.updateShopForm.shopLeaderPhoneNumber,
-          };
+          let params = {};
+          //开业日期特殊处理，分两种情况
+          if (!validateEmpty(this.updateShopForm.shopOpeningDate)) {
+            params = {
+              'shopId':this.updateShopForm.shopId,
+              'shopName':this.updateShopForm.shopName,
+              'shopWeizhi':this.updateShopForm.shopWeizhi,
+              'shopJingyingType':this.updateShopForm.shopJingyingType,
+              'shopJingyingBrand':this.updateShopForm.shopJingyingBrand,
+              //开业日期为空就不传该字段
+              'shopLeaderName':this.updateShopForm.shopLeaderName,
+              'shopLeaderSex':this.updateShopForm.shopLeaderSex,
+              'shopLeaderPhoneNumber':this.updateShopForm.shopLeaderPhoneNumber,
+            };
+          }else{
+            params = {
+              'shopId':this.updateShopForm.shopId,
+              'shopName':this.updateShopForm.shopName,
+              'shopWeizhi':this.updateShopForm.shopWeizhi,
+              'shopJingyingType':this.updateShopForm.shopJingyingType,
+              'shopJingyingBrand':this.updateShopForm.shopJingyingBrand,
+              'shopOpeningDate':formatDate_yyyyMMdd(this.updateShopForm.shopOpeningDate),
+              'shopLeaderName':this.updateShopForm.shopLeaderName,
+              'shopLeaderSex':this.updateShopForm.shopLeaderSex,
+              'shopLeaderPhoneNumber':this.updateShopForm.shopLeaderPhoneNumber,
+            };
+          }
+
           let res = await updateShop(params);
           if (res.code === '0000') {
             this.$refs.updateShopFormRef.resetFields();

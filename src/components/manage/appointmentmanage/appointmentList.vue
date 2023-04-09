@@ -93,7 +93,7 @@
 </template>
 
 <script>
-  import { validateEmpty,validatePhoneNumber,formatAmount,addDays,millisecondFormatDate_yymmddHHmmss,millisecondFormatDate_yymmdd,formatHumanSexByNumber} from "../../../tools";
+  import { formatDate_yyyyMMdd,formatStrDate_yymmddHHmmss,validateEmpty,validatePhoneNumber,formatAmount,addDays,formatHumanSexByNumber} from "../../../tools";
   import {queryAppointmentList,queryShopAllCustomer,queryProjectList,queryAppointmentStatusList,
     addAppointment,updateAppointment,queryEmployeeList,addCustomer,deleteCustomer,updateCustomer} from "../../../api/ApiList";
   import confirmModal from "../../utils/modal/confirmModal";
@@ -235,7 +235,7 @@
             width: 200,
             render: (h,params)=>{
               return h('div',
-                millisecondFormatDate_yymmddHHmmss(params.row.createTime)
+                formatStrDate_yymmddHHmmss(params.row.createTime)
               )
             }
           },
@@ -250,7 +250,7 @@
             width: 200,
             render: (h,params)=>{
               return h('div',
-                millisecondFormatDate_yymmddHHmmss(params.row.updateTime)
+                formatStrDate_yymmddHHmmss(params.row.updateTime)
               )
             }
           },
@@ -286,8 +286,8 @@
             //门店id - 少不了的参数
             'shopId':this.selectedShopId,
             //查询条件
-            'appointmentDateStart':millisecondFormatDate_yymmdd(this.searchAppointmentDateStart),
-            'appointmentDateEnd':millisecondFormatDate_yymmdd(this.searchAppointmentDateEnd),
+            'appointmentDateStart':formatDate_yyyyMMdd(this.searchAppointmentDateStart),
+            'appointmentDateEnd':formatDate_yyyyMMdd(this.searchAppointmentDateEnd),
             'appointmentStatus':this.searchAppointmentStatus,
             //页码
             'pageNo':this.currentPageNo,
@@ -432,7 +432,7 @@
         this.updateCustomerForm.customerName = this.data[index].customerName;
         this.updateCustomerForm.sex = this.data[index].sex;
         this.updateCustomerForm.phoneNumber = this.data[index].phoneNumber;
-        this.updateCustomerForm.birthday = millisecondFormatDate_yymmdd(this.data[index].birthday);
+        this.updateCustomerForm.birthday = this.data[index].birthday;
         this.updateCustomerForm.customerMassLevel = this.data[index].customerMassLevel;
         this.updateCustomerForm.belongToEmployeeId = this.data[index].belongToEmployeeId;
         this.$refs.updateCustomerModalRef.showModal();

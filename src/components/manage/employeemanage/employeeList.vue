@@ -81,7 +81,7 @@
 </template>
 
 <script>
-  import { millisecondFormatDate_yymmddHHmmss,millisecondFormatDate_yymmdd ,formatHumanSexByNumber} from "../../../tools";
+  import { formatDate_yyyyMMdd,formatStrDate_yymmddHHmmss ,validateEmpty,formatHumanSexByNumber} from "../../../tools";
   import {queryRoleList,queryEmployeeList,addEmployee,deleteEmployee,updateEmployee} from "../../../api/ApiList";
   import confirmModal from "../../utils/modal/confirmModal";
 
@@ -156,7 +156,7 @@
             width: 200,
             render: (h,params)=>{
               return h('div',
-                millisecondFormatDate_yymmdd(params.row.birthday)
+                params.row.birthday
               )
             }
           },
@@ -186,7 +186,7 @@
             width: 200,
             render: (h,params)=>{
               return h('div',
-                millisecondFormatDate_yymmddHHmmss(params.row.createTime)
+                formatStrDate_yymmddHHmmss(params.row.createTime)
               )
             }
           },
@@ -201,7 +201,7 @@
             width: 200,
             render: (h,params)=>{
               return h('div',
-                millisecondFormatDate_yymmddHHmmss(params.row.updateTime)
+                formatStrDate_yymmddHHmmss(params.row.updateTime)
               )
             }
           },
@@ -255,7 +255,7 @@
         this.updateEmployeeForm.employeeName = this.data[index].employeeName;
         this.updateEmployeeForm.sex = this.data[index].sex;
         this.updateEmployeeForm.phoneNumber = this.data[index].phoneNumber;
-        this.updateEmployeeForm.birthday = millisecondFormatDate_yymmdd(this.data[index].birthday);
+        this.updateEmployeeForm.birthday = this.data[index].birthday;
         this.updateEmployeeForm.roleId = this.data[index].roleId;
         this.$refs.updateEmployeeModalRef.showModal();
       },
@@ -267,14 +267,28 @@
       },
       //添加员工
       addEmployee:async function(){
-        let params = {
-          'shopId':this.selectedShopId,
-          'employeeName':this.addEmployeeForm.employeeName,
-          'sex':this.addEmployeeForm.sex,
-          'phoneNumber':this.addEmployeeForm.phoneNumber,
-          'birthday':this.addEmployeeForm.birthday.length!==0 ? new Date(this.addEmployeeForm.birthday).getTime() : "",
-          'roleId':this.addEmployeeForm.roleId,
-        };
+        let params = {};
+        //生日日期特殊处理，分两种情况
+        if (!validateEmpty(this.addEmployeeForm.birthday)) {
+          params = {
+            'shopId':this.selectedShopId,
+            'employeeName':this.addEmployeeForm.employeeName,
+            'sex':this.addEmployeeForm.sex,
+            'phoneNumber':this.addEmployeeForm.phoneNumber,
+            //生日为空就不传生日字段
+            'roleId':this.addEmployeeForm.roleId,
+          };
+        }else {
+          params = {
+            'shopId':this.selectedShopId,
+            'employeeName':this.addEmployeeForm.employeeName,
+            'sex':this.addEmployeeForm.sex,
+            'phoneNumber':this.addEmployeeForm.phoneNumber,
+            'birthday':formatDate_yyyyMMdd(this.addEmployeeForm.birthday),
+            'roleId':this.addEmployeeForm.roleId,
+          };
+        }
+
         let res = await addEmployee(params);
         if (res.code === '0000') {
           this.$refs.addEmployeeFormRef.resetFields();
@@ -286,15 +300,30 @@
       },
       //修改员工
       updateEmployee:async function () {
-        let params = {
-          'employeeId':this.updateEmployeeForm.employeeId,
-          'shopId':this.selectedShopId,
-          'employeeName':this.updateEmployeeForm.employeeName,
-          'sex':this.updateEmployeeForm.sex,
-          'phoneNumber':this.updateEmployeeForm.phoneNumber,
-          'birthday':this.updateEmployeeForm.birthday.length!==0 ? new Date(this.updateEmployeeForm.birthday).getTime() : "",
-          'roleId':this.updateEmployeeForm.roleId,
-        };
+        let params = {};
+        //生日日期特殊处理，分两种情况
+        if (!validateEmpty(this.updateEmployeeForm.birthday)) {
+          params = {
+            'employeeId':this.updateEmployeeForm.employeeId,
+            'shopId':this.selectedShopId,
+            'employeeName':this.updateEmployeeForm.employeeName,
+            'sex':this.updateEmployeeForm.sex,
+            'phoneNumber':this.updateEmployeeForm.phoneNumber,
+            //生日为空就不传生日字段
+            'roleId':this.updateEmployeeForm.roleId,
+          };
+        }else {
+          params = {
+            'employeeId':this.updateEmployeeForm.employeeId,
+            'shopId':this.selectedShopId,
+            'employeeName':this.updateEmployeeForm.employeeName,
+            'sex':this.updateEmployeeForm.sex,
+            'phoneNumber':this.updateEmployeeForm.phoneNumber,
+            'birthday':formatDate_yyyyMMdd(this.updateEmployeeForm.birthday),
+            'roleId':this.updateEmployeeForm.roleId,
+          };
+        }
+
         let res = await updateEmployee(params);
         if (res.code === '0000') {
           this.$refs.updateEmployeeFormRef.resetFields();
