@@ -9,6 +9,18 @@ export function validateEmpty(checkStr) {
 
 
 /**
+ * 校验手机号
+ * @param phoneNumber
+ * @returns {boolean}
+ */
+export function validatePhoneNumber(phoneNumber) {
+  // 以1开头，后面跟10位数字，共11位
+  const reg = /^1\d{10}$/;
+  return reg.test(phoneNumber);
+}
+
+
+/**
  * 校验密码格式
  * @param password
  * @returns {boolean}

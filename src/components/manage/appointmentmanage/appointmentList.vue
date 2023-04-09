@@ -7,6 +7,11 @@
       </Col>
       <Col span="20">
         <Input v-model="searchPhoneNumber" placeholder="预约手机号码" clearable style="width: 150px" :maxlength="11"/>
+        <DatePicker type="date" v-model="searchAppointmentDateStart" placeholder="开始日期" style="width: 200px" format="yyyy-MM-dd"/>
+        <DatePicker type="date" v-model="searchAppointmentDateEnd" placeholder="结束日期" style="width: 200px" format="yyyy-MM-dd"/>
+        <Select v-model="searchAppointmentStatus" style="width:100px" clearable>
+          <Option v-for="item in appointmentStatusList" :value="item.code" :key="item.code">{{ item.msg }}</Option>
+        </Select>
         <Button type="primary" shape="circle" icon="ios-search" @click="queryAppointmentList">查询</Button>
         <Button shape="circle" @click="resetQuery">重置</Button>
       </Col>
@@ -19,7 +24,7 @@
             <Row>
               <Col span="6">&nbsp;</Col>
               <Col span="6"><Button type="primary" @click="showUpdateModal(index)">修改</Button></Col>
-              <Col span="6"><Button type="error" @click="showDeleteModal(index)">删除</Button></Col>
+              <Col span="6"><Button type="error" @click="showDeleteModal(index)">作废</Button></Col>
             </Row>
           </template>
         </Table>
@@ -88,8 +93,8 @@
 </template>
 
 <script>
-  import { validateEmpty,formatAmount,millisecondFormatDate_yymmddHHmmss,millisecondFormatDate_yymmdd,formatHumanSexByNumber} from "../../../tools";
-  import {queryAppointmentList,queryShopAllCustomer,queryProjectList,
+  import { validateEmpty,validatePhoneNumber,formatAmount,millisecondFormatDate_yymmddHHmmss,millisecondFormatDate_yymmdd,formatHumanSexByNumber} from "../../../tools";
+  import {queryAppointmentList,queryShopAllCustomer,queryProjectList,queryAppointmentStatusList,
     addAppointment,updateAppointment,queryEmployeeList,addCustomer,deleteCustomer,updateCustomer} from "../../../api/ApiList";
   import confirmModal from "../../utils/modal/confirmModal";
 
@@ -108,11 +113,13 @@
         // 当前页
         currentPageNo:1,
         searchPhoneNumber:"",
-        searchAppointmentDate:"",
+        searchAppointmentDateStart:new Date(),
+        searchAppointmentDateEnd:new Date(),
         searchAppointmentStatus:"",
         employeeList: [],
         customerList:[],
         projectList:[],
+        appointmentStatusList:[],
         addCustomerForm:{
           customerName:"",
           sex:"",
@@ -159,11 +166,21 @@
           },
           {
             title: '性别',
-            key: 'sex',
+            key: 'customerId',
             width: 200,
             render: (h,params)=>{
               return h('div',
                 this.rendSexByCustomerId(params.row.customerId)
+              )
+            }
+          },
+          {
+            title: '手机号',
+            key: 'customerId',
+            width: 200,
+            render: (h,params)=>{
+              return h('div',
+                this.rendPhoneNumberByCustomerId(params.row.customerId)
               )
             }
           },
@@ -250,21 +267,56 @@
     methods:{
       // 查询预约集合
       queryAppointmentList :async function () {
-        if (!validateEmpty(this.searchAppointmentDate)) {
-          //因为是今天写的这个页面，默认值就写今天
-          this.searchAppointmentDate = '2023-04-09';
+        //查询参数
+        let params = {};
+
+        //思路: 手机号如果不为空，则精确查找, 如果为空，则不根据手机号查找，而是根据其他条件查
+        if (!validateEmpty(this.searchPhoneNumber)) {
+          //手机号为空,那么两个日期都必填, 预约状态非必选
+          if (!validateEmpty(this.searchAppointmentDateStart)) {
+            this.$Message.warning("请选择开始日期");
+            return;
+          }
+          if (!validateEmpty(this.searchAppointmentDateEnd)) {
+            this.$Message.warning("请选择结束日期");
+            return;
+          }
+          //组织入参
+          params = {
+            //门店id - 少不了的参数
+            'shopId':this.selectedShopId,
+            //查询条件
+            'appointmentDateStart':millisecondFormatDate_yymmdd(this.searchAppointmentDateStart),
+            'appointmentDateEnd':millisecondFormatDate_yymmdd(this.searchAppointmentDateEnd),
+            'appointmentStatus':this.searchAppointmentStatus,
+            //页码
+            'pageNo':this.currentPageNo,
+            'pageSize':this.pageSize,
+          };
+
+        }else{
+          //手机号不为空，校验格式，必须填入一个完整手机号查
+          if (!validatePhoneNumber(this.searchPhoneNumber)){
+            this.$Message.warning("请输入11位完整手机号");
+            return;
+          }
+          //将其他三个参数置空
+          this.searchAppointmentDateStart = "";
+          this.searchAppointmentDateEnd = "";
+          this.searchAppointmentStatus = "";
+          //组织入参
+          params = {
+            //门店id - 少不了的参数
+            'shopId':this.selectedShopId,
+            //查询条件
+            'phoneNumber':this.searchPhoneNumber,
+            //页码
+            'pageNo':this.currentPageNo,
+            'pageSize':this.pageSize,
+          };
         }
-        let params = {
-          //门店id - 少不了的参数
-          'shopId':this.selectedShopId,
-          //查询条件
-          'phoneNumber':this.searchPhoneNumber,
-          'appointmentDate':this.searchAppointmentDate,
-          'appointmentStatus':this.searchAppointmentStatus,
-          //页码
-          'pageNo':this.currentPageNo,
-          'pageSize':this.pageSize,
-        };
+
+        //查询
         let res = await queryAppointmentList(params);
         this.data = res.data.records;
         this.total = res.data.total;
@@ -301,6 +353,12 @@
         let res = await queryProjectList(params);
         this.projectList = res.data;
       },
+      //查询预约状态集合
+      queryAppointmentStatusList:async function(){
+        let params = {};
+        let res = await queryAppointmentStatusList(params);
+        this.appointmentStatusList = res.data;
+      },
       /**
        * 渲染预约所属员工姓名
        * @param str
@@ -334,6 +392,18 @@
         for(let i = 0; i < this.customerList.length; i++){
           if (str === this.customerList[i].customerId) {
             return formatHumanSexByNumber(this.customerList[i].sex);
+          }
+        }
+      },
+      /**
+       * 渲染顾客手机号
+       * @param str
+       * @returns {string}
+       */
+      rendPhoneNumberByCustomerId : function(str){
+        for(let i = 0; i < this.customerList.length; i++){
+          if (str === this.customerList[i].customerId) {
+            return this.customerList[i].phoneNumber;
           }
         }
       },
@@ -448,6 +518,9 @@
 
       //查项目集合
       this.queryProjectList();
+
+      //查询预约状态集合
+      this.queryAppointmentStatusList();
 
     }
   }
