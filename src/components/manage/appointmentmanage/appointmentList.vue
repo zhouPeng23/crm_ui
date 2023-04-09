@@ -24,7 +24,7 @@
             <Row>
               <Col span="6">&nbsp;</Col>
               <Col span="6"><Button type="primary" @click="showUpdateModal(index)">修改</Button></Col>
-              <Col span="6"><Button type="error" @click="showDeleteModal(index)">作废</Button></Col>
+              <Col span="6"><Button type="error" @click="showZuofeiModal(index)">作废</Button></Col>
             </Row>
           </template>
         </Table>
@@ -84,9 +84,9 @@
       </Form>
     </confirmModal>
 
-    <!--确认删除预约弹框-->
-    <confirmModal ref="deleteCustomerModalRef" modal-title="提示:" :modal-width="260" @handleSubmit="deleteCustomer()">
-      <div style="font-size: 14px;;">确认删除: {{deleteCustomerForm.customerName}} ?</div>
+    <!--确认作废预约弹框-->
+    <confirmModal ref="zuofeiAppointmentModalRef" modal-title="提示:" :modal-width="260" @handleSubmit="zuofeiAppointment()">
+      <div style="font-size: 14px;;">确认作废: “ <span style="color: red">{{zuofeiAppointmentForm.customerName}}</span> ” 的预约单?</div>
     </confirmModal>
 
   </div>
@@ -95,7 +95,7 @@
 <script>
   import { formatDate_yyyyMMdd,formatStrDate_yymmddHHmmss,validateEmpty,validatePhoneNumber,formatAmount,addDays,formatHumanSexByNumber} from "../../../tools";
   import {queryAppointmentList,queryShopAllCustomer,queryProjectList,queryAppointmentStatusList,
-    addAppointment,updateAppointment,queryEmployeeList,addCustomer,deleteCustomer,updateCustomer} from "../../../api/ApiList";
+    addAppointment,updateAppointment,queryEmployeeList,addCustomer,updateCustomer,zuofeiAppointment} from "../../../api/ApiList";
   import confirmModal from "../../utils/modal/confirmModal";
 
   export default {
@@ -137,8 +137,8 @@
           customerMassLevel:"",
           belongToEmployeeId:"",
         },
-        deleteCustomerForm:{
-          customerId:"",
+        zuofeiAppointmentForm:{
+          appointmentId:"",
           customerName:""
         },
         sexList: [
@@ -462,11 +462,11 @@
         this.updateCustomerForm.belongToEmployeeId = this.data[index].belongToEmployeeId;
         this.$refs.updateCustomerModalRef.showModal();
       },
-      // 显示删除预约弹框
-      showDeleteModal:function(index){
-        this.deleteCustomerForm.customerId = this.data[index].customerId;
-        this.deleteCustomerForm.customerName = this.data[index].customerName;
-        this.$refs.deleteCustomerModalRef.showModal();
+      // 显示作废预约弹框
+      showZuofeiModal:function(index){
+        this.zuofeiAppointmentForm.appointmentId = this.data[index].appointmentId;
+        this.zuofeiAppointmentForm.customerName = this.renderCustomerName(this.data[index].customerId);
+        this.$refs.zuofeiAppointmentModalRef.showModal();
       },
       //添加预约
       addCustomer:async function(){
@@ -509,12 +509,12 @@
           this.$Message.error(res.msg);
         }
       },
-      //删除预约
-      deleteCustomer:async function () {
+      //作废预约
+      zuofeiAppointment:async function () {
         let params = {
-          'customerId':this.deleteCustomerForm.customerId
+          'appointmentId':this.zuofeiAppointmentForm.appointmentId
         };
-        let res = await deleteCustomer(params);
+        let res = await zuofeiAppointment(params);
         if (res.code === '0000') {
           this.$Message.success(res.msg);
           this.queryAppointmentList();

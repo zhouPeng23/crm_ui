@@ -40,6 +40,7 @@ export const getAllCustomerMassLevelList = (params) => POST(baseUrl+'/customer/g
 export const queryAppointmentList = (params) => POST(baseUrl+'/appointment/queryAppointmentList',params);
 export const addAppointment = (params) => POST(baseUrl+'/appointment/addAppointment',params);
 export const updateAppointment = (params) => POST(baseUrl+'/appointment/updateAppointment',params);
+export const zuofeiAppointment = (params) => POST(baseUrl+'/appointment/zuofeiAppointment',params);
 export const queryAppointmentStatusList = (params) => POST(baseUrl+'/appointment/queryAppointmentStatusList',params);
 
 
