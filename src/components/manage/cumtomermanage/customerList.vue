@@ -3,7 +3,7 @@
 
     <Row style="margin: 10px 0 10px 0">
       <Col span="4" >
-        <Button type="warning" @click="showAddModal">添加顾客</Button>
+        <Button type="primary" @click="showAddModal">添加顾客</Button>
       </Col>
       <Col span="20">
         <Input v-model="searchCustomerName" placeholder="顾客姓名" clearable style="width: 150px" />

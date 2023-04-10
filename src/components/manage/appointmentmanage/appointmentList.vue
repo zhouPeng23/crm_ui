@@ -3,7 +3,7 @@
 
     <Row style="margin: 10px 0 10px 0">
       <Col span="4" >
-        <Button type="warning" @click="showAddModal">添加预约</Button>
+        <Button type="primary" @click="showAddModal">添加预约</Button>
       </Col>
       <Col span="20">
         <Input v-model="searchPhoneNumber" placeholder="预约手机号码" clearable style="width: 150px" :maxlength="11"/>
