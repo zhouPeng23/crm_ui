@@ -39,11 +39,12 @@
       <Form ref="addAppointmentFormRef" :model="addAppointmentForm" :label-width="100" @submit.native.prevent>
         <FormItem label="顾客手机号码" prop="phoneNumber" required>
           <Input type="text" v-model="addAppointmentForm.phoneNumber" :maxlength="11" style="width: 200px"></Input>
+          <Button type="primary" ghost @click="queryCustomerByPhoneNumber">查询</Button>
         </FormItem>
-        <FormItem label="顾客姓名" prop="customerName" required>
+        <FormItem label="顾客姓名" prop="customerName">
           <Input type="text" v-model="addAppointmentForm.customerName" style="width: 200px"></Input>
         </FormItem>
-        <FormItem label="顾客性别" prop="sex" required>
+        <FormItem label="顾客性别" prop="sex">
           <Select v-model="addAppointmentForm.sex" style="width:100px">
             <Option v-for="item in sexList" :value="item.value" :key="item.value">{{ item.label }}</Option>
           </Select>
@@ -70,13 +71,13 @@
     <!--修改预约弹框-->
     <confirmModal ref="updateAppointmentModalRef" modal-title="修改预约:" :modal-width="600" @handleSubmit="updateAppointment()">
       <Form ref="updateAppointmentFormRef" :model="updateAppointmentForm" :label-width="100" @submit.native.prevent>
-        <FormItem label="顾客手机号码" prop="phoneNumber" required>
+        <FormItem label="顾客手机号码" prop="phoneNumber">
           <Input type="text" v-model="updateAppointmentForm.phoneNumber" :maxlength="11" style="width: 200px" disabled></Input>
         </FormItem>
-        <FormItem label="顾客姓名" prop="customerName" required>
+        <FormItem label="顾客姓名" prop="customerName">
           <Input type="text" v-model="updateAppointmentForm.customerName" style="width: 200px" disabled></Input>
         </FormItem>
-        <FormItem label="顾客性别" prop="sex" required>
+        <FormItem label="顾客性别" prop="sex">
           <Select disabled v-model="updateAppointmentForm.sex" style="width:100px">
             <Option v-for="item in sexList" :value="item.value" :key="item.value">{{ item.label }}</Option>
           </Select>
@@ -115,7 +116,7 @@
 
 <script>
   import { formatDate_yyyyMMdd,formatStrDate_yymmddHHmmss,validateEmpty,validatePhoneNumber,formatAmount,addDays,formatHumanSexByNumber} from "../../../tools";
-  import {queryAppointmentList,queryShopAllCustomer,queryProjectList,queryAppointmentStatusList,
+  import {queryAppointmentList,queryShopAllCustomer,queryProjectList,queryAppointmentStatusList,queryCustomerByPhoneNumber,
     addAppointment,updateAppointment,queryEmployeeList,zuofeiAppointment} from "../../../api/ApiList";
   import confirmModal from "../../utils/modal/confirmModal";
 
@@ -523,6 +524,27 @@
       // 显示添加预约弹框
       showAddModal:function(){
         this.$refs.addAppointmentModalRef.showModal();
+      },
+      /**
+       * 根据手机号查询顾客，如果能查到则补充姓名、性别
+       */
+      queryCustomerByPhoneNumber: async function(){
+        if (!validatePhoneNumber(this.addAppointmentForm.phoneNumber)) {
+          this.$Message.warning("手机号格式错误");
+          return;
+        }
+        let params = {
+          'phoneNumber':this.addAppointmentForm.phoneNumber,
+        };
+        let res = await queryCustomerByPhoneNumber(params);
+        if (!validateEmpty(res.data)) {
+          this.$Message.success("未查询到记录");
+        }else{
+          this.$Message.success("老顾客");
+          //设置顾客名称、性别
+          this.addAppointmentForm.customerName = res.data.customerName;
+          this.addAppointmentForm.sex = res.data.sex;
+        }
       },
       // 显示修改预约弹框
       showUpdateModal:function(index){

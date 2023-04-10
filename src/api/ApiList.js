@@ -35,6 +35,7 @@ export const addCustomer = (params) => POST(baseUrl+'/customer/addCustomer',para
 export const updateCustomer = (params) => POST(baseUrl+'/customer/updateCustomer',params);
 export const deleteCustomer = (params) => POST(baseUrl+'/customer/deleteCustomer',params);
 export const getAllCustomerMassLevelList = (params) => POST(baseUrl+'/customer/getAllCustomerMassLevelList',params);
+export const queryCustomerByPhoneNumber = (params) => POST(baseUrl+'/customer/queryCustomerByPhoneNumber',params);
 
 //预约
 export const queryAppointmentList = (params) => POST(baseUrl+'/appointment/queryAppointmentList',params);
