@@ -54,8 +54,13 @@
         <FormItem label="预约时间" prop="appointmentTime" required>
           <TimePicker format="HH:mm" v-model="addAppointmentForm.appointmentTime" placeholder="请选择" style="width: 100px" />
         </FormItem>
-        <FormItem label="所属员工" prop="belongToEmployeeId" required>
-          <Select v-model="addAppointmentForm.belongToEmployeeId" style="width:100px">
+        <FormItem label="预约项目" prop="projectIds" required>
+          <Select v-model="addAppointmentForm.projectIds" filterable multiple >
+            <Option v-for="item in projectList" :value="item.projectId" :key="item.projectId">{{ item.projectName }}</Option>
+          </Select>
+        </FormItem>
+        <FormItem label="所属员工" prop="employeeId" required>
+          <Select v-model="addAppointmentForm.employeeId" style="width:100px">
             <Option v-for="item in employeeList" :value="item.employeeId" :key="item.employeeId">{{ item.employeeName }}</Option>
           </Select>
         </FormItem>
@@ -82,8 +87,13 @@
         <FormItem label="预约时间" prop="appointmentTime" required>
           <TimePicker format="HH:mm" v-model="updateAppointmentForm.appointmentTime" placeholder="请选择" style="width: 100px" />
         </FormItem>
-        <FormItem label="所属员工" prop="belongToEmployeeId" required>
-          <Select v-model="updateAppointmentForm.belongToEmployeeId" style="width:100px">
+        <FormItem label="预约项目" prop="projectIds" required>
+          <Select v-model="updateAppointmentForm.projectIds" filterable multiple >
+            <Option v-for="item in projectList" :value="item.projectId" :key="item.projectId">{{ item.projectName }}</Option>
+          </Select>
+        </FormItem>
+        <FormItem label="所属员工" prop="employeeId" required>
+          <Select v-model="updateAppointmentForm.employeeId" style="width:100px">
             <Option v-for="item in employeeList" :value="item.employeeId" :key="item.employeeId">{{ item.employeeName }}</Option>
           </Select>
         </FormItem>
@@ -132,7 +142,8 @@
           sex:"",
           appointmentDate:"",
           appointmentTime:"",
-          belongToEmployeeId:"",
+          projectIds:[],
+          employeeId:"",
         },
         updateAppointmentForm:{
           appointmentId:"",
@@ -141,7 +152,8 @@
           sex:"",
           appointmentDate:"",
           appointmentTime:"",
-          belongToEmployeeId:"",
+          projectIds:"",
+          employeeId:"",
         },
         zuofeiAppointmentForm:{
           appointmentId:"",
@@ -214,11 +226,11 @@
           },
           {
             title: '项目',
-            key: 'projectId',
+            key: 'projectIds',
             width: 200,
             render: (h,params)=>{
               return h('div',
-                this.rendProjectName(params.row.projectId)
+                this.rendProjectName(params.row.projectIds)
               )
             }
           },
@@ -448,7 +460,7 @@
        */
       rendProjectName : function(str){
         for(let i = 0; i < this.projectList.length; i++){
-          if (str === this.projectList[i].projectId) {
+          if (str === this.projectList[i].projectId.toString()) {
             return this.projectList[i].projectName;
           }
         }
@@ -465,7 +477,7 @@
         this.updateAppointmentForm.phoneNumber = this.data[index].phoneNumber;
         this.updateAppointmentForm.birthday = this.data[index].birthday;
         this.updateAppointmentForm.customerMassLevel = this.data[index].customerMassLevel;
-        this.updateAppointmentForm.belongToEmployeeId = this.data[index].belongToEmployeeId;
+        this.updateAppointmentForm.employeeId = this.data[index].employeeId;
         this.$refs.updateAppointmentModalRef.showModal();
       },
       // 显示作废预约弹框
@@ -476,14 +488,23 @@
       },
       //添加预约
       addAppointment:async function(){
+        if (!validateEmpty(this.addAppointmentForm.appointmentDate)) {
+          this.$Message.warning("预约日期不能为空");
+          return;
+        }
+        if (!validateEmpty(this.addAppointmentForm.appointmentTime)) {
+          this.$Message.warning("预约时间不能为空");
+          return;
+        }
         let params = {
           'shopId':this.selectedShopId,
           'phoneNumber':this.addAppointmentForm.phoneNumber,
           'customerName':this.addAppointmentForm.customerName,
           'sex':this.addAppointmentForm.sex,
-          'appointmentDate':this.addAppointmentForm.appointmentDate,
-          'appointmentTime':this.addAppointmentForm.appointmentTime,
-          'belongToEmployeeId':this.addAppointmentForm.belongToEmployeeId,
+          'appointmentDate':formatDate_yyyyMMdd(this.addAppointmentForm.appointmentDate),
+          'appointmentTime':this.addAppointmentForm.appointmentTime+":00",
+          'projectIds':this.addAppointmentForm.projectIds.join(","),
+          'employeeId':this.addAppointmentForm.employeeId,
         };
         let res = await addAppointment(params);
         if (res.code === '0000') {
@@ -504,7 +525,7 @@
           'phoneNumber':this.updateAppointmentForm.phoneNumber,
           'birthday':this.updateAppointmentForm.birthday.length!==0 ? new Date(this.updateAppointmentForm.birthday).getTime() : "",
           'customerMassLevel':this.updateAppointmentForm.customerMassLevel,
-          'belongToEmployeeId':this.updateAppointmentForm.belongToEmployeeId,
+          'employeeId':this.updateAppointmentForm.employeeId,
         };
         let res = await updateAppointment(params);
         if (res.code === '0000') {
