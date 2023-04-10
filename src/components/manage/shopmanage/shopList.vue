@@ -380,7 +380,7 @@
         },
         //删除门店
         deleteShop:async function () {
-          if (this.deleteShopForm.shopId === this.selectedShopId) {
+          if (this.deleteShopForm.shopId.toString() === this.selectedShopId) {
             this.$Message.warning("无法删除，门店正在被选择！");
             return;
           }
