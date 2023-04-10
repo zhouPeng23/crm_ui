@@ -269,7 +269,7 @@
           {
             title: '所属员工姓名',
             key: 'employeeId',
-            width: 100,
+            width: 120,
             render: (h,params)=>{
               return h('div',
                 this.renderBelongToEmployeeName(params.row.employeeId)
