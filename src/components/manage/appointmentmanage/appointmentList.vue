@@ -7,12 +7,13 @@
       </Col>
       <Col span="20">
         <Input v-model="searchPhoneNumber" placeholder="预约手机号码" clearable style="width: 150px" :maxlength="11"/>
-        <DatePicker type="date" v-model="searchAppointmentDateStart" placeholder="开始日期" style="width: 200px" format="yyyy-MM-dd"/>
-        <DatePicker type="date" v-model="searchAppointmentDateEnd" placeholder="结束日期" style="width: 200px" format="yyyy-MM-dd"/>
+        <DatePicker type="date" v-model="searchAppointmentDateStart" placeholder="开始日期" style="width: 130px" format="yyyy-MM-dd"/>
+        <DatePicker type="date" v-model="searchAppointmentDateEnd" placeholder="结束日期" style="width: 130px" format="yyyy-MM-dd"/>
         <Select v-model="searchAppointmentStatus" style="width:100px" clearable>
           <Option v-for="item in appointmentStatusList" :value="item.code" :key="item.code">{{ item.msg }}</Option>
         </Select>
-        <Button type="primary" shape="circle" icon="ios-search" @click="queryAppointmentList">查询</Button>
+        <Button type="primary" shape="circle" icon="ios-search" @click="queryAppointmentList">条件查询</Button>
+        <Button shape="circle" type="success" @click="queryToday">今日所有</Button>
         <Button shape="circle" @click="resetQuery">重置</Button>
       </Col>
     </Row>
@@ -131,7 +132,7 @@
         // 总数
         total:0,
         // 每页记录数
-        pageSize:10,
+        pageSize:20,
         // 当前页
         currentPageNo:1,
         searchPhoneNumber:"",
@@ -318,6 +319,10 @@
             this.$Message.warning("请选择结束日期");
             return;
           }
+          if (this.searchAppointmentDateEnd.getTime() < this.searchAppointmentDateStart.getTime()) {
+            this.$Message.warning("结束日期必须大于或等于开始日期");
+            return;
+          }
           //组织入参
           params = {
             //门店id - 少不了的参数
@@ -357,6 +362,17 @@
         let res = await queryAppointmentList(params);
         this.data = res.data.records;
         this.total = res.data.total;
+      },
+      queryToday:function(){
+        //查询条件设置为空
+        this.searchPhoneNumber = "";
+        this.searchAppointmentDateStart = new Date();
+        this.searchAppointmentDateEnd = new Date();
+        this.searchAppointmentStatus = "";
+        //页码设置为默认值
+        this.currentPageNo = 1;
+        //重置后，重新查询
+        this.queryAppointmentList();
       },
       resetQuery: function(){
         //查询条件设置为空
