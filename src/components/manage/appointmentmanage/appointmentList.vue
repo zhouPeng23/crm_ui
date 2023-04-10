@@ -71,13 +71,13 @@
     <confirmModal ref="updateAppointmentModalRef" modal-title="修改预约:" :modal-width="600" @handleSubmit="updateAppointment()">
       <Form ref="updateAppointmentFormRef" :model="updateAppointmentForm" :label-width="100" @submit.native.prevent>
         <FormItem label="顾客手机号码" prop="phoneNumber" required>
-          <Input type="text" v-model="updateAppointmentForm.phoneNumber" :maxlength="11" style="width: 200px"></Input>
+          <Input type="text" v-model="updateAppointmentForm.phoneNumber" :maxlength="11" style="width: 200px" disabled></Input>
         </FormItem>
         <FormItem label="顾客姓名" prop="customerName" required>
-          <Input type="text" v-model="updateAppointmentForm.customerName" style="width: 200px"></Input>
+          <Input type="text" v-model="updateAppointmentForm.customerName" style="width: 200px" disabled></Input>
         </FormItem>
         <FormItem label="顾客性别" prop="sex" required>
-          <Select v-model="updateAppointmentForm.sex" style="width:100px">
+          <Select disabled v-model="updateAppointmentForm.sex" style="width:100px">
             <Option v-for="item in sexList" :value="item.value" :key="item.value">{{ item.label }}</Option>
           </Select>
         </FormItem>
@@ -95,6 +95,11 @@
         <FormItem label="所属员工" prop="employeeId" required>
           <Select v-model="updateAppointmentForm.employeeId" style="width:100px">
             <Option v-for="item in employeeList" :value="item.employeeId" :key="item.employeeId">{{ item.employeeName }}</Option>
+          </Select>
+        </FormItem>
+        <FormItem label="预约状态" prop="appointmentStatus" required>
+          <Select v-model="updateAppointmentForm.appointmentStatus" style="width:100px">
+            <Option v-for="item in appointmentStatusList" :value="item.code" :key="item.code">{{ item.msg }}</Option>
           </Select>
         </FormItem>
       </Form>
@@ -152,8 +157,9 @@
           sex:"",
           appointmentDate:"",
           appointmentTime:"",
-          projectIds:"",
+          projectIds:[],
           employeeId:"",
+          appointmentStatus:"",
         },
         zuofeiAppointmentForm:{
           appointmentId:"",
@@ -178,7 +184,7 @@
             render: (h,params)=>{
               return h('div',
                 [
-                  h('strong',this.rendAppointmentStatus(params.row.appointmentStatus))
+                  h('strong',this.renderAppointmentStatus(params.row.appointmentStatus))
                 ]
 
               )
@@ -200,7 +206,7 @@
             width: 200,
             render: (h,params)=>{
               return h('div',
-                this.rendSexByCustomerId(params.row.customerId)
+                this.renderSexByCustomerId(params.row.customerId)
               )
             }
           },
@@ -210,7 +216,7 @@
             width: 200,
             render: (h,params)=>{
               return h('div',
-                this.rendPhoneNumberByCustomerId(params.row.customerId)
+                this.renderPhoneNumberByCustomerId(params.row.customerId)
               )
             }
           },
@@ -230,7 +236,7 @@
             width: 200,
             render: (h,params)=>{
               return h('div',
-                this.rendProjectName(params.row.projectIds)
+                this.renderProjectName(params.row.projectIds)
               )
             }
           },
@@ -417,24 +423,35 @@
         }
       },
       /**
+       * 获取顾客性别code
+       * @param str
+       * @returns {string}
+       */
+      getSexIdByCustomerId : function(str){
+        for(let i = 0; i < this.customerList.length; i++){
+          if (str === this.customerList[i].customerId) {
+            return this.customerList[i].sex;
+          }
+        }
+      },
+      /**
        * 渲染顾客性别
        * @param str
        * @returns {string}
        */
-      rendSexByCustomerId : function(str){
+      renderSexByCustomerId : function(str){
         for(let i = 0; i < this.customerList.length; i++){
           if (str === this.customerList[i].customerId) {
             return formatHumanSexByNumber(this.customerList[i].sex);
           }
         }
       },
-
       /**
        * 渲染预约状态
        * @param str
        * @returns {string}
        */
-      rendAppointmentStatus : function(str){
+      renderAppointmentStatus : function(str){
         for(let i = 0; i < this.appointmentStatusList.length; i++){
           if (str === this.appointmentStatusList[i].code) {
             return this.appointmentStatusList[i].msg;
@@ -446,7 +463,7 @@
        * @param str
        * @returns {string}
        */
-      rendPhoneNumberByCustomerId : function(str){
+      renderPhoneNumberByCustomerId : function(str){
         for(let i = 0; i < this.customerList.length; i++){
           if (str === this.customerList[i].customerId) {
             return this.customerList[i].phoneNumber;
@@ -458,7 +475,7 @@
        * @param projectIdsStr
        * @returns {string}
        */
-      rendProjectName : function(projectIdsStr){
+      renderProjectName : function(projectIdsStr){
         let allProjectName = "";
         //根据逗号分隔projectIds
         let projectIdsArray = projectIdsStr.split(",");
@@ -475,19 +492,33 @@
         }
         return allProjectName;
       },
+      /**
+       * 获取项目id数组
+       * @param projectIdsStr
+       */
+      getProjectIdsArray : function(projectIdsStr){
+        let projectIdsArray = projectIdsStr.split(",");
+        let intArray = [];
+        for (let i = 0; i < projectIdsArray.length; i++) {
+          intArray.push(parseInt(projectIdsArray[i]));
+        }
+        return intArray;
+      },
       // 显示添加预约弹框
       showAddModal:function(){
         this.$refs.addAppointmentModalRef.showModal();
       },
       // 显示修改预约弹框
       showUpdateModal:function(index){
-        this.updateAppointmentForm.customerId = this.data[index].customerId;
-        this.updateAppointmentForm.customerName = this.data[index].customerName;
-        this.updateAppointmentForm.sex = this.data[index].sex;
-        this.updateAppointmentForm.phoneNumber = this.data[index].phoneNumber;
-        this.updateAppointmentForm.birthday = this.data[index].birthday;
-        this.updateAppointmentForm.customerMassLevel = this.data[index].customerMassLevel;
+        this.updateAppointmentForm.appointmentId = this.data[index].appointmentId;
+        this.updateAppointmentForm.phoneNumber = this.renderPhoneNumberByCustomerId(this.data[index].customerId);
+        this.updateAppointmentForm.customerName = this.renderCustomerName(this.data[index].customerId);
+        this.updateAppointmentForm.sex = this.getSexIdByCustomerId(this.data[index].customerId);
+        this.updateAppointmentForm.appointmentDate = this.data[index].appointmentDate;
+        this.updateAppointmentForm.appointmentTime = this.data[index].appointmentTime;
+        this.updateAppointmentForm.projectIds = this.getProjectIdsArray(this.data[index].projectIds);
         this.updateAppointmentForm.employeeId = this.data[index].employeeId;
+        this.updateAppointmentForm.appointmentStatus = this.data[index].appointmentStatus;
         this.$refs.updateAppointmentModalRef.showModal();
       },
       // 显示作废预约弹框
@@ -529,15 +560,21 @@
       },
       //修改预约
       updateAppointment:async function () {
+        if (!validateEmpty(this.updateAppointmentForm.appointmentDate)) {
+          this.$Message.warning("预约日期不能为空");
+          return;
+        }
+        if (!validateEmpty(this.updateAppointmentForm.appointmentTime)) {
+          this.$Message.warning("预约时间不能为空");
+          return;
+        }
         let params = {
-          'customerId':this.updateAppointmentForm.customerId,
-          'shopId':this.selectedShopId,
-          'customerName':this.updateAppointmentForm.customerName,
-          'sex':this.updateAppointmentForm.sex,
-          'phoneNumber':this.updateAppointmentForm.phoneNumber,
-          'birthday':this.updateAppointmentForm.birthday.length!==0 ? new Date(this.updateAppointmentForm.birthday).getTime() : "",
-          'customerMassLevel':this.updateAppointmentForm.customerMassLevel,
+          'appointmentId':this.updateAppointmentForm.appointmentId,
+          'appointmentDate':formatDate_yyyyMMdd(this.updateAppointmentForm.appointmentDate),
+          'appointmentTime':this.updateAppointmentForm.appointmentTime+":00",
+          'projectIds':this.updateAppointmentForm.projectIds.join(","),
           'employeeId':this.updateAppointmentForm.employeeId,
+          'appointmentStatus':this.updateAppointmentForm.appointmentStatus,
         };
         let res = await updateAppointment(params);
         if (res.code === '0000') {
