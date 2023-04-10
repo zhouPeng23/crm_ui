@@ -455,15 +455,25 @@
       },
       /**
        * 渲染项目名称
-       * @param str
+       * @param projectIdsStr
        * @returns {string}
        */
-      rendProjectName : function(str){
-        for(let i = 0; i < this.projectList.length; i++){
-          if (str === this.projectList[i].projectId.toString()) {
-            return this.projectList[i].projectName;
+      rendProjectName : function(projectIdsStr){
+        let allProjectName = "";
+        //根据逗号分隔projectIds
+        let projectIdsArray = projectIdsStr.split(",");
+        for (let i = 0; i < projectIdsArray.length; i++) {
+          for(let j = 0; j < this.projectList.length; j++){
+            if (projectIdsArray[i] === this.projectList[j].projectId.toString()) {
+              allProjectName += this.projectList[j].projectName + " ,";
+            }
           }
         }
+        //去掉最后一个逗号
+        if (allProjectName.endsWith(",")) {
+          allProjectName = allProjectName.slice(0, -1);
+        }
+        return allProjectName;
       },
       // 显示添加预约弹框
       showAddModal:function(){
@@ -510,6 +520,8 @@
         if (res.code === '0000') {
           this.$refs.addAppointmentFormRef.resetFields();
           this.$Message.success(res.msg);
+          //查顾客集合，再查预约记录，因为有的顾客是新顾客，需要重新查询顾客集合
+          this.queryShopAllCustomer();
           this.queryAppointmentList();
         }else {
           this.$Message.error(res.msg);
