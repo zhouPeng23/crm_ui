@@ -116,7 +116,7 @@
 </template>
 
 <script>
-  import { formatDate_yyyyMMdd,formatStrDate_yymmddHHmmss,validateEmpty,validatePhoneNumber,formatAmount,addDays,formatHumanSexByNumber} from "../../../tools";
+  import { formatDate_yyyyMMdd,formatStrDate_yymmddHHmmss,validateEmpty,validatePhoneNumber,formatAmount,addDays,formatHumanSexByNumber,isToday} from "../../../tools";
   import {queryAppointmentList,queryShopAllCustomer,queryProjectList,queryAppointmentStatusList,queryCustomerByPhoneNumber,
     addAppointment,updateAppointment,queryEmployeeList,zuofeiAppointment} from "../../../api/ApiList";
   import confirmModal from "../../utils/modal/confirmModal";
@@ -181,7 +181,7 @@
           {
             title: '预约状态',
             key: 'appointmentStatus',
-            width: 200,
+            width: 100,
             fixed: 'left',
             render: (h,params)=>{
               return h('div',
@@ -195,7 +195,7 @@
           {
             title: '顾客姓名',
             key: 'customerId',
-            width: 200,
+            width: 150,
             render: (h, params) => {
               return h('div', [
                 this.renderCustomerName(params.row.customerId)
@@ -205,7 +205,7 @@
           {
             title: '性别',
             key: 'customerId',
-            width: 200,
+            width: 100,
             render: (h,params)=>{
               return h('div',
                 this.renderSexByCustomerId(params.row.customerId)
@@ -215,7 +215,7 @@
           {
             title: '手机号',
             key: 'customerId',
-            width: 200,
+            width: 150,
             render: (h,params)=>{
               return h('div',
                 this.renderPhoneNumberByCustomerId(params.row.customerId)
@@ -225,17 +225,31 @@
           {
             title: '预约日期',
             key: 'appointmentDate',
-            width: 200,
+            width: 100,
+            render: (h,params)=>{
+              return h('div',
+                {
+                  style:{color:this.renderColorByAppointmentDate(params.row.appointmentDate)}
+                },params.row.appointmentDate
+              )
+            }
           },
           {
             title: '预约时间',
             key: 'appointmentTime',
-            width: 200,
+            width: 100,
+            render: (h,params)=>{
+              return h('div',
+                {
+                  style:{color:this.renderColorByAppointmentDate(params.row.appointmentDate)}
+                },params.row.appointmentTime
+              )
+            }
           },
           {
             title: '项目',
             key: 'projectIds',
-            width: 200,
+            width: 258,
             render: (h,params)=>{
               return h('div',
                 this.renderProjectName(params.row.projectIds)
@@ -245,7 +259,7 @@
           {
             title: '项目金额',
             key: 'projectPrice',
-            width: 200,
+            width: 100,
             render: (h,params)=>{
               return h('div',
                 formatAmount(params.row.projectPrice)
@@ -255,7 +269,7 @@
           {
             title: '所属员工姓名',
             key: 'employeeId',
-            width: 200,
+            width: 100,
             render: (h,params)=>{
               return h('div',
                 this.renderBelongToEmployeeName(params.row.employeeId)
@@ -427,8 +441,16 @@
           return "chartreuse";
         }else if (appointmentStatus === 3) {
           return "black";
-        }else if (appointmentStatus === 3) {
-          return "yellow";
+        }
+      },
+      /**
+       * 根据预约日期渲染颜色
+       * @param appointmentDate
+       * @returns {string}
+       */
+      renderColorByAppointmentDate:function(appointmentDate){
+        if (isToday(new Date(appointmentDate))){
+          return "blue";
         }
       },
       /**

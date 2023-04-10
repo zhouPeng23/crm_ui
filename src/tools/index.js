@@ -95,6 +95,21 @@ export function addDays(date, days) {
 
 
 /**
+ * 判断一个date日期是不是今天
+ * @param date
+ * @returns {boolean}
+ */
+export function isToday(date) {
+  let today = new Date();
+  return (
+    date.getDate() === today.getDate() &&
+    date.getMonth() === today.getMonth() &&
+    date.getFullYear() === today.getFullYear()
+  );
+}
+
+
+/**
  * 格式化性别
  * @param str
  * @returns {string}
