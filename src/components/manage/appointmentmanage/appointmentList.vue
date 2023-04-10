@@ -183,10 +183,10 @@
             fixed: 'left',
             render: (h,params)=>{
               return h('div',
-                [
-                  h('strong',this.renderAppointmentStatus(params.row.appointmentStatus))
-                ]
-
+                {style:{
+                  color:this.renderColorByAppointmentStatus(params.row.appointmentStatus)
+                }},
+                [ h('strong',this.renderAppointmentStatus(params.row.appointmentStatus))]
               )
             }
           },
@@ -397,6 +397,22 @@
         let params = {};
         let res = await queryAppointmentStatusList(params);
         this.appointmentStatusList = res.data;
+      },
+       /**
+       * 根据状态渲染颜色
+       * @param appointmentStatus
+       * @returns {string}
+       */
+      renderColorByAppointmentStatus : function(appointmentStatus){
+        if (appointmentStatus===1){
+          return "blue";
+        } else if (appointmentStatus === 2) {
+          return "chartreuse";
+        }else if (appointmentStatus === 3) {
+          return "black";
+        }else if (appointmentStatus === 3) {
+          return "yellow";
+        }
       },
       /**
        * 渲染预约所属员工姓名
