@@ -99,13 +99,69 @@ export function addDays(date, days) {
  * @param date
  * @returns {boolean}
  */
-export function isToday(date) {
+export function dateIsToday(date) {
   let today = new Date();
   return (
     date.getDate() === today.getDate() &&
     date.getMonth() === today.getMonth() &&
     date.getFullYear() === today.getFullYear()
   );
+}
+
+
+/**
+ * 判断一个date日期字符串是不是今天
+ * @param dateString
+ * @returns {boolean}
+ */
+function dateStrIsToday(dateString) {
+  let today = new Date();
+  let date = new Date(dateString);
+  return (
+    date.getDate() === today.getDate() &&
+    date.getMonth() === today.getMonth() &&
+    date.getFullYear() === today.getFullYear()
+  );
+}
+
+
+/**
+ * 传入日期和时间：如果日期是今天，则返回上午、下午、晚上+时间，否则继续返回时间，如： 上午 08:00:00 ,  13:00:00
+ * @param dateString
+ * @param timeString
+ * @returns {string}
+ */
+export function getTimePeriod(dateString,timeString) {
+  if (dateStrIsToday(dateString)) {
+    let time = new Date(dateString+" "+timeString);
+    let hours = time.getHours();
+    let period;
+    if (hours >= 0 && hours < 12) {
+      period = "上午";
+    } else if (hours >= 12 && hours < 18) {
+      period = "下午";
+    } else {
+      period = "晚上";
+    }
+    return period+"  -  "+timeString.substring(0,5);
+
+  }else{
+    return timeString.substring(0,5);
+  }
+}
+
+
+/**
+ * 传入日期返回： 今日  或者是具体日期 2023-04-11
+ * @param dateString
+ * @returns {string}
+ */
+export function getDatePeriod(dateString) {
+  if (dateStrIsToday(dateString)) {
+    return "今日";
+  }else{
+    return dateString;
+  }
 }
 
 

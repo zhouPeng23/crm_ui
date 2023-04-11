@@ -116,7 +116,7 @@
 </template>
 
 <script>
-  import { formatDate_yyyyMMdd,formatStrDate_yymmddHHmmss,validateEmpty,validatePhoneNumber,formatAmount,addDays,formatHumanSexByNumber,isToday} from "../../../tools";
+  import { formatDate_yyyyMMdd,formatStrDate_yymmddHHmmss,validateEmpty,validatePhoneNumber,formatAmount,addDays,formatHumanSexByNumber,dateIsToday,getDatePeriod,getTimePeriod} from "../../../tools";
   import {queryAppointmentList,queryShopAllCustomer,queryProjectList,queryAppointmentStatusList,queryCustomerByPhoneNumber,
     addAppointment,updateAppointment,queryEmployeeList,zuofeiAppointment} from "../../../api/ApiList";
   import confirmModal from "../../utils/modal/confirmModal";
@@ -230,19 +230,19 @@
               return h('div',
                 {
                   style:{color:this.renderColorByAppointmentDate(params.row.appointmentDate)}
-                },params.row.appointmentDate
+                },getDatePeriod(params.row.appointmentDate)
               )
             }
           },
           {
             title: '预约时间',
             key: 'appointmentTime',
-            width: 100,
+            width: 120,
             render: (h,params)=>{
               return h('div',
                 {
                   style:{color:this.renderColorByAppointmentDate(params.row.appointmentDate)}
-                },params.row.appointmentTime
+                },getTimePeriod(params.row.appointmentDate, params.row.appointmentTime)
               )
             }
           },
@@ -449,7 +449,7 @@
        * @returns {string}
        */
       renderColorByAppointmentDate:function(appointmentDate){
-        if (isToday(new Date(appointmentDate))){
+        if (dateIsToday(new Date(appointmentDate))){
           return "blue";
         }
       },
