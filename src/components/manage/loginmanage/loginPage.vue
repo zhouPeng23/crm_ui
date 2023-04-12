@@ -66,7 +66,7 @@
   #login_bg {
     height: 100vh;
     width: 100%;
-    background: url("../../../../static/img/login/lijiang.png")  0px 0px no-repeat;
+    background: url("../../../../static/img/login/lijiang.jpg")  0px 0px no-repeat;
     background-size: 100%;
   }
   #login_area {
