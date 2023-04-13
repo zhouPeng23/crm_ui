@@ -4,7 +4,7 @@
     <Row>
       <Col span="2">
         <!--添加门店按钮-->
-        <Button type="success" style="margin: 10px 0 10px 0" @click="showAddModal">添加门店</Button>
+        <!--<Button type="success" style="margin: 10px 0 10px 0" @click="showAddModal">添加门店</Button>-->
       </Col>
       <Col span="20" style="text-align: center">
         <div v-if="selectedShopId" style="margin: 12px 0 0 0"></div>

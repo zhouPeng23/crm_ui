@@ -3,7 +3,7 @@
 
       <div id="login_area">
         <div style="font-size:20px; margin: 20px 0 0 0;text-align: center">
-          宛央科技美肤中心
+          <!--宛央科技美肤中心-->
         </div>
         <div>
           <Input v-model="phoneNumber" size="large" placeholder="请输入手机号" type="text" style="width: 300px;height: 40px;margin: 15px 0 0 0; padding: 0 20px 0 20px"/>

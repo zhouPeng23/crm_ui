@@ -73,9 +73,6 @@
       },
     },
     mounted:async function () {
-      this.selectedShopId = localStorage.getItem('selectedShopId');
-      this.selectedShopName = localStorage.getItem('selectedShopName');
-
       //本页面没有其他请求，防止浏览器返回上一页面，所以做个特殊处理，回到登录页面
       if (!validateEmpty(localStorage.getItem('token'))) {
         this.$router.push({path:'/login'});
