@@ -6,9 +6,9 @@
         修改密码
       </div>
       <div>
-        <Input v-model="oldPassword" size="large" placeholder="请输原密码" type="text" style="width: 300px;height: 40px;margin: 15px 0 0 0; padding: 0 20px 0 20px"/>
-        <Input v-model="newPassword" size="large" placeholder="请输入新密码" type="password" style="width: 300px;height: 40px;margin: 15px 0 0 0; padding: 0 20px 0 20px"/>
-        <Input v-model="newPasswordSecond" size="large" placeholder="请再次输入新密码" type="password" style="width: 300px;height: 40px;margin: 15px 0 0 0; padding: 0 20px 0 20px"/>
+        <Input v-model="oldPassword" size="large" placeholder="请输原密码" type="text" style="width: 300px;height: 40px;margin: 15px 0 0 0; padding: 0 20px 0 20px" :maxlength="20"/>
+        <Input v-model="newPassword" size="large" placeholder="请输入新密码" type="password" style="width: 300px;height: 40px;margin: 15px 0 0 0; padding: 0 20px 0 20px" :maxlength="20"/>
+        <Input v-model="newPasswordSecond" size="large" placeholder="请再次输入新密码" type="password" style="width: 300px;height: 40px;margin: 15px 0 0 0; padding: 0 20px 0 20px" :maxlength="20"/>
         <Button type="warning" size="large" long @click="modifyPassword()" style="width: 260px;height: 40px;margin: 15px 0 0 20px;">提    交</Button>
         <div style="margin: 20px 0 0 0;color: #ffb97c;text-align: center">
           <span>密码格式:长度6-20, 纯数字、纯字母或两者组合</span>

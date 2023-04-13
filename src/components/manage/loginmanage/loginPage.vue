@@ -6,8 +6,8 @@
           <!--宛央科技美肤中心-->
         </div>
         <div>
-          <Input v-model="phoneNumber" size="large" placeholder="请输入手机号" type="text" style="width: 300px;height: 40px;margin: 15px 0 0 0; padding: 0 20px 0 20px"/>
-          <Input v-model="password" size="large" placeholder="请输入密码" type="password" style="width: 300px;height: 40px;margin: 15px 0 0 0; padding: 0 20px 0 20px"/>
+          <Input v-model="phoneNumber" size="large" placeholder="请输入手机号" :maxlength="20" type="text" style="width: 300px;height: 40px;margin: 15px 0 0 0; padding: 0 20px 0 20px"/>
+          <Input v-model="password" size="large" placeholder="请输入密码" :maxlength="20" type="password" style="width: 300px;height: 40px;margin: 15px 0 0 0; padding: 0 20px 0 20px"/>
           <Button type="primary" size="large" long @click="login" style="width: 260px;height: 40px;margin: 15px 0 0 20px;">登   录</Button>
         </div>
       </div>
