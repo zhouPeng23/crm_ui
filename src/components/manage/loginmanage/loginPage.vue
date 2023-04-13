@@ -47,9 +47,10 @@
         };
         let res = await login(params);
         if (res.code === '0000') {
-          localStorage.setItem("loginUserName",res.data.employeeName);
-          localStorage.setItem("loginUserId",res.data.employeeId);
-          // this.$Message.success("欢迎您: " + res.data.employeeName);
+          localStorage.setItem("loginUserPhoneNumber",res.data.loginUserPhoneNumber);
+          localStorage.setItem("loginUserName",res.data.loginUserName);
+          localStorage.setItem('loginUserCanSearchShopIds',res.data.loginUserCanSearchShopIds);
+          localStorage.setItem('loginUserCanSearchAuthMenu',res.data.loginUserCanSearchAuthMenu);
           this.$router.push({path: '/manage/shopmanage/shopList'});
         }else {
           this.$Message.error(res.msg);

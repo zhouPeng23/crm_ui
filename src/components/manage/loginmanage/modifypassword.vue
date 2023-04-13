@@ -56,7 +56,7 @@
           return;
         }
         let params = {
-          'employeeId':localStorage.getItem("loginUserId"),
+          'phoneNumber':localStorage.getItem("loginUserPhoneNumber"),
           'oldPassword':md5(this.oldPassword),
           'newPassword':md5(this.newPassword),
           'newPasswordSecond':md5(this.newPasswordSecond),

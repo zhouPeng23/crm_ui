@@ -257,7 +257,9 @@
       methods:{
         // 查询门店集合
         queryShopList :async function () {
-          let params = {};
+          let params = {
+            'shopIds': localStorage.getItem('loginUserCanSearchShopIds'),
+          };
           let res = await queryShopList(params);
           this.data = res.data;
         },
