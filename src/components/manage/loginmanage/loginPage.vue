@@ -3,7 +3,7 @@
 
       <div id="login_area">
         <div style="font-size:20px; margin: 20px 0 0 0;text-align: center">
-          <!--宛央科技美肤中心-->
+          {{systemName}}
         </div>
         <div>
           <Input v-model="phoneNumber" size="large" placeholder="请输入手机号" :maxlength="20" type="text" style="width: 300px;height: 40px;margin: 15px 0 0 0; padding: 0 20px 0 20px"/>
@@ -23,6 +23,7 @@
     name: "loginPage",
     data() {
       return {
+        systemName:'',
         phoneNumber:'',
         password:'',
       }
@@ -58,7 +59,7 @@
       },
     },
     async mounted () {
-
+      this.systemName = process.env.NODE_ENV === 'production'?'宛央科技美肤中心':'测试系统';
     }
   }
 </script>
