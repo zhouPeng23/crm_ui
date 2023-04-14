@@ -225,7 +225,7 @@
           {
             title: '预约日期',
             key: 'appointmentDate',
-            width: 100,
+            width: 120,
             render: (h,params)=>{
               return h('div',
                 {
