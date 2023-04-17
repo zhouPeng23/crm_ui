@@ -109,7 +109,7 @@
 
 <script>
   import { formatDate_yyyyMMdd,formatStrDate_yymmddHHmmss,validateEmpty,formatHumanSexByNumber} from "../../../tools";
-  import {queryEmployeeList,getAllCustomerMassLevelList,queryCustomerList,addCustomer,deleteCustomer,updateCustomer} from "../../../api/ApiList";
+  import {queryEmployeeList,getAllCustomerMassLevelList,queryCustomerList,addCustomer,deleteCustomer,updateCustomer,queryShopAllCustomer} from "../../../api/ApiList";
   import confirmModal from "../../utils/modal/confirmModal";
 
   export default {
@@ -132,6 +132,7 @@
         searchCustomerMassLevel:"",
         searchBelongToEmployeeId:"",
         employeeList: [],
+        allCustomerList: [],
         allCustomerMassLevelList: [],
         addCustomerForm:{
           customerName:"",
@@ -228,6 +229,16 @@
             }
           },
           {
+            title: '被介绍客户姓名',
+            key: 'introducedByCustomerId',
+            width: 200,
+            render: (h,params)=>{
+              return h('div',
+                this.renderIntroducedByCustomerName(params.row.introducedByCustomerId)
+              )
+            }
+          },
+          {
             title: '创建人',
             key: 'createBy',
             width: 200,
@@ -297,6 +308,13 @@
         this.data = res.data.records;
         this.total = res.data.total;
       },
+      queryShopAllCustomer:async function(){
+        let params = {
+          'shopId':this.selectedShopId,
+        };
+        let res = await queryShopAllCustomer(params);
+        this.allCustomerList = res.data;
+      },
       resetQuery: function(){
         //查询条件设置为空
         this.searchCustomerName = "";
@@ -344,6 +362,18 @@
         for(let i = 0; i < this.employeeList.length; i++){
           if (str === this.employeeList[i].employeeId) {
             return this.employeeList[i].employeeName;
+          }
+        }
+      },
+      /**
+       * 渲染被介绍顾客姓名
+       * @param str
+       * @returns {string}
+       */
+      renderIntroducedByCustomerName : function(str){
+        for(let i = 0; i < this.allCustomerList.length; i++){
+          if (str === this.allCustomerList[i].customerId) {
+            return this.allCustomerList[i].customerName;
           }
         }
       },
@@ -471,6 +501,9 @@
 
       //查员工
       this.queryEmployeeList();
+
+      //查询所有顾客
+      this.queryShopAllCustomer();
 
       //查顾客
       this.queryCustomerList();

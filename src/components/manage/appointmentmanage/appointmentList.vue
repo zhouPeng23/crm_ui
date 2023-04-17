@@ -61,7 +61,7 @@
             <Option v-for="item in projectList" :value="item.projectId" :key="item.projectId">{{ item.projectName }}</Option>
           </Select>
         </FormItem>
-        <FormItem label="所属员工" prop="employeeId" required>
+        <FormItem label="本次服务员工" prop="employeeId" required>
           <Select v-model="addAppointmentForm.employeeId" style="width:100px">
             <Option v-for="item in employeeList" :value="item.employeeId" :key="item.employeeId">{{ item.employeeName }}</Option>
           </Select>
@@ -94,7 +94,7 @@
             <Option v-for="item in projectList" :value="item.projectId" :key="item.projectId">{{ item.projectName }}</Option>
           </Select>
         </FormItem>
-        <FormItem label="所属员工" prop="employeeId" required>
+        <FormItem label="本次服务员工" prop="employeeId" required>
           <Select v-model="updateAppointmentForm.employeeId" style="width:100px">
             <Option v-for="item in employeeList" :value="item.employeeId" :key="item.employeeId">{{ item.employeeName }}</Option>
           </Select>
@@ -267,9 +267,9 @@
             }
           },
           {
-            title: '所属员工姓名',
+            title: '本次服务员工姓名',
             key: 'employeeId',
-            width: 120,
+            width: 150,
             render: (h,params)=>{
               return h('div',
                 this.renderBelongToEmployeeName(params.row.employeeId)
@@ -454,7 +454,7 @@
         }
       },
       /**
-       * 渲染预约所属员工姓名
+       * 渲染预约本次服务员工姓名
        * @param str
        * @returns {string}
        */
