@@ -41,7 +41,7 @@
 
     <!--添加顾客弹框-->
     <confirmModal ref="addCustomerModalRef" modal-title="添加顾客:" :modal-width="600" @handleSubmit="addCustomer()">
-      <Form ref="addCustomerFormRef" :model="addCustomerForm" :label-width="100" @submit.native.prevent>
+      <Form ref="addCustomerFormRef" :model="addCustomerForm" :label-width="120" @submit.native.prevent>
         <FormItem label="顾客姓名" prop="customerName" required>
           <Input type="text" v-model="addCustomerForm.customerName" style="width: 200px"></Input>
         </FormItem>
@@ -65,6 +65,19 @@
           <Select v-model="addCustomerForm.belongToEmployeeId" style="width:100px">
             <Option v-for="item in employeeList" :value="item.employeeId" :key="item.employeeId">{{ item.employeeName }}</Option>
           </Select>
+        </FormItem>
+        <FormItem label="被介绍人">
+          <Select v-model="addCustomerForm.hasIntroducedByCustomer" style="width:100px" :onchange="hasIntroducedByCustomerChange()">
+            <Option value="0">无</Option>
+            <Option value="1">有</Option>
+          </Select>
+        </FormItem>
+        <FormItem v-if="addCustomerForm.showIntroducedByCustomer" label="被介绍顾客手机号" prop="introducedByCustomerPhoneNumber" required>
+          <Input type="text" v-model="addCustomerForm.introducedByCustomerPhoneNumber" :maxlength="11" style="width: 200px"></Input>
+          <Button type="primary" ghost @click="queryCustomerByPhoneNumber">查询</Button>
+        </FormItem>
+        <FormItem v-if="addCustomerForm.showIntroducedByCustomer" label="被介绍顾客姓名" prop="introducedByCustomerName" required>
+          <Input type="text" v-model="addCustomerForm.introducedByCustomerName" style="width: 200px" disabled></Input>
         </FormItem>
       </Form>
     </confirmModal>
@@ -108,8 +121,8 @@
 </template>
 
 <script>
-  import { formatDate_yyyyMMdd,formatStrDate_yymmddHHmmss,validateEmpty,formatHumanSexByNumber} from "../../../tools";
-  import {queryEmployeeList,getAllCustomerMassLevelList,queryCustomerList,addCustomer,deleteCustomer,updateCustomer,queryShopAllCustomer} from "../../../api/ApiList";
+  import { formatDate_yyyyMMdd,formatStrDate_yymmddHHmmss,validateEmpty,formatHumanSexByNumber,validatePhoneNumber} from "../../../tools";
+  import {queryEmployeeList,getAllCustomerMassLevelList,queryCustomerList,addCustomer,deleteCustomer,updateCustomer,queryShopAllCustomer,queryCustomerByPhoneNumber} from "../../../api/ApiList";
   import confirmModal from "../../utils/modal/confirmModal";
 
   export default {
@@ -141,6 +154,10 @@
           birthday:"",
           customerMassLevel:"",
           belongToEmployeeId:"",
+          hasIntroducedByCustomer:"0",
+          showIntroducedByCustomer:false,
+          introducedByCustomerPhoneNumber:"",
+          introducedByCustomerName:"",
         },
         updateCustomerForm:{
           customerId:"",
@@ -377,6 +394,32 @@
           }
         }
       },
+      /**
+       * 是否有被介绍人 改变触发函数
+       */
+      hasIntroducedByCustomerChange:function(){
+        this.addCustomerForm.showIntroducedByCustomer = this.addCustomerForm.hasIntroducedByCustomer !== "0";
+      },
+      /**
+       * 根据手机号查询顾客，如果能查到则补充姓名
+       */
+      queryCustomerByPhoneNumber: async function(){
+        if (!validatePhoneNumber(this.addCustomerForm.introducedByCustomerPhoneNumber)) {
+          this.$Message.warning("手机号格式错误");
+          return;
+        }
+        let params = {
+          'phoneNumber':this.addCustomerForm.introducedByCustomerPhoneNumber,
+        };
+        let res = await queryCustomerByPhoneNumber(params);
+        if (!validateEmpty(res.data)) {
+          this.$Message.success("未查询到记录");
+        }else{
+          this.$Message.success("被介绍人存在");
+          //设置顾客名称
+          this.addCustomerForm.introducedByCustomerName = res.data.customerName;
+        }
+      },
       // 显示添加顾客弹框
       showAddModal:function(){
         this.$refs.addCustomerModalRef.showModal();
@@ -411,6 +454,9 @@
             //生日为空就不传生日字段
             'customerMassLevel':this.addCustomerForm.customerMassLevel,
             'belongToEmployeeId':this.addCustomerForm.belongToEmployeeId,
+            'hasIntroducedByCustomer':this.addCustomerForm.hasIntroducedByCustomer,
+            'introducedByCustomerPhoneNumber':this.addCustomerForm.introducedByCustomerPhoneNumber,
+            'introducedByCustomerName':this.addCustomerForm.introducedByCustomerName,
           };
         }else {
           params = {
@@ -421,12 +467,17 @@
             'birthday':formatDate_yyyyMMdd(this.addCustomerForm.birthday),
             'customerMassLevel':this.addCustomerForm.customerMassLevel,
             'belongToEmployeeId':this.addCustomerForm.belongToEmployeeId,
+            'hasIntroducedByCustomer':this.addCustomerForm.hasIntroducedByCustomer,
+            'introducedByCustomerPhoneNumber':this.addCustomerForm.introducedByCustomerPhoneNumber,
+            'introducedByCustomerName':this.addCustomerForm.introducedByCustomerName,
           };
         }
 
         let res = await addCustomer(params);
         if (res.code === '0000') {
           this.$refs.addCustomerFormRef.resetFields();
+          this.addCustomerForm.hasIntroducedByCustomer = "0";
+          this.addCustomerForm.showIntroducedByCustomer = false;
           this.$Message.success(res.msg);
           this.queryCustomerList();
         }else {
