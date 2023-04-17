@@ -67,14 +67,14 @@
           </Select>
         </FormItem>
         <FormItem label="被介绍人">
-          <Select v-model="addCustomerForm.hasIntroducedByCustomer" style="width:100px" :onchange="hasIntroducedByCustomerChange()">
+          <Select v-model="addCustomerForm.hasIntroducedByCustomer" style="width:100px" :onchange="hasIntroducedByCustomerChange_add()">
             <Option value="0">无</Option>
             <Option value="1">有</Option>
           </Select>
         </FormItem>
         <FormItem v-if="addCustomerForm.showIntroducedByCustomer" label="被介绍顾客手机号" prop="introducedByCustomerPhoneNumber" required>
           <Input type="text" v-model="addCustomerForm.introducedByCustomerPhoneNumber" :maxlength="11" style="width: 200px"></Input>
-          <Button type="primary" ghost @click="queryCustomerByPhoneNumber">查询</Button>
+          <Button type="primary" ghost @click="queryCustomerByPhoneNumber_add">查询</Button>
         </FormItem>
         <FormItem v-if="addCustomerForm.showIntroducedByCustomer" label="被介绍顾客姓名" prop="introducedByCustomerName" required>
           <Input type="text" v-model="addCustomerForm.introducedByCustomerName" style="width: 200px" disabled></Input>
@@ -84,7 +84,7 @@
 
     <!--修改顾客弹框-->
     <confirmModal ref="updateCustomerModalRef" modal-title="修改顾客:" :modal-width="600" @handleSubmit="updateCustomer()">
-      <Form ref="updateCustomerFormRef" :model="updateCustomerForm" :label-width="100" @submit.native.prevent>
+      <Form ref="updateCustomerFormRef" :model="updateCustomerForm" :label-width="120" @submit.native.prevent>
         <FormItem label="顾客姓名" prop="customerName" required>
           <Input type="text" v-model="updateCustomerForm.customerName" style="width: 200px"></Input>
         </FormItem>
@@ -108,6 +108,19 @@
           <Select v-model="updateCustomerForm.belongToEmployeeId" style="width:100px">
             <Option v-for="item in employeeList" :value="item.employeeId" :key="item.employeeId">{{ item.employeeName }}</Option>
           </Select>
+        </FormItem>
+        <FormItem label="被介绍人">
+          <Select v-model="updateCustomerForm.hasIntroducedByCustomer" style="width:100px" :onchange="hasIntroducedByCustomerChange_update()">
+            <Option value="0">无</Option>
+            <Option value="1">有</Option>
+          </Select>
+        </FormItem>
+        <FormItem v-if="updateCustomerForm.showIntroducedByCustomer" label="被介绍顾客手机号" prop="introducedByCustomerPhoneNumber" required>
+          <Input type="text" v-model="updateCustomerForm.introducedByCustomerPhoneNumber" :maxlength="11" style="width: 200px"></Input>
+          <Button type="primary" ghost @click="queryCustomerByPhoneNumber_update">查询</Button>
+        </FormItem>
+        <FormItem v-if="updateCustomerForm.showIntroducedByCustomer" label="被介绍顾客姓名" prop="introducedByCustomerName" required>
+          <Input type="text" v-model="updateCustomerForm.introducedByCustomerName" style="width: 200px" disabled></Input>
         </FormItem>
       </Form>
     </confirmModal>
@@ -167,6 +180,10 @@
           birthday:"",
           customerMassLevel:"",
           belongToEmployeeId:"",
+          hasIntroducedByCustomer:"0",
+          showIntroducedByCustomer:false,
+          introducedByCustomerPhoneNumber:"",
+          introducedByCustomerName:"",
         },
         deleteCustomerForm:{
           customerId:"",
@@ -251,7 +268,7 @@
             width: 200,
             render: (h,params)=>{
               return h('div',
-                this.renderIntroducedByCustomerName(params.row.introducedByCustomerId)
+                this.renderIntroducedNameByCustomerName(params.row.introducedByCustomerId)
               )
             }
           },
@@ -387,7 +404,7 @@
        * @param str
        * @returns {string}
        */
-      renderIntroducedByCustomerName : function(str){
+      renderIntroducedNameByCustomerName : function(str){
         for(let i = 0; i < this.allCustomerList.length; i++){
           if (str === this.allCustomerList[i].customerId) {
             return this.allCustomerList[i].customerName;
@@ -395,15 +412,33 @@
         }
       },
       /**
+       * 渲染被介绍顾客手机号
+       * @param str
+       * @returns {string}
+       */
+      renderIntroducedPhoneNumberByCustomerName : function(str){
+        for(let i = 0; i < this.allCustomerList.length; i++){
+          if (str === this.allCustomerList[i].customerId) {
+            return this.allCustomerList[i].phoneNumber;
+          }
+        }
+      },
+      /**
        * 是否有被介绍人 改变触发函数
        */
-      hasIntroducedByCustomerChange:function(){
+      hasIntroducedByCustomerChange_add:function(){
         this.addCustomerForm.showIntroducedByCustomer = this.addCustomerForm.hasIntroducedByCustomer !== "0";
+      },
+      /**
+       * 是否有被介绍人 改变触发函数
+       */
+      hasIntroducedByCustomerChange_update:function(){
+        this.updateCustomerForm.showIntroducedByCustomer = this.updateCustomerForm.hasIntroducedByCustomer !== "0";
       },
       /**
        * 根据手机号查询顾客，如果能查到则补充姓名
        */
-      queryCustomerByPhoneNumber: async function(){
+      queryCustomerByPhoneNumber_add: async function(){
         if (!validatePhoneNumber(this.addCustomerForm.introducedByCustomerPhoneNumber)) {
           this.$Message.warning("手机号格式错误");
           return;
@@ -420,6 +455,26 @@
           this.addCustomerForm.introducedByCustomerName = res.data.customerName;
         }
       },
+      /**
+       * 根据手机号查询顾客，如果能查到则补充姓名
+       */
+      queryCustomerByPhoneNumber_update: async function(){
+        if (!validatePhoneNumber(this.updateCustomerForm.introducedByCustomerPhoneNumber)) {
+          this.$Message.warning("手机号格式错误");
+          return;
+        }
+        let params = {
+          'phoneNumber':this.updateCustomerForm.introducedByCustomerPhoneNumber,
+        };
+        let res = await queryCustomerByPhoneNumber(params);
+        if (!validateEmpty(res.data)) {
+          this.$Message.success("未查询到记录");
+        }else{
+          this.$Message.success("被介绍人存在");
+          //设置顾客名称
+          this.updateCustomerForm.introducedByCustomerName = res.data.customerName;
+        }
+      },
       // 显示添加顾客弹框
       showAddModal:function(){
         this.$refs.addCustomerModalRef.showModal();
@@ -433,6 +488,10 @@
         this.updateCustomerForm.birthday = this.data[index].birthday;
         this.updateCustomerForm.customerMassLevel = this.data[index].customerMassLevel;
         this.updateCustomerForm.belongToEmployeeId = this.data[index].belongToEmployeeId;
+        this.updateCustomerForm.hasIntroducedByCustomer = !validateEmpty(this.data[index].introducedByCustomerId)?"0":"1";
+        this.updateCustomerForm.showIntroducedByCustomer = validateEmpty(this.data[index].introducedByCustomerId);
+        this.updateCustomerForm.introducedByCustomerPhoneNumber = this.renderIntroducedPhoneNumberByCustomerName(this.data[index].introducedByCustomerId);
+        this.updateCustomerForm.introducedByCustomerName = this.renderIntroducedNameByCustomerName(this.data[index].introducedByCustomerId);
         this.$refs.updateCustomerModalRef.showModal();
       },
       // 显示删除顾客弹框
@@ -498,6 +557,9 @@
             //生日为空就不传生日字段
             'customerMassLevel':this.updateCustomerForm.customerMassLevel,
             'belongToEmployeeId':this.updateCustomerForm.belongToEmployeeId,
+            'hasIntroducedByCustomer':this.updateCustomerForm.hasIntroducedByCustomer,
+            'introducedByCustomerPhoneNumber':this.updateCustomerForm.introducedByCustomerPhoneNumber,
+            'introducedByCustomerName':this.updateCustomerForm.introducedByCustomerName,
           };
         }else {
           params = {
@@ -509,12 +571,17 @@
             'birthday':formatDate_yyyyMMdd(this.updateCustomerForm.birthday),
             'customerMassLevel':this.updateCustomerForm.customerMassLevel,
             'belongToEmployeeId':this.updateCustomerForm.belongToEmployeeId,
+            'hasIntroducedByCustomer':this.updateCustomerForm.hasIntroducedByCustomer,
+            'introducedByCustomerPhoneNumber':this.updateCustomerForm.introducedByCustomerPhoneNumber,
+            'introducedByCustomerName':this.updateCustomerForm.introducedByCustomerName,
           };
         }
 
         let res = await updateCustomer(params);
         if (res.code === '0000') {
           this.$refs.updateCustomerFormRef.resetFields();
+          this.updateCustomerForm.hasIntroducedByCustomer = "0";
+          this.updateCustomerForm.showIntroducedByCustomer = false;
           this.$Message.success(res.msg);
           this.queryCustomerList();
         }else {
