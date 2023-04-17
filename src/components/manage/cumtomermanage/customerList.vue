@@ -204,7 +204,7 @@
           {
             title: '顾客姓名',
             key: 'customerName',
-            width: 200,
+            width: 150,
             fixed: 'left',
             render: (h, params) => {
               return h('div', [
@@ -225,12 +225,12 @@
           {
             title: '手机号',
             key: 'phoneNumber',
-            width: 200,
+            width: 150,
           },
           {
             title: '生日日期',
             key: 'birthday',
-            width: 200,
+            width: 150,
             render: (h,params)=>{
               return h('div',
                 params.row.birthday
@@ -240,7 +240,7 @@
           {
             title: '会员等级',
             key: 'customerMassLevel',
-            width: 200,
+            width: 150,
             render: (h,params)=>{
               return h('div',
                 this.renderCustomerMassLevel(params.row.customerMassLevel)
@@ -250,7 +250,7 @@
           {
             title: '所属员工姓名',
             key: 'belongToEmployeeName',
-            width: 200,
+            width: 150,
             render: (h,params)=>{
               return h('div',
                 this.renderBelongToEmployeeName(params.row.belongToEmployeeId)
@@ -260,7 +260,7 @@
           {
             title: '被介绍客户姓名',
             key: 'introducedByCustomerId',
-            width: 200,
+            width: 150,
             render: (h,params)=>{
               return h('div',
                 this.renderIntroducedNameByCustomerName(params.row.introducedByCustomerId)

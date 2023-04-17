@@ -68,7 +68,7 @@
           {
             title: '姓名',
             key: 'customerName',
-            width: 200,
+            width: 150,
             fixed: 'left',
             render: (h, params) => {
               return h('div', [
@@ -89,7 +89,7 @@
           {
             title: '手机号',
             key: 'customerId',
-            width: 200,
+            width: 150,
             render: (h,params)=>{
               return h('div',
                 this.renderPhoneNumberByCustomerId(params.row.customerId)
@@ -99,7 +99,7 @@
           {
             title: '介绍的顾客姓名',
             key: 'introduceCustomerId',
-            width: 200,
+            width: 150,
             render: (h,params)=>{
               return h('div',
                 this.renderIntroduceCustomerNameByCustomerId(params.row.introduceCustomerId)
@@ -109,7 +109,7 @@
           {
             title: '介绍的顾客手机号',
             key: 'introduceCustomerId',
-            width: 200,
+            width: 150,
             render: (h,params)=>{
               return h('div',
                 this.renderIntroduceCustomerPhoneNumberByCustomerId(params.row.introduceCustomerId)
