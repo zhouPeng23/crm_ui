@@ -116,7 +116,7 @@
 </template>
 
 <script>
-  import { formatDate_yyyyMMdd,formatStrDate_yymmddHHmmss,validateEmpty,validatePhoneNumber,formatAmount,addDays,formatHumanSexByNumber,dateIsToday,getDatePeriod,getTimePeriod} from "../../../tools";
+  import { formatDate_yyyyMMdd,formatStrDate_yymmddHHmmss,validateEmpty,validatePhoneNumber,formatAmount,addDays,formatHumanSexByNumber,dateIsToday,getDatePeriod,getTimePeriod} from "../../../tools/index";
   import {queryAppointmentList,queryShopAllCustomer,queryProjectList,queryAppointmentStatusList,queryCustomerByPhoneNumber,
     addAppointment,updateAppointment,queryEmployeeList,zuofeiAppointment} from "../../../api/ApiList";
   import confirmModal from "../../utils/modal/confirmModal";

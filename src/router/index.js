@@ -11,10 +11,9 @@ const projectList  = () => import('../components/manage/shopmanage/projectList')
 const employeeList  = () => import('../components/manage/employeemanage/employeeList');
 
 //顾客管理
+const appointmentList  = () => import('../components/manage/cumtomermanage/appointmentList');
 const customerList  = () => import('../components/manage/cumtomermanage/customerList');
-
-//预约管理
-const appointmentList  = () => import('../components/manage/appointmentmanage/appointmentList');
+const customerIncomeList  = () => import('../components/manage/cumtomermanage/customerIncomeList');
 
 //登录管理
 const loginPage  = () => import('../components/manage/loginmanage/loginPage');
@@ -36,12 +35,9 @@ const employeeManageRouters = [
 
 //客户管理
 const customerManageRouters = [
-  {path:'customerList',component:customerList},
-];
-
-//预约管理
-const appointmentManageRouters = [
   {path:'appointmentList',component:appointmentList},
+  {path:'customerList',component:customerList},
+  {path:'customerIncomeList',component:customerIncomeList},
 ];
 
 //登录管理
@@ -59,7 +55,6 @@ export default new Router({
     {path:'/manage/shopmanage',component:baseLayout,children:shopManageRouters},//门店管理
     {path:'/manage/employeemanage',component:baseLayout,children:employeeManageRouters},//员工管理
     {path:'/manage/customermanage',component:baseLayout,children:customerManageRouters},//客户管理
-    {path:'/manage/appointmentmanage',component:baseLayout,children:appointmentManageRouters},//预约管理
     {path:'/manage/loginmanage',component:baseLayout,children:loginManageRouters},//登录管理
     {path: '/login', component:loginPage },
     {path: '*', component:loginPage },
