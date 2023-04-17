@@ -37,6 +37,9 @@ export const deleteCustomer = (params) => POST(baseUrl+'/customer/deleteCustomer
 export const getAllCustomerMassLevelList = (params) => POST(baseUrl+'/customer/getAllCustomerMassLevelList',params);
 export const queryCustomerByPhoneNumber = (params) => POST(baseUrl+'/customer/queryCustomerByPhoneNumber',params);
 
+//顾客收益
+export const queryCustomerIncomeList = (params) => POST(baseUrl+'/customerIncome/queryCustomerIncomeList',params);
+
 //预约
 export const queryAppointmentList = (params) => POST(baseUrl+'/appointment/queryAppointmentList',params);
 export const addAppointment = (params) => POST(baseUrl+'/appointment/addAppointment',params);
