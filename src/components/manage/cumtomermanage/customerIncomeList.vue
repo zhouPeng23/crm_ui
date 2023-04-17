@@ -67,13 +67,13 @@
         columns: [
           {
             title: '姓名',
-            key: 'customerName',
+            key: 'customerId',
             width: 150,
             fixed: 'left',
-            render: (h, params) => {
-              return h('div', [
-                h('strong' ,params.row.customerName)
-              ]);
+            render: (h,params)=>{
+              return h('div',
+                this.renderCustomerNameByCustomerId(params.row.customerId)
+              )
             }
           },
           {
@@ -168,6 +168,18 @@
         this.currentPageNo = 1;
         //重置后，重新查询
         this.queryCustomerIncomeList();
+      },
+      /**
+       * 渲染顾客姓名
+       * @param str
+       * @returns {string}
+       */
+      renderCustomerNameByCustomerId : function(str){
+        for(let i = 0; i < this.allCustomerList.length; i++){
+          if (str === this.allCustomerList[i].customerId) {
+            return this.allCustomerList[i].customerName;
+          }
+        }
       },
       /**
        * 渲染介绍的顾客姓名
