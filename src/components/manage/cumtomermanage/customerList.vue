@@ -215,7 +215,7 @@
           {
             title: '性别',
             key: 'sex',
-            width: 200,
+            width: 100,
             render: (h,params)=>{
               return h('div',
                 formatHumanSexByNumber(params.row.sex)
@@ -247,11 +247,6 @@
               )
             }
           },
-          // {
-          //   title: '所属员工id',
-          //   key: 'belongToEmployeeId',
-          //   width: 200,
-          // },
           {
             title: '所属员工姓名',
             key: 'belongToEmployeeName',
@@ -302,16 +297,6 @@
               )
             }
           },
-          // {
-          //   title: '顾客id',
-          //   key: 'customerId',
-          //   width: 80,
-          // },
-          // {
-          //   title: '门店id',
-          //   key: 'shopId',
-          //   width: 80,
-          // },
           {
             title: '操作',
             slot: 'action',
