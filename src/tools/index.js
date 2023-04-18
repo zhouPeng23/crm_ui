@@ -42,6 +42,7 @@ export function validatePassword(password) {
  * @returns {string}
  */
 export function formatDate_yyyyMMdd(date) {
+  console.log(date);
   if (!validateEmpty(date)) {
     return "";
   }
