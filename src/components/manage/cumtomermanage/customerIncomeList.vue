@@ -41,7 +41,7 @@
 
 <script>
   import { formatDate_yyyyMMdd,formatStrDate_yymmddHHmmss,validateEmpty,formatHumanSexByNumber,validatePhoneNumber} from "../../../tools";
-  import {queryCustomerIncomeList,queryShopAllCustomer} from "../../../api/ApiList";
+  import {queryCustomerIncomeList,queryShopAllCustomer,queryProjectList,queryAppointmentByIds} from "../../../api/ApiList";
   import confirmModal from "../../utils/modal/confirmModal";
 
   export default {
@@ -61,6 +61,8 @@
         searchCustomerName:"",
         searchPhoneNumber:"",
         allCustomerList: [],
+        projectList:[],
+        currentPageAppointmentList:[],
         showAppointmentDetailForm:{
           customerName:"",
         },
@@ -117,6 +119,16 @@
             }
           },
           {
+            title: '预约单做的项目',
+            key: 'introduceCustomerAppointmentId',
+            width: 150,
+            render: (h,params)=>{
+              return h('div',
+                this.renderProjectName(this.findAppointmentProjectIdsById(params.row.introduceCustomerAppointmentId))
+              )
+            }
+          },
+          {
             title: '创建时间',
             key: 'createTime',
             width: 200,
@@ -152,6 +164,26 @@
         let res = await queryCustomerIncomeList(params);
         this.data = res.data.records;
         this.total = res.data.total;
+
+        //查询当前分页中预约单集合
+        this.queryCurrentPageAppointment();
+
+      },
+      queryCurrentPageAppointment:async function(){
+        if (this.data.length === 0) {
+          return;
+        }
+        let appointmentIds = "";
+        for (let i = 0; i < this.data.length; i++) {
+          appointmentIds += this.data[i].introduceCustomerAppointmentId+","
+        }
+        // 截取字符串，去掉最后一个字符
+        appointmentIds = appointmentIds.slice(0, -1);
+        let params = {
+          'appointmentIds':appointmentIds,
+        };
+        let res = await queryAppointmentByIds(params);
+        this.currentPageAppointmentList = res.data;
       },
       queryShopAllCustomer:async function(){
         let params = {
@@ -159,6 +191,14 @@
         };
         let res = await queryShopAllCustomer(params);
         this.allCustomerList = res.data;
+      },
+      // 查询项目集合
+      queryProjectList :async function () {
+        let params = {
+          'shopId': this.selectedShopId
+        };
+        let res = await queryProjectList(params);
+        this.projectList = res.data;
       },
       resetQuery: function(){
         //查询条件设置为空
@@ -229,6 +269,41 @@
           }
         }
       },
+
+      /**
+       * 根据预约id查找预约单projectIds
+       * @param appointmentId
+       * @returns {string}
+       */
+      findAppointmentProjectIdsById : function(appointmentId){
+        for(let i = 0; i < this.currentPageAppointmentList.length; i++){
+          if (appointmentId === this.currentPageAppointmentList[i].appointmentId) {
+            return this.currentPageAppointmentList[i].projectIds;
+          }
+        }
+      },
+      /**
+       * 渲染项目名称
+       * @param projectIdsStr
+       * @returns {string}
+       */
+      renderProjectName : function(projectIdsStr){
+        let allProjectName = "";
+        //根据逗号分隔projectIds
+        let projectIdsArray = projectIdsStr.split(",");
+        for (let i = 0; i < projectIdsArray.length; i++) {
+          for(let j = 0; j < this.projectList.length; j++){
+            if (projectIdsArray[i] === this.projectList[j].projectId.toString()) {
+              allProjectName += this.projectList[j].projectName + " ,";
+            }
+          }
+        }
+        //去掉最后一个逗号
+        if (allProjectName.endsWith(",")) {
+          allProjectName = allProjectName.slice(0, -1);
+        }
+        return allProjectName;
+      },
       // 显示预约单详情
       showAppointmentDetailModal:function(index){
         this.showAppointmentDetailForm.customerName = this.data[index].customerName;
@@ -246,6 +321,9 @@
     mounted:async function () {
       this.selectedShopId = localStorage.getItem('selectedShopId');
       this.selectedShopName = localStorage.getItem('selectedShopName');
+
+      //查项目集合
+      this.queryProjectList();
 
       //查询所有顾客
       this.queryShopAllCustomer();
