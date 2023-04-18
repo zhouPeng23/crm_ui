@@ -231,3 +231,15 @@ export function formatAmount(amount) {
   return integerPart + decimalPart;
 }
 
+
+/**
+ * 格式化顾客收益金额
+ * @param amount
+ * @param percent
+ * @returns {string}
+ */
+export function formatCustomerIncomeAmount(amount,percent) {
+  amount = amount * percent;
+  return formatAmount(amount);
+}
+

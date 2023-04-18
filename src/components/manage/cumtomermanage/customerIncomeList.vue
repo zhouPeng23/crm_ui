@@ -36,7 +36,7 @@
 </template>
 
 <script>
-  import { formatDate_yyyyMMdd,formatStrDate_yymmddHHmmss,validateEmpty,formatHumanSexByNumber,validatePhoneNumber,formatAmount} from "../../../tools";
+  import { formatDate_yyyyMMdd,formatStrDate_yymmddHHmmss,validateEmpty,formatHumanSexByNumber,validatePhoneNumber,formatAmount,formatCustomerIncomeAmount} from "../../../tools";
   import {queryCustomerIncomeList,queryShopAllCustomer,queryProjectList,queryAppointmentByIds,queryAppointmentStatusList} from "../../../api/ApiList";
   import confirmModal from "../../utils/modal/confirmModal";
 
@@ -67,18 +67,21 @@
           {
             title: '姓名',
             key: 'customerId',
-            width: 150,
+            width: 100,
             fixed: 'left',
-            render: (h, params) => {
-              return h('div', [
-                h('strong' ,this.renderCustomerNameByCustomerId(params.row.customerId))
-              ]);
+            render: (h,params)=>{
+              return h('div',
+                {style:{
+                    color:"orange"
+                  }},
+                [ h('strong',this.renderCustomerNameByCustomerId(params.row.customerId))]
+              )
             }
           },
           {
             title: '性别',
             key: 'sex',
-            width: 100,
+            width: 70,
             render: (h,params)=>{
               return h('div',
                 formatHumanSexByNumber(this.renderSexByCustomerId(params.row.customerId))
@@ -88,7 +91,7 @@
           {
             title: '手机号',
             key: 'customerId',
-            width: 150,
+            width: 120,
             render: (h,params)=>{
               return h('div',
                 this.renderPhoneNumberByCustomerId(params.row.customerId)
@@ -108,7 +111,7 @@
           {
             title: '介绍的顾客手机号',
             key: 'introduceCustomerId',
-            width: 150,
+            width: 140,
             render: (h,params)=>{
               return h('div',
                 this.renderIntroduceCustomerPhoneNumberByCustomerId(params.row.introduceCustomerId)
@@ -138,10 +141,23 @@
           {
             title: '项目总金额',
             key: 'introduceCustomerAppointmentId',
-            width: 150,
+            width: 100,
             render: (h,params)=>{
               return h('div',
                 formatAmount(this.findAppointmentProjectPriceById(params.row.introduceCustomerAppointmentId))
+              )
+            }
+          },
+          {
+            title: '本单收益金额',
+            key: 'introduceCustomerAppointmentId',
+            width: 120,
+            render: (h,params)=>{
+              return h('div',
+                {style:{
+                    color:"orange"
+                  }},
+                [ h('strong',"+"+formatCustomerIncomeAmount(this.findAppointmentProjectPriceById(params.row.introduceCustomerAppointmentId),0.1))]
               )
             }
           },
@@ -158,7 +174,7 @@
           {
             title: '预约单状态',
             key: 'introduceCustomerAppointmentId',
-            width: 300,
+            width: 200,
             align: 'center',
             fixed: 'right',
             render: (h,params)=>{
