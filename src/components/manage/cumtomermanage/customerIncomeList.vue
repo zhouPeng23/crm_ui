@@ -6,8 +6,8 @@
         &nbsp;
       </Col>
       <Col span="18">
-        <Input v-model="searchCustomerName" placeholder="顾客姓名" clearable style="width: 150px" />
-        <Input v-model="searchPhoneNumber" placeholder="顾客手机号码" clearable style="width: 150px" :maxlength="11"/>
+        <Input v-model="searchCustomerName" placeholder="姓名" clearable style="width: 150px" />
+        <Input v-model="searchPhoneNumber" placeholder="手机号" clearable style="width: 150px" :maxlength="11"/>
         <Button type="primary" shape="circle" icon="ios-search" @click="queryCustomerIncomeList">查询</Button>
         <Button shape="circle" @click="resetQuery">重置</Button>
       </Col>
@@ -17,10 +17,6 @@
         <!--列表展示数据-->
         <Table border :columns="columns" :data="data">
           <template #action="{ row, index }">
-            <Row>
-              <Col span="6">&nbsp;</Col>
-              <Col span="6"><Button type="primary" @click="showAppointmentDetailModal(index)">预约单详情</Button></Col>
-            </Row>
           </template>
         </Table>
 
@@ -40,8 +36,8 @@
 </template>
 
 <script>
-  import { formatDate_yyyyMMdd,formatStrDate_yymmddHHmmss,validateEmpty,formatHumanSexByNumber,validatePhoneNumber} from "../../../tools";
-  import {queryCustomerIncomeList,queryShopAllCustomer,queryProjectList,queryAppointmentByIds} from "../../../api/ApiList";
+  import { formatDate_yyyyMMdd,formatStrDate_yymmddHHmmss,validateEmpty,formatHumanSexByNumber,validatePhoneNumber,formatAmount} from "../../../tools";
+  import {queryCustomerIncomeList,queryShopAllCustomer,queryProjectList,queryAppointmentByIds,queryAppointmentStatusList} from "../../../api/ApiList";
   import confirmModal from "../../utils/modal/confirmModal";
 
   export default {
@@ -63,6 +59,7 @@
         allCustomerList: [],
         projectList:[],
         currentPageAppointmentList:[],
+        appointmentStatusList:[],
         showAppointmentDetailForm:{
           customerName:"",
         },
@@ -119,12 +116,32 @@
             }
           },
           {
-            title: '预约单做的项目',
+            title: '预约日期+时间',
+            key: 'introduceCustomerAppointmentId',
+            width: 160,
+            render: (h,params)=>{
+              return h('div',
+                this.findAppointmentDateById(params.row.introduceCustomerAppointmentId)
+              )
+            }
+          },
+          {
+            title: '预约单项目',
+            key: 'introduceCustomerAppointmentId',
+            width: 258,
+            render: (h,params)=>{
+              return h('div',
+                this.renderProjectName(this.findAppointmentProjectIdsById(params.row.introduceCustomerAppointmentId))
+              )
+            }
+          },
+          {
+            title: '项目总金额',
             key: 'introduceCustomerAppointmentId',
             width: 150,
             render: (h,params)=>{
               return h('div',
-                this.renderProjectName(this.findAppointmentProjectIdsById(params.row.introduceCustomerAppointmentId))
+                formatAmount(this.findAppointmentProjectPriceById(params.row.introduceCustomerAppointmentId))
               )
             }
           },
@@ -139,12 +156,20 @@
             }
           },
           {
-            title: '操作',
-            slot: 'action',
+            title: '预约单状态',
+            key: 'introduceCustomerAppointmentId',
             width: 300,
             align: 'center',
-            fixed: 'right'
-          }
+            fixed: 'right',
+            render: (h,params)=>{
+              return h('div',
+                {style:{
+                    color:this.renderColorByAppointmentStatus(this.findAppointmentStatusById(params.row.introduceCustomerAppointmentId))
+                  }},
+                [ h('strong',this.renderAppointmentStatus(this.findAppointmentStatusById(params.row.introduceCustomerAppointmentId)))]
+              )
+            }
+          },
         ],
       }
     },
@@ -199,6 +224,12 @@
         };
         let res = await queryProjectList(params);
         this.projectList = res.data;
+      },
+      //查询预约状态集合
+      queryAppointmentStatusList:async function(){
+        let params = {};
+        let res = await queryAppointmentStatusList(params);
+        this.appointmentStatusList = res.data;
       },
       resetQuery: function(){
         //查询条件设置为空
@@ -269,7 +300,32 @@
           }
         }
       },
-
+      /**
+       * 渲染预约状态
+       * @param str
+       * @returns {string}
+       */
+      renderAppointmentStatus : function(str){
+        for(let i = 0; i < this.appointmentStatusList.length; i++){
+          if (str === this.appointmentStatusList[i].code) {
+            return this.appointmentStatusList[i].msg;
+          }
+        }
+      },
+      /**
+       * 根据状态渲染颜色
+       * @param appointmentStatus
+       * @returns {string}
+       */
+      renderColorByAppointmentStatus : function(appointmentStatus){
+        if (appointmentStatus===1){
+          return "blue";
+        } else if (appointmentStatus === 2) {
+          return "chartreuse";
+        }else if (appointmentStatus === 3) {
+          return "black";
+        }
+      },
       /**
        * 根据预约id查找预约单projectIds
        * @param appointmentId
@@ -279,6 +335,42 @@
         for(let i = 0; i < this.currentPageAppointmentList.length; i++){
           if (appointmentId === this.currentPageAppointmentList[i].appointmentId) {
             return this.currentPageAppointmentList[i].projectIds;
+          }
+        }
+      },
+      /**
+       * 根据预约id查找预约单projectPrice
+       * @param appointmentId
+       * @returns {string}
+       */
+      findAppointmentProjectPriceById : function(appointmentId){
+        for(let i = 0; i < this.currentPageAppointmentList.length; i++){
+          if (appointmentId === this.currentPageAppointmentList[i].appointmentId) {
+            return this.currentPageAppointmentList[i].projectPrice;
+          }
+        }
+      },
+      /**
+       * 根据预约id查找预约单status
+       * @param appointmentId
+       * @returns {string}
+       */
+      findAppointmentStatusById : function(appointmentId){
+        for(let i = 0; i < this.currentPageAppointmentList.length; i++){
+          if (appointmentId === this.currentPageAppointmentList[i].appointmentId) {
+            return this.currentPageAppointmentList[i].appointmentStatus;
+          }
+        }
+      },
+      /**
+       * 根据预约id查找预约单日期
+       * @param appointmentId
+       * @returns {string}
+       */
+      findAppointmentDateById : function(appointmentId){
+        for(let i = 0; i < this.currentPageAppointmentList.length; i++){
+          if (appointmentId === this.currentPageAppointmentList[i].appointmentId) {
+            return this.currentPageAppointmentList[i].appointmentDate+" "+this.currentPageAppointmentList[i].appointmentTime;
           }
         }
       },
@@ -330,6 +422,9 @@
 
       //查顾客收益
       this.queryCustomerIncomeList();
+
+      //查询预约状态集合
+      this.queryAppointmentStatusList();
 
     }
   }
