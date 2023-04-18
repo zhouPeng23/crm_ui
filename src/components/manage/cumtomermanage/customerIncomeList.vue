@@ -70,10 +70,10 @@
             key: 'customerId',
             width: 150,
             fixed: 'left',
-            render: (h,params)=>{
-              return h('div',
-                this.renderCustomerNameByCustomerId(params.row.customerId)
-              )
+            render: (h, params) => {
+              return h('div', [
+                h('strong' ,this.renderCustomerNameByCustomerId(params.row.customerId))
+              ]);
             }
           },
           {

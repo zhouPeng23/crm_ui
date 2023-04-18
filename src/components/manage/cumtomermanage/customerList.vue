@@ -524,6 +524,7 @@
           this.addCustomerForm.showIntroducedByCustomer = false;
           this.$Message.success(res.msg);
           this.queryCustomerList();
+          this.queryShopAllCustomer();
         }else {
           this.$Message.error(res.msg);
         }
@@ -569,6 +570,7 @@
           this.updateCustomerForm.showIntroducedByCustomer = false;
           this.$Message.success(res.msg);
           this.queryCustomerList();
+          this.queryShopAllCustomer();
         }else {
           this.$Message.error(res.msg);
         }
