@@ -33,6 +33,7 @@
               </template>
               <MenuItem name="2-1"><router-link to="/manage/employeemanage/shiftList">{{mainMenu2_01}}</router-link></MenuItem>
               <MenuItem name="2-2"><router-link to="/manage/employeemanage/employeeList">{{mainMenu2_02}}</router-link></MenuItem>
+              <MenuItem name="2-3"><router-link to="/manage/employeemanage/employeeList">{{mainMenu2_03}}</router-link></MenuItem>
             </Submenu>
             <Submenu name="3">
               <template slot="title">
@@ -85,6 +86,7 @@
         mainMenu2:'员工管理',
           mainMenu2_01:'班次列表',
           mainMenu2_02:'员工列表',
+          mainMenu2_03:'加班记录',
         mainMenu3:'顾客管理',
           mainMenu3_01:'预约列表',
           mainMenu3_02:'顾客列表',

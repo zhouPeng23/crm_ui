@@ -53,17 +53,17 @@
         <FormItem label="预约日期" prop="appointmentDate" required>
           <DatePicker type="date" v-model="addAppointmentForm.appointmentDate" placeholder="请选择" style="width: 200px" format="yyyy-MM-dd"/>
         </FormItem>
+        <FormItem label="预约员工" prop="employeeId" required>
+          <Select v-model="addAppointmentForm.employeeId" style="width:100px" :onchange="employeeIdChange_add()">
+            <Option v-for="item in employeeList" :value="item.employeeId" :key="item.employeeId">{{ item.employeeName }}</Option>
+          </Select>
+        </FormItem>
         <FormItem label="预约时间" prop="appointmentTime" required>
           <TimePicker format="HH:mm" v-model="addAppointmentForm.appointmentTime" placeholder="请选择" style="width: 100px" />
         </FormItem>
         <FormItem label="预约项目" prop="projectIds" required>
           <Select v-model="addAppointmentForm.projectIds" filterable multiple >
             <Option v-for="item in projectList" :value="item.projectId" :key="item.projectId">{{ item.projectName }}</Option>
-          </Select>
-        </FormItem>
-        <FormItem label="本次服务员工" prop="employeeId" required>
-          <Select v-model="addAppointmentForm.employeeId" style="width:100px">
-            <Option v-for="item in employeeList" :value="item.employeeId" :key="item.employeeId">{{ item.employeeName }}</Option>
           </Select>
         </FormItem>
       </Form>
@@ -86,17 +86,17 @@
         <FormItem label="预约日期" prop="appointmentDate" required>
           <DatePicker type="date" v-model="updateAppointmentForm.appointmentDate" placeholder="请选择" style="width: 200px" format="yyyy-MM-dd"/>
         </FormItem>
+        <FormItem label="预约员工" prop="employeeId" required>
+          <Select v-model="updateAppointmentForm.employeeId" style="width:100px">
+            <Option v-for="item in employeeList" :value="item.employeeId" :key="item.employeeId">{{ item.employeeName }}</Option>
+          </Select>
+        </FormItem>
         <FormItem label="预约时间" prop="appointmentTime" required>
           <TimePicker format="HH:mm" v-model="updateAppointmentForm.appointmentTime" placeholder="请选择" style="width: 100px" />
         </FormItem>
         <FormItem label="预约项目" prop="projectIds" required>
           <Select v-model="updateAppointmentForm.projectIds" filterable multiple >
             <Option v-for="item in projectList" :value="item.projectId" :key="item.projectId">{{ item.projectName }}</Option>
-          </Select>
-        </FormItem>
-        <FormItem label="本次服务员工" prop="employeeId" required>
-          <Select v-model="updateAppointmentForm.employeeId" style="width:100px">
-            <Option v-for="item in employeeList" :value="item.employeeId" :key="item.employeeId">{{ item.employeeName }}</Option>
           </Select>
         </FormItem>
         <FormItem label="预约状态" prop="appointmentStatus" required>
@@ -118,7 +118,7 @@
 <script>
   import { formatDate_yyyyMMdd,formatStrDate_yymmddHHmmss,validateEmpty,validatePhoneNumber,formatAmount,addDays,formatHumanSexByNumber,dateIsToday,getDatePeriod,getTimePeriod} from "../../../tools/index";
   import {queryAppointmentList,queryShopAllCustomer,queryProjectList,queryAppointmentStatusList,queryCustomerByPhoneNumber,
-    addAppointment,updateAppointment,queryEmployeeList,zuofeiAppointment} from "../../../api/ApiList";
+    addAppointment,updateAppointment,queryEmployeeList,zuofeiAppointment,queryShiftTimeList} from "../../../api/ApiList";
   import confirmModal from "../../utils/modal/confirmModal";
 
   export default {
@@ -142,6 +142,7 @@
         employeeList: [],
         customerList:[],
         projectList:[],
+        allShiftTimeList:[],
         appointmentStatusList:[],
         addAppointmentForm:{
           phoneNumber:"",
@@ -267,7 +268,7 @@
             }
           },
           {
-            title: '本次服务员工姓名',
+            title: '本次服务员工',
             key: 'employeeId',
             width: 150,
             render: (h,params)=>{
@@ -423,6 +424,14 @@
         let res = await queryProjectList(params);
         this.projectList = res.data;
       },
+      // 查询店铺下所有班次集合
+      queryShiftTimeList :async function () {
+        let params = {
+          'shopId': this.selectedShopId
+        };
+        let res = await queryShiftTimeList(params);
+        this.allShiftTimeList = res.data;
+      },
       //查询预约状态集合
       queryAppointmentStatusList:async function(){
         let params = {};
@@ -563,6 +572,25 @@
       showAddModal:function(){
         this.$refs.addAppointmentModalRef.showModal();
       },
+      //添加预约，预约员工改变触发函数
+      employeeIdChange_add: function(){
+        let employeeId = this.addAppointmentForm.employeeId;
+        let shiftId = "";
+        //查到班次id
+        for(let i = 0; i < this.employeeList.length; i++){
+          if (employeeId === this.employeeList[i].employeeId) {
+            shiftId = this.employeeList[i].shiftId;
+          }
+        }
+        //根据班次id查班次时间
+        let shiftTimesStr = "";
+        for(let i = 0; i < this.allShiftTimeList.length; i++){
+          if (shiftId === this.allShiftTimeList[i].shiftId) {
+            shiftTimesStr += "[ "+this.allShiftTimeList[i].startTime.substring(0,5) +" - "+ this.allShiftTimeList[i].endTime.substring(0,5) +" ]  、";
+          }
+        }
+        console.log(shiftTimesStr.substring(0,shiftTimesStr.length-1))
+      },
       /**
        * 根据手机号查询顾客，如果能查到则补充姓名、性别
        */
@@ -698,6 +726,9 @@
 
       //查项目集合
       this.queryProjectList();
+
+      //查询店铺下所有班次集合
+      this.queryShiftTimeList();
 
       //查询预约状态集合
       this.queryAppointmentStatusList();
