@@ -130,7 +130,7 @@ function dateStrIsToday(dateString) {
 
 
 /**
- * 传入日期和时间：如果日期是今天，则返回上午、下午、晚上+时间，否则继续返回时间，如： 上午 08:00:00 ,  13:00:00
+ * 传入日期和时间：如果日期是今天，则返回上午、下午、晚上+时间，否则继续返回时间，如： 上午 08:00 ,  13:00
  * @param dateString
  * @param timeString
  * @returns {string}

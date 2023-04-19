@@ -8,6 +8,7 @@ const shopList  = () => import('../components/manage/shopmanage/shopList');
 const projectList  = () => import('../components/manage/shopmanage/projectList');
 
 //员工管理
+const shiftList  = () => import('../components/manage/employeemanage/shiftList');
 const employeeList  = () => import('../components/manage/employeemanage/employeeList');
 
 //顾客管理
@@ -30,6 +31,7 @@ const shopManageRouters = [
 
 //员工管理
 const employeeManageRouters = [
+  {path:'shiftList',component:shiftList},
   {path:'employeeList',component:employeeList},
 ];
 

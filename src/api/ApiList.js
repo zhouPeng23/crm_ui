@@ -25,6 +25,13 @@ export const addEmployee = (params) => POST(baseUrl+'/employee/addEmployee',para
 export const updateEmployee = (params) => POST(baseUrl+'/employee/updateEmployee',params);
 export const deleteEmployee = (params) => POST(baseUrl+'/employee/deleteEmployee',params);
 
+//班次和时间
+export const queryShiftList = (params) => POST(baseUrl+'/shift/queryShiftList',params);
+export const addShift = (params) => POST(baseUrl+'/shift/addShift',params);
+export const deleteShift = (params) => POST(baseUrl+'/shift/deleteShift',params);
+export const queryShiftTimeList = (params) => POST(baseUrl+'/shift/queryShiftTimeList',params);
+export const addShiftTime = (params) => POST(baseUrl+'/shift/addShiftTime',params);
+
 //角色
 export const queryRoleList = (params) => POST(baseUrl+'/role/queryRoleList',params);
 
