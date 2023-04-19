@@ -149,7 +149,7 @@
         // 总数
         total:0,
         // 每页记录数
-        pageSize:10,
+        pageSize:20,
         // 当前页
         currentPageNo:1,
         searchCustomerName:"",
