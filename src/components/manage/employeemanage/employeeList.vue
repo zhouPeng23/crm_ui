@@ -44,6 +44,11 @@
             <Option v-for="item in roleList" :value="item.roleId" :key="item.roleId">{{ item.roleName }}</Option>
           </Select>
         </FormItem>
+        <FormItem label="班次" prop="shiftId" required>
+          <Select v-model="addEmployeeForm.shiftId" style="width:100px">
+            <Option v-for="item in shiftList" :value="item.shiftId" :key="item.shiftId">{{ item.shiftName }}</Option>
+          </Select>
+        </FormItem>
       </Form>
     </confirmModal>
 
@@ -69,6 +74,11 @@
             <Option v-for="item in roleList" :value="item.roleId" :key="item.roleId">{{ item.roleName }}</Option>
           </Select>
         </FormItem>
+        <FormItem label="班次" prop="shiftId" required>
+          <Select v-model="updateEmployeeForm.shiftId" style="width:100px">
+            <Option v-for="item in shiftList" :value="item.shiftId" :key="item.shiftId">{{ item.shiftName }}</Option>
+          </Select>
+        </FormItem>
       </Form>
     </confirmModal>
 
@@ -82,7 +92,7 @@
 
 <script>
   import { formatDate_yyyyMMdd,formatStrDate_yymmddHHmmss ,validateEmpty,formatHumanSexByNumber} from "../../../tools";
-  import {queryRoleList,queryEmployeeList,addEmployee,deleteEmployee,updateEmployee} from "../../../api/ApiList";
+  import {queryRoleList,queryEmployeeList,addEmployee,deleteEmployee,updateEmployee,queryShiftList} from "../../../api/ApiList";
   import confirmModal from "../../utils/modal/confirmModal";
 
   export default {
@@ -99,6 +109,7 @@
           phoneNumber:"",
           birthday:"",
           roleId:"",
+          shiftId:"",
         },
         updateEmployeeForm:{
           employeeId:"",
@@ -107,6 +118,7 @@
           phoneNumber:"",
           birthday:"",
           roleId:"",
+          shiftId:"",
         },
         deleteEmployeeForm:{
           employeeId:"",
@@ -123,11 +135,12 @@
           },
         ],
         roleList:[],
+        shiftList:[],
         columns: [
           {
             title: '员工姓名',
             key: 'employeeName',
-            width: 200,
+            width: 150,
             fixed: 'left',
             render: (h, params) => {
               return h('div', [
@@ -138,7 +151,7 @@
           {
             title: '性别',
             key: 'sex',
-            width: 200,
+            width: 100,
             render: (h,params)=>{
               return h('div',
                 formatHumanSexByNumber(params.row.sex)
@@ -146,29 +159,34 @@
             }
           },
           {
+            title: '班次',
+            key: 'shiftId',
+            width: 100,
+            render: (h,params)=>{
+              return h('div',
+                this.renderShift(params.row.shiftId)
+              )
+            }
+          },
+          {
             title: '手机号',
             key: 'phoneNumber',
-            width: 200,
+            width: 150,
           },
           {
             title: '生日日期',
             key: 'birthday',
-            width: 200,
+            width: 150,
             render: (h,params)=>{
               return h('div',
                 params.row.birthday
               )
             }
           },
-          // {
-          //   title: '角色id',
-          //   key: 'roleId',
-          //   width: 200,
-          // },
           {
             title: '角色名称',
-            key: 'roleName',
-            width: 200,
+            key: 'roleId',
+            width: 100,
             render: (h,params)=>{
               return h('div',
                 this.renderRoleName(params.row.roleId)
@@ -205,16 +223,6 @@
               )
             }
           },
-          // {
-          //   title: '员工id',
-          //   key: 'employeeId',
-          //   width: 80,
-          // },
-          // {
-          //   title: '门店id',
-          //   key: 'shopId',
-          //   width: 80,
-          // },
           {
             title: '操作',
             slot: 'action',
@@ -234,6 +242,25 @@
         let res = await queryEmployeeList(params);
         this.data = res.data;
       },
+      //查询角色集合
+      queryRoleList :async function () {
+        //查询角色集合
+        let params = {
+          'shopId':this.selectedShopId
+        };
+        let roleDataRes = await queryRoleList(params);
+        if (roleDataRes.code === '0000' && roleDataRes.data!=null) {
+          this.roleList = roleDataRes.data;
+        }
+      },
+      //查询班次集合
+      queryShiftList :async function () {
+        let params = {
+          'shopId': this.selectedShopId
+        };
+        let res = await queryShiftList(params);
+        this.shiftList = res.data;
+      },
       /**
        * 渲染员工角色名称
        * @param str
@@ -242,6 +269,18 @@
         for(let i = 0; i < this.roleList.length; i++){
           if (str === this.roleList[i].roleId) {
             return this.roleList[i].roleName;
+          }
+        }
+      },
+
+      /**
+       * 渲染员工班次名称
+       * @param str
+       */
+      renderShift :function(str){
+        for(let i = 0; i < this.shiftList.length; i++){
+          if (str === this.shiftList[i].shiftId) {
+            return this.shiftList[i].shiftName;
           }
         }
       },
@@ -254,6 +293,7 @@
         this.updateEmployeeForm.employeeId = this.data[index].employeeId;
         this.updateEmployeeForm.employeeName = this.data[index].employeeName;
         this.updateEmployeeForm.sex = this.data[index].sex;
+        this.updateEmployeeForm.shiftId = this.data[index].shiftId;
         this.updateEmployeeForm.phoneNumber = this.data[index].phoneNumber;
         this.updateEmployeeForm.birthday = this.data[index].birthday;
         this.updateEmployeeForm.roleId = this.data[index].roleId;
@@ -274,6 +314,7 @@
             'shopId':this.selectedShopId,
             'employeeName':this.addEmployeeForm.employeeName,
             'sex':this.addEmployeeForm.sex,
+            'shiftId':this.addEmployeeForm.shiftId,
             'phoneNumber':this.addEmployeeForm.phoneNumber,
             //生日为空就不传生日字段
             'roleId':this.addEmployeeForm.roleId,
@@ -283,6 +324,7 @@
             'shopId':this.selectedShopId,
             'employeeName':this.addEmployeeForm.employeeName,
             'sex':this.addEmployeeForm.sex,
+            'shiftId':this.addEmployeeForm.shiftId,
             'phoneNumber':this.addEmployeeForm.phoneNumber,
             'birthday':formatDate_yyyyMMdd(this.addEmployeeForm.birthday),
             'roleId':this.addEmployeeForm.roleId,
@@ -308,6 +350,7 @@
             'shopId':this.selectedShopId,
             'employeeName':this.updateEmployeeForm.employeeName,
             'sex':this.updateEmployeeForm.sex,
+            'shiftId':this.updateEmployeeForm.shiftId,
             'phoneNumber':this.updateEmployeeForm.phoneNumber,
             //生日为空就不传生日字段
             'roleId':this.updateEmployeeForm.roleId,
@@ -318,6 +361,7 @@
             'shopId':this.selectedShopId,
             'employeeName':this.updateEmployeeForm.employeeName,
             'sex':this.updateEmployeeForm.sex,
+            'shiftId':this.updateEmployeeForm.shiftId,
             'phoneNumber':this.updateEmployeeForm.phoneNumber,
             'birthday':formatDate_yyyyMMdd(this.updateEmployeeForm.birthday),
             'roleId':this.updateEmployeeForm.roleId,
@@ -354,14 +398,12 @@
       //查员工
       this.queryEmployeeList();
 
-      //查询角色集合
-      let params = {
-        'shopId':this.selectedShopId
-      };
-      let roleDataRes = await queryRoleList(params);
-      if (roleDataRes.code === '0000' && roleDataRes.data!=null) {
-        this.roleList = roleDataRes.data;
-      }
+      //查班次集合
+      this.queryShiftList();
+
+      //查角色集合
+      this.queryRoleList();
+
     }
   }
 </script>

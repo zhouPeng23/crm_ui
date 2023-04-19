@@ -82,7 +82,7 @@
           {
             title: '班次名称',
             key: 'shiftName',
-            width: 200,
+            width: 150,
             fixed: 'left',
           },
           {
