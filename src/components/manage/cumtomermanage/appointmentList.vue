@@ -36,7 +36,7 @@
     </Row>
 
     <!--添加预约弹框-->
-    <confirmModal ref="addAppointmentModalRef" modal-title="添加预约:" :modal-width="600" @handleSubmit="addAppointment()">
+    <confirmModal ref="addAppointmentModalRef" modal-title="添加预约:" :modal-width="750" @handleSubmit="addAppointment()">
       <Form ref="addAppointmentFormRef" :model="addAppointmentForm" :label-width="100" @submit.native.prevent>
         <FormItem label="顾客手机号码" prop="phoneNumber" required>
           <Input type="text" v-model="addAppointmentForm.phoneNumber" :maxlength="11" style="width: 200px"></Input>
@@ -53,10 +53,23 @@
         <FormItem label="预约日期" prop="appointmentDate" required>
           <DatePicker type="date" v-model="addAppointmentForm.appointmentDate" placeholder="请选择" style="width: 200px" format="yyyy-MM-dd"/>
         </FormItem>
-        <FormItem label="预约员工" prop="employeeId" required>
-          <Select v-model="addAppointmentForm.employeeId" style="width:100px" :onchange="employeeIdChange_add()">
-            <Option v-for="item in employeeList" :value="item.employeeId" :key="item.employeeId">{{ item.employeeName }}</Option>
-          </Select>
+        <FormItem label="预约员工" required>
+          <Row>
+            <Col span="4">
+              <FormItem prop="employeeId">
+                <Select v-model="addAppointmentForm.employeeId" style="width:100px" :onchange="employeeIdChange_add()">
+                  <Option v-for="item in employeeList" :value="item.employeeId" :key="item.employeeId">{{ item.employeeName }}</Option>
+                </Select>
+              </FormItem>
+            </Col>
+            <Col span="20">
+              <FormItem prop="employeeShiftTimeSelected">
+                <RadioGroup v-model="addAppointmentForm.employeeShiftTimeSelected" type="button" :onclick="selectThisShiftTime()">
+                  <Radio v-for="(item,index) in addAppointmentForm.employeeShiftTimeAll.split(',')" :key="index" :label="item"></Radio>
+                </RadioGroup>
+              </FormItem>
+            </Col>
+          </Row>
         </FormItem>
         <FormItem label="预约时间" prop="appointmentTime" required>
           <TimePicker format="HH:mm" v-model="addAppointmentForm.appointmentTime" placeholder="请选择" style="width: 100px" />
@@ -70,7 +83,7 @@
     </confirmModal>
 
     <!--修改预约弹框-->
-    <confirmModal ref="updateAppointmentModalRef" modal-title="修改预约:" :modal-width="600" @handleSubmit="updateAppointment()">
+    <confirmModal ref="updateAppointmentModalRef" modal-title="修改预约:" :modal-width="750" @handleSubmit="updateAppointment()">
       <Form ref="updateAppointmentFormRef" :model="updateAppointmentForm" :label-width="100" @submit.native.prevent>
         <FormItem label="顾客手机号码" prop="phoneNumber">
           <Input type="text" v-model="updateAppointmentForm.phoneNumber" :maxlength="11" style="width: 200px" disabled></Input>
@@ -79,7 +92,7 @@
           <Input type="text" v-model="updateAppointmentForm.customerName" style="width: 200px" disabled></Input>
         </FormItem>
         <FormItem label="顾客性别" prop="sex">
-          <Select disabled v-model="updateAppointmentForm.sex" style="width:100px">
+          <Select v-model="updateAppointmentForm.sex" style="width:100px" disabled>
             <Option v-for="item in sexList" :value="item.value" :key="item.value">{{ item.label }}</Option>
           </Select>
         </FormItem>
@@ -92,7 +105,7 @@
           </Select>
         </FormItem>
         <FormItem label="预约时间" prop="appointmentTime" required>
-          <TimePicker format="HH:mm" v-model="updateAppointmentForm.appointmentTime" placeholder="请选择" style="width: 100px" />
+          <TimePicker format="HH:mm" v-model="updateAppointmentForm.appointmentTime" placeholder="请选择" style="width: 100px"/>
         </FormItem>
         <FormItem label="预约项目" prop="projectIds" required>
           <Select v-model="updateAppointmentForm.projectIds" filterable multiple >
@@ -152,6 +165,8 @@
           appointmentTime:"",
           projectIds:[],
           employeeId:"",
+          employeeShiftTimeAll:"",
+          employeeShiftTimeSelected:"",
         },
         updateAppointmentForm:{
           appointmentId:"",
@@ -196,7 +211,7 @@
           {
             title: '顾客姓名',
             key: 'customerId',
-            width: 150,
+            width: 100,
             render: (h, params) => {
               return h('div', [
                 this.renderCustomerName(params.row.customerId)
@@ -206,7 +221,7 @@
           {
             title: '性别',
             key: 'customerId',
-            width: 100,
+            width: 80,
             render: (h,params)=>{
               return h('div',
                 this.renderSexByCustomerId(params.row.customerId)
@@ -216,7 +231,7 @@
           {
             title: '手机号',
             key: 'customerId',
-            width: 150,
+            width: 120,
             render: (h,params)=>{
               return h('div',
                 this.renderPhoneNumberByCustomerId(params.row.customerId)
@@ -250,7 +265,7 @@
           {
             title: '项目',
             key: 'projectIds',
-            width: 258,
+            width: 230,
             render: (h,params)=>{
               return h('div',
                 this.renderProjectName(params.row.projectIds)
@@ -586,10 +601,17 @@
         let shiftTimesStr = "";
         for(let i = 0; i < this.allShiftTimeList.length; i++){
           if (shiftId === this.allShiftTimeList[i].shiftId) {
-            shiftTimesStr += "[ "+this.allShiftTimeList[i].startTime.substring(0,5) +" - "+ this.allShiftTimeList[i].endTime.substring(0,5) +" ]  、";
+            shiftTimesStr += this.allShiftTimeList[i].startTime.substring(0,5) +"-"+ this.allShiftTimeList[i].endTime.substring(0,5) +",";
           }
         }
-        console.log(shiftTimesStr.substring(0,shiftTimesStr.length-1))
+        shiftTimesStr = shiftTimesStr.substring(0,shiftTimesStr.length-1);
+        console.log(shiftTimesStr);
+        this.addAppointmentForm.employeeShiftTimeAll = shiftTimesStr;
+      },
+      //选择该时间
+      selectThisShiftTime:function(){
+        this.addAppointmentForm.appointmentTime = this.addAppointmentForm.employeeShiftTimeSelected.substring(0,5);
+        console.log("真正预约时间:"+this.addAppointmentForm.appointmentTime);
       },
       /**
        * 根据手机号查询顾客，如果能查到则补充姓名、性别
