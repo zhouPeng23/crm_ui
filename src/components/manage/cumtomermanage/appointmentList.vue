@@ -263,9 +263,9 @@
             }
           },
           {
-            title: '本次服务员工',
+            title: '预约员工',
             key: 'employeeId',
-            width: 120,
+            width: 100,
             render: (h,params)=>{
               return h('div',
                 this.renderBelongToEmployeeName(params.row.employeeId)
@@ -478,7 +478,7 @@
         }
       },
       /**
-       * 渲染预约本次服务员工姓名
+       * 渲染预约预约员工姓名
        * @param str
        * @returns {string}
        */
