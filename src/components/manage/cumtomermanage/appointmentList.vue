@@ -263,6 +263,16 @@
             }
           },
           {
+            title: '本次服务员工',
+            key: 'employeeId',
+            width: 120,
+            render: (h,params)=>{
+              return h('div',
+                this.renderBelongToEmployeeName(params.row.employeeId)
+              )
+            }
+          },
+          {
             title: '项目',
             key: 'projectIds',
             width: 230,
@@ -279,16 +289,6 @@
             render: (h,params)=>{
               return h('div',
                 formatAmount(params.row.projectPrice)
-              )
-            }
-          },
-          {
-            title: '本次服务员工',
-            key: 'employeeId',
-            width: 150,
-            render: (h,params)=>{
-              return h('div',
-                this.renderBelongToEmployeeName(params.row.employeeId)
               )
             }
           },
