@@ -134,7 +134,7 @@
             width: 258,
             render: (h,params)=>{
               return h('div',
-                this.renderProjectName(this.findAppointmentProjectIdsById(params.row.introduceCustomerAppointmentId))
+                this.renderProjectNameByAppointmentId(params.row.introduceCustomerAppointmentId)
               )
             }
           },
@@ -391,14 +391,22 @@
         }
       },
       /**
-       * 渲染项目名称
-       * @param projectIdsStr
+       * 根据预约单id，渲染项目名称
+       * @param appointmentId
        * @returns {string}
        */
-      renderProjectName : function(projectIdsStr){
+      renderProjectNameByAppointmentId : function(appointmentId){
+
+        let projectIds = "";
+        for(let i = 0; i < this.currentPageAppointmentList.length; i++){
+          if (appointmentId === this.currentPageAppointmentList[i].appointmentId) {
+            projectIds =  this.currentPageAppointmentList[i].projectIds;
+          }
+        }
+
         let allProjectName = "";
         //根据逗号分隔projectIds
-        let projectIdsArray = projectIdsStr.split(",");
+        let projectIdsArray = projectIds.split(",");
         for (let i = 0; i < projectIdsArray.length; i++) {
           for(let j = 0; j < this.projectList.length; j++){
             if (projectIdsArray[i] === this.projectList[j].projectId.toString()) {
