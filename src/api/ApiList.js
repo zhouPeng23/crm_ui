@@ -33,6 +33,9 @@ export const deleteShift = (params) => POST(baseUrl+'/shift/deleteShift',params)
 export const queryShiftTimeList = (params) => POST(baseUrl+'/shift/queryShiftTimeList',params);
 export const addShiftTime = (params) => POST(baseUrl+'/shift/addShiftTime',params);
 
+//员工加班记录
+export const queryEmployeeOverTimeList = (params) => POST(baseUrl+'/employeeOverTime/queryEmployeeOverTimeList',params);
+
 //角色
 export const queryRoleList = (params) => POST(baseUrl+'/role/queryRoleList',params);
 

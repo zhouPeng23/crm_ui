@@ -33,7 +33,7 @@
               </template>
               <MenuItem name="2-1"><router-link to="/manage/employeemanage/shiftList">{{mainMenu2_01}}</router-link></MenuItem>
               <MenuItem name="2-2"><router-link to="/manage/employeemanage/employeeList">{{mainMenu2_02}}</router-link></MenuItem>
-              <MenuItem name="2-3"><router-link to="/manage/employeemanage/employeeList">{{mainMenu2_03}}</router-link></MenuItem>
+              <MenuItem name="2-3"><router-link to="/manage/employeemanage/employeeOverTimeList">{{mainMenu2_03}}</router-link></MenuItem>
             </Submenu>
             <Submenu name="3">
               <template slot="title">

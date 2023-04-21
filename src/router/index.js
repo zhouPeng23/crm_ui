@@ -10,6 +10,7 @@ const projectList  = () => import('../components/manage/shopmanage/projectList')
 //员工管理
 const shiftList  = () => import('../components/manage/employeemanage/shiftList');
 const employeeList  = () => import('../components/manage/employeemanage/employeeList');
+const employeeOverTimeList  = () => import('../components/manage/employeemanage/employeeOverTimeList');
 
 //顾客管理
 const appointmentList  = () => import('../components/manage/cumtomermanage/appointmentList');
@@ -33,6 +34,7 @@ const shopManageRouters = [
 const employeeManageRouters = [
   {path:'shiftList',component:shiftList},
   {path:'employeeList',component:employeeList},
+  {path:'employeeOverTimeList',component:employeeOverTimeList},
 ];
 
 //客户管理
