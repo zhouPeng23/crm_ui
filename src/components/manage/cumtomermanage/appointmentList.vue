@@ -129,7 +129,7 @@
 </template>
 
 <script>
-  import { formatDate_yyyyMMdd,formatStrDate_yymmddHHmmss,validateEmpty,validatePhoneNumber,formatAmount,addDays,formatHumanSexByNumber,dateIsToday,getDatePeriod,getTimePeriod} from "../../../tools/index";
+  import { formatDate_yyyyMMdd,formatStrDate_yymmddHHmmss,validateEmpty,validatePhoneNumber,formatAmount,addDays,formatHumanSexByNumber,dateIsToday,getDatePeriod,getTimePeriod,formatAppointmentTime2Str} from "../../../tools/index";
   import {queryAppointmentList,queryShopAllCustomer,queryProjectList,queryAppointmentStatusList,queryCustomerByPhoneNumber,
     addAppointment,updateAppointment,queryEmployeeList,zuofeiAppointment,queryShiftTimeList} from "../../../api/ApiList";
   import confirmModal from "../../utils/modal/confirmModal";
@@ -669,7 +669,7 @@
           'customerName':this.addAppointmentForm.customerName,
           'sex':this.addAppointmentForm.sex,
           'appointmentDate':formatDate_yyyyMMdd(this.addAppointmentForm.appointmentDate),
-          'appointmentTime':this.addAppointmentForm.appointmentTime+":00",
+          'appointmentTime':formatAppointmentTime2Str(this.addAppointmentForm.appointmentTime),
           'projectIds':this.addAppointmentForm.projectIds.join(","),
           'employeeId':this.addAppointmentForm.employeeId,
         };
@@ -697,7 +697,7 @@
         let params = {
           'appointmentId':this.updateAppointmentForm.appointmentId,
           'appointmentDate':formatDate_yyyyMMdd(this.updateAppointmentForm.appointmentDate),
-          'appointmentTime':this.updateAppointmentForm.appointmentTime+":00",
+          'appointmentTime':formatAppointmentTime2Str(this.updateAppointmentForm.appointmentTime),
           'projectIds':this.updateAppointmentForm.projectIds.join(","),
           'employeeId':this.updateAppointmentForm.employeeId,
           'appointmentStatus':this.updateAppointmentForm.appointmentStatus,

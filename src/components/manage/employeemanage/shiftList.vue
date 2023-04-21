@@ -54,7 +54,7 @@
 
 <script>
   import {queryShiftList,addShift,deleteShift,queryShiftTimeList,addShiftTime} from "../../../api/ApiList";
-  import {validateEmpty} from "../../../tools/index";
+  import {validateEmpty,formatAppointmentTime2Str} from "../../../tools/index";
   import confirmModal from "../../utils/modal/confirmModal";
 
   export default {
@@ -178,8 +178,8 @@
         let params = {
           'shopId':this.selectedShopId,
           'shiftId':this.addShiftTimeForm.shiftId,
-          'startTime':this.addShiftTimeForm.startTime+":00",
-          'endTime':this.addShiftTimeForm.endTime+":00",
+          'startTime':formatAppointmentTime2Str(this.addShiftTimeForm.startTime),
+          'endTime':formatAppointmentTime2Str(this.addShiftTimeForm.endTime),
         };
         let res = await addShiftTime(params);
         if (res.code === '0000') {

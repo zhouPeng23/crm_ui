@@ -86,6 +86,27 @@ function addZero(num){
 
 
 /**
+ * 将"预约时间"格式化为 HH:mm:ss
+ * @param time
+ * @returns {string}
+ */
+export function formatAppointmentTime2Str(time) {
+  if (!validateEmpty(time)) {
+    return "";
+  }
+  if (time.length === 8) {
+    return time;
+  }
+  if (time.length > 8) {
+    return time.substring(0,8);
+  }
+  if (time.length < 8) {
+    return time+":00";
+  }
+}
+
+
+/**
  * 给定日期增加一定天数
  * @param date
  * @param days
