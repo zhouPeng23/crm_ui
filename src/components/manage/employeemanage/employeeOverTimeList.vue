@@ -32,7 +32,8 @@
 
 <script>
   import { formatDate_yyyyMMdd,formatStrDate_yymmddHHmmss ,validateEmpty,addDays} from "../../../tools";
-  import {queryEmployeeOverTimeList,queryShopNormalEmployeeList,queryAppointmentByIds,queryShopAllCustomer,queryProjectList} from "../../../api/ApiList";
+  import {queryEmployeeOverTimeList,queryShopNormalEmployeeList,queryAppointmentByIds,
+    queryShopAllCustomer,queryProjectList,queryAppointmentStatusList} from "../../../api/ApiList";
   import confirmModal from "../../utils/modal/confirmModal";
 
   export default {
@@ -56,6 +57,7 @@
         customerList:[],
         appointmentList:[],
         projectList:[],
+        appointmentStatusList:[],
         columns: [
           {
             title: '员工id',
@@ -114,12 +116,15 @@
             }
           },
           {
-            title: '创建时间',
-            key: 'createTime',
+            title: '预约单状态',
+            key: 'appointmentId',
             width: 200,
             render: (h,params)=>{
               return h('div',
-                formatStrDate_yymmddHHmmss(params.row.createTime)
+                {style:{
+                    color:this.renderColorByAppointmentStatus(params.row.appointmentId)
+                  }},
+                [ h('strong',this.renderAppointmentStatus(params.row.appointmentId))]
               )
             }
           },
@@ -178,6 +183,12 @@
         };
         let res = await queryProjectList(params);
         this.projectList = res.data;
+      },
+      //查询预约状态集合
+      queryAppointmentStatusList:async function(){
+        let params = {};
+        let res = await queryAppointmentStatusList(params);
+        this.appointmentStatusList = res.data;
       },
       /**
        * 渲染员工姓名
@@ -265,6 +276,48 @@
         }
         return allProjectName;
       },
+      /**
+       * 渲染预约状态
+       * @param appointmentId
+       * @returns {string}
+       */
+      renderAppointmentStatus : function(appointmentId){
+        let appointmentStatus = "";
+        //先找预约单
+        for(let i = 0; i < this.appointmentList.length; i++){
+          if (appointmentId === this.appointmentList[i].appointmentId) {
+            appointmentStatus =  this.appointmentList[i].appointmentStatus;
+          }
+        }
+
+        for(let i = 0; i < this.appointmentStatusList.length; i++){
+          if (appointmentStatus === this.appointmentStatusList[i].code) {
+            return this.appointmentStatusList[i].msg;
+          }
+        }
+      },
+      /**
+       * 根据状态渲染颜色
+       * @param appointmentId
+       * @returns {string}
+       */
+      renderColorByAppointmentStatus : function(appointmentId){
+        let appointmentStatus = "";
+        //先找预约单
+        for(let i = 0; i < this.appointmentList.length; i++){
+          if (appointmentId === this.appointmentList[i].appointmentId) {
+            appointmentStatus =  this.appointmentList[i].appointmentStatus;
+          }
+        }
+
+        if (appointmentStatus===1){
+          return "blue";
+        } else if (appointmentStatus === 2) {
+          return "chartreuse";
+        }else if (appointmentStatus === 3) {
+          return "black";
+        }
+      },
       handleChange(pageNo){
         this.currentPageNo = pageNo;
         this.queryEmployeeOverTimeList();
@@ -286,6 +339,9 @@
 
       //查员工加班记录
       this.queryEmployeeOverTimeList();
+
+      //查询预约状态集合
+      this.queryAppointmentStatusList();
 
     }
   }
