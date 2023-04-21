@@ -92,7 +92,7 @@
 
 <script>
   import { formatDate_yyyyMMdd,formatStrDate_yymmddHHmmss ,validateEmpty,formatHumanSexByNumber} from "../../../tools";
-  import {queryRoleList,queryEmployeeList,addEmployee,deleteEmployee,updateEmployee,queryShiftList} from "../../../api/ApiList";
+  import {queryRoleList,queryShopNormalEmployeeList,addEmployee,deleteEmployee,updateEmployee,queryShiftList} from "../../../api/ApiList";
   import confirmModal from "../../utils/modal/confirmModal";
 
   export default {
@@ -235,11 +235,11 @@
     },
     methods:{
       // 查询员工集合
-      queryEmployeeList :async function () {
+      queryShopNormalEmployeeList :async function () {
         let params = {
           'shopId': this.selectedShopId
         };
-        let res = await queryEmployeeList(params);
+        let res = await queryShopNormalEmployeeList(params);
         this.data = res.data;
       },
       //查询角色集合
@@ -335,7 +335,7 @@
         if (res.code === '0000') {
           this.$refs.addEmployeeFormRef.resetFields();
           this.$Message.success(res.msg);
-          this.queryEmployeeList();
+          this.queryShopNormalEmployeeList();
         }else {
           this.$Message.error(res.msg);
         }
@@ -372,7 +372,7 @@
         if (res.code === '0000') {
           this.$refs.updateEmployeeFormRef.resetFields();
           this.$Message.success(res.msg);
-          this.queryEmployeeList();
+          this.queryShopNormalEmployeeList();
         }else {
           this.$Message.error(res.msg);
         }
@@ -385,7 +385,7 @@
         let res = await deleteEmployee(params);
         if (res.code === '0000') {
           this.$Message.success(res.msg);
-          this.queryEmployeeList();
+          this.queryShopNormalEmployeeList();
         }else {
           this.$Message.error(res.msg);
         }
@@ -396,7 +396,7 @@
       this.selectedShopName = localStorage.getItem('selectedShopName');
 
       //查员工
-      this.queryEmployeeList();
+      this.queryShopNormalEmployeeList();
 
       //查班次集合
       this.queryShiftList();

@@ -20,7 +20,8 @@ export const updateProject = (params) => POST(baseUrl+'/project/updateProject',p
 export const deleteProject = (params) => POST(baseUrl+'/project/deleteProject',params);
 
 //员工
-export const queryEmployeeList = (params) => POST(baseUrl+'/employee/queryEmployeeList',params);
+export const queryShopAllEmployeeList = (params) => POST(baseUrl+'/employee/queryShopAllEmployeeList',params);
+export const queryShopNormalEmployeeList = (params) => POST(baseUrl+'/employee/queryShopNormalEmployeeList',params);
 export const addEmployee = (params) => POST(baseUrl+'/employee/addEmployee',params);
 export const updateEmployee = (params) => POST(baseUrl+'/employee/updateEmployee',params);
 export const deleteEmployee = (params) => POST(baseUrl+'/employee/deleteEmployee',params);

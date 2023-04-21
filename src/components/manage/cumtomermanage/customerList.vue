@@ -15,7 +15,7 @@
           <Option v-for="item in allCustomerMassLevelList" :value="item.code" :key="item.code">{{ item.msg }}</Option>
         </Select>
         <Select v-model="searchBelongToEmployeeId" style="width:100px" clearable placeholder="所属员工">
-          <Option v-for="item in employeeList" :value="item.employeeId" :key="item.employeeId">{{ item.employeeName }}</Option>
+          <Option v-for="item in shopAllemployeeList" :value="item.employeeId" :key="item.employeeId">{{ item.employeeName }}</Option>
         </Select>
         <Button type="primary" shape="circle" icon="ios-search" @click="queryCustomerList">查询</Button>
         <Button shape="circle" @click="resetQuery">重置</Button>
@@ -63,7 +63,7 @@
         </FormItem>
         <FormItem label="所属员工" prop="belongToEmployeeId" required>
           <Select v-model="addCustomerForm.belongToEmployeeId" style="width:100px">
-            <Option v-for="item in employeeList" :value="item.employeeId" :key="item.employeeId">{{ item.employeeName }}</Option>
+            <Option v-for="item in shopNormalemployeeList" :value="item.employeeId" :key="item.employeeId">{{ item.employeeName }}</Option>
           </Select>
         </FormItem>
         <FormItem label="被介绍人">
@@ -106,7 +106,7 @@
         </FormItem>
         <FormItem label="所属员工" prop="belongToEmployeeId" required>
           <Select v-model="updateCustomerForm.belongToEmployeeId" style="width:100px">
-            <Option v-for="item in employeeList" :value="item.employeeId" :key="item.employeeId">{{ item.employeeName }}</Option>
+            <Option v-for="item in shopNormalemployeeList" :value="item.employeeId" :key="item.employeeId">{{ item.employeeName }}</Option>
           </Select>
         </FormItem>
         <FormItem label="被介绍人">
@@ -135,7 +135,8 @@
 
 <script>
   import { formatDate_yyyyMMdd,formatStrDate_yymmddHHmmss,validateEmpty,formatHumanSexByNumber,validatePhoneNumber} from "../../../tools";
-  import {queryEmployeeList,getAllCustomerMassLevelList,queryCustomerList,addCustomer,deleteCustomer,updateCustomer,queryShopAllCustomer,queryCustomerByPhoneNumber} from "../../../api/ApiList";
+  import {queryShopAllEmployeeList,queryShopNormalEmployeeList,getAllCustomerMassLevelList,queryCustomerList,addCustomer,deleteCustomer,updateCustomer,
+    queryShopAllCustomer,queryCustomerByPhoneNumber} from "../../../api/ApiList";
   import confirmModal from "../../utils/modal/confirmModal";
 
   export default {
@@ -157,7 +158,8 @@
         searchSex:"",
         searchCustomerMassLevel:"",
         searchBelongToEmployeeId:"",
-        employeeList: [],
+        shopAllemployeeList: [],
+        shopNormalemployeeList: [],
         allCustomerList: [],
         allCustomerMassLevelList: [],
         addCustomerForm:{
@@ -346,13 +348,21 @@
         //重置后，重新查询
         this.queryCustomerList();
       },
-      // 查询员工集合
-      queryEmployeeList :async function () {
+      // 查店铺所有员工
+      queryShopAllEmployeeList :async function () {
         let params = {
           'shopId': this.selectedShopId
         };
-        let res = await queryEmployeeList(params);
-        this.employeeList = res.data;
+        let res = await queryShopAllEmployeeList(params);
+        this.shopAllemployeeList = res.data;
+      },
+      // 查店铺正常状态员工
+      queryShopNormalEmployeeList :async function () {
+        let params = {
+          'shopId': this.selectedShopId
+        };
+        let res = await queryShopNormalEmployeeList(params);
+        this.shopNormalemployeeList = res.data;
       },
       //查询会员等级集合
       getAllCustomerMassLevelList:async function(){
@@ -378,9 +388,9 @@
        * @returns {string}
        */
       renderBelongToEmployeeName : function(str){
-        for(let i = 0; i < this.employeeList.length; i++){
-          if (str === this.employeeList[i].employeeId) {
-            return this.employeeList[i].employeeName;
+        for(let i = 0; i < this.shopAllemployeeList.length; i++){
+          if (str === this.shopAllemployeeList[i].employeeId) {
+            return this.shopAllemployeeList[i].employeeName;
           }
         }
       },
@@ -604,8 +614,11 @@
       //查会员等级
       this.getAllCustomerMassLevelList();
 
-      //查员工
-      this.queryEmployeeList();
+      //查店铺所有员工
+      this.queryShopAllEmployeeList();
+
+      //查店铺正常状态员工
+      this.queryShopNormalEmployeeList();
 
       //查询所有顾客
       this.queryShopAllCustomer();

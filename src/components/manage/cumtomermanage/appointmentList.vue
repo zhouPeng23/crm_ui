@@ -58,7 +58,7 @@
             <Col span="4">
               <FormItem prop="employeeId">
                 <Select v-model="addAppointmentForm.employeeId" style="width:100px" :onchange="employeeIdChange_add()">
-                  <Option v-for="item in employeeList" :value="item.employeeId" :key="item.employeeId">{{ item.employeeName }}</Option>
+                  <Option v-for="item in shopNormalemployeeList" :value="item.employeeId" :key="item.employeeId">{{ item.employeeName }}</Option>
                 </Select>
               </FormItem>
             </Col>
@@ -101,7 +101,7 @@
         </FormItem>
         <FormItem label="预约员工" prop="employeeId" required>
           <Select v-model="updateAppointmentForm.employeeId" style="width:100px">
-            <Option v-for="item in employeeList" :value="item.employeeId" :key="item.employeeId">{{ item.employeeName }}</Option>
+            <Option v-for="item in shopNormalemployeeList" :value="item.employeeId" :key="item.employeeId">{{ item.employeeName }}</Option>
           </Select>
         </FormItem>
         <FormItem label="预约时间" prop="appointmentTime" required>
@@ -129,9 +129,10 @@
 </template>
 
 <script>
-  import { formatDate_yyyyMMdd,formatStrDate_yymmddHHmmss,validateEmpty,validatePhoneNumber,formatAmount,addDays,formatHumanSexByNumber,dateIsToday,getDatePeriod,getTimePeriod,formatAppointmentTime2Str} from "../../../tools/index";
-  import {queryAppointmentList,queryShopAllCustomer,queryProjectList,queryAppointmentStatusList,queryCustomerByPhoneNumber,
-    addAppointment,updateAppointment,queryEmployeeList,zuofeiAppointment,queryShiftTimeList} from "../../../api/ApiList";
+  import { formatDate_yyyyMMdd,formatStrDate_yymmddHHmmss,validateEmpty,validatePhoneNumber,formatAmount,addDays,
+    formatHumanSexByNumber,dateIsToday,getDatePeriod,getTimePeriod,formatAppointmentTime2Str} from "../../../tools/index";
+  import {queryAppointmentList,queryShopAllCustomer,queryShopNormalEmployeeList,queryProjectList,queryAppointmentStatusList,queryCustomerByPhoneNumber,
+    addAppointment,updateAppointment,queryShopAllEmployeeList,zuofeiAppointment,queryShiftTimeList} from "../../../api/ApiList";
   import confirmModal from "../../utils/modal/confirmModal";
 
   export default {
@@ -152,7 +153,8 @@
         searchAppointmentDateStart:new Date(),
         searchAppointmentDateEnd:addDays(new Date(),10),
         searchAppointmentStatus:"",
-        employeeList: [],
+        shopAllemployeeList: [],
+        shopNormalemployeeList:[],
         customerList:[],
         projectList:[],
         allShiftTimeList:[],
@@ -415,13 +417,21 @@
         //重置后，重新查询
         this.queryAppointmentList();
       },
-      // 查询员工集合
-      queryEmployeeList :async function () {
+      // 查店铺所有员工
+      queryShopAllEmployeeList :async function () {
         let params = {
           'shopId': this.selectedShopId
         };
-        let res = await queryEmployeeList(params);
-        this.employeeList = res.data;
+        let res = await queryShopAllEmployeeList(params);
+        this.shopAllemployeeList = res.data;
+      },
+      // 查店铺正常状态员工
+      queryShopNormalEmployeeList :async function () {
+        let params = {
+          'shopId': this.selectedShopId
+        };
+        let res = await queryShopNormalEmployeeList(params);
+        this.shopNormalemployeeList = res.data;
       },
       // 查询顾客集合
       queryShopAllCustomer :async function () {
@@ -483,9 +493,9 @@
        * @returns {string}
        */
       renderBelongToEmployeeName : function(str){
-        for(let i = 0; i < this.employeeList.length; i++){
-          if (str === this.employeeList[i].employeeId) {
-            return this.employeeList[i].employeeName;
+        for(let i = 0; i < this.shopAllemployeeList.length; i++){
+          if (str === this.shopAllemployeeList[i].employeeId) {
+            return this.shopAllemployeeList[i].employeeName;
           }
         }
       },
@@ -592,9 +602,9 @@
         let employeeId = this.addAppointmentForm.employeeId;
         let shiftId = "";
         //查到班次id
-        for(let i = 0; i < this.employeeList.length; i++){
-          if (employeeId === this.employeeList[i].employeeId) {
-            shiftId = this.employeeList[i].shiftId;
+        for(let i = 0; i < this.shopAllemployeeList.length; i++){
+          if (employeeId === this.shopAllemployeeList[i].employeeId) {
+            shiftId = this.shopAllemployeeList[i].shiftId;
           }
         }
         //根据班次id查班次时间
@@ -740,8 +750,11 @@
       //查预约
       this.queryAppointmentList();
 
-      //查员工集合
-      this.queryEmployeeList();
+      //查店铺所有员工
+      this.queryShopAllEmployeeList();
+
+      //查店铺正常状态员工
+      this.queryShopNormalEmployeeList();
 
       //查顾客集合
       this.queryShopAllCustomer();
