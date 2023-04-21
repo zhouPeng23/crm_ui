@@ -15,7 +15,7 @@
           <Option v-for="item in allCustomerMassLevelList" :value="item.code" :key="item.code">{{ item.msg }}</Option>
         </Select>
         <Select v-model="searchBelongToEmployeeId" style="width:100px" clearable placeholder="所属员工">
-          <Option v-for="item in shopAllemployeeList" :value="item.employeeId" :key="item.employeeId">{{ item.employeeName }}</Option>
+          <Option v-for="item in shopNormalemployeeList" :value="item.employeeId" :key="item.employeeId">{{ item.employeeName }}</Option>
         </Select>
         <Button type="primary" shape="circle" icon="ios-search" @click="queryCustomerList">查询</Button>
         <Button shape="circle" @click="resetQuery">重置</Button>
