@@ -79,16 +79,6 @@
             }
           },
           {
-            title: '性别',
-            key: 'sex',
-            width: 70,
-            render: (h,params)=>{
-              return h('div',
-                formatHumanSexByNumber(this.renderSexByCustomerId(params.row.customerId))
-              )
-            }
-          },
-          {
             title: '手机号',
             key: 'customerId',
             width: 120,
@@ -98,6 +88,16 @@
               )
             }
           },
+          // {
+          //   title: '性别',
+          //   key: 'sex',
+          //   width: 70,
+          //   render: (h,params)=>{
+          //     return h('div',
+          //       formatHumanSexByNumber(this.renderSexByCustomerId(params.row.customerId))
+          //     )
+          //   }
+          // },
           {
             title: '介绍的顾客姓名',
             key: 'introduceCustomerId',

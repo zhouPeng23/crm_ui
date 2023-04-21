@@ -37,7 +37,7 @@
 
     <!--添加预约弹框-->
     <confirmModal ref="addAppointmentModalRef" modal-title="添加预约:" :modal-width="750" @handleSubmit="addAppointment()">
-      <Form ref="addAppointmentFormRef" :model="addAppointmentForm" :label-width="100" @submit.native.prevent>
+      <Form ref="addAppointmentFormRef" :model="addAppointmentForm" :label-width="100">
         <FormItem label="顾客手机号码" prop="phoneNumber" required>
           <Input type="text" v-model="addAppointmentForm.phoneNumber" :maxlength="11" style="width: 200px"></Input>
           <Button type="primary" ghost @click="queryCustomerByPhoneNumber">查询</Button>
@@ -64,8 +64,8 @@
             </Col>
             <Col span="20">
               <FormItem prop="employeeShiftTimeSelected">
-                <RadioGroup v-model="addAppointmentForm.employeeShiftTimeSelected" type="button" :onclick="selectThisShiftTime()">
-                  <Radio v-for="(item,index) in addAppointmentForm.employeeShiftTimeAll.split(',')" :key="index" :label="item"></Radio>
+                <RadioGroup v-model="addAppointmentForm.employeeShiftTimeSelected" type="button" :onclick="selectThisShiftTime(addAppointmentForm.employeeShiftTimeSelected)">
+                  <Radio v-for="(item,index) in addAppointmentForm.employeeShiftTimeAll.split(',')" :key="Math.random()" :label="item"></Radio>
                 </RadioGroup>
               </FormItem>
             </Col>
@@ -169,6 +169,7 @@
           employeeId:"",
           employeeShiftTimeAll:"",
           employeeShiftTimeSelected:"",
+          employeeShiftTimeSelected_lasttime:"",
         },
         updateAppointmentForm:{
           appointmentId:"",
@@ -619,8 +620,15 @@
         this.addAppointmentForm.employeeShiftTimeAll = shiftTimesStr;
       },
       //选择该时间
-      selectThisShiftTime:function(){
-        this.addAppointmentForm.appointmentTime = this.addAppointmentForm.employeeShiftTimeSelected.substring(0,5);
+      selectThisShiftTime:function(employeeShiftTimeSelected){
+
+        if (this.addAppointmentForm.employeeShiftTimeSelected_lasttime === employeeShiftTimeSelected) {
+          return;
+        }else{
+          this.addAppointmentForm.employeeShiftTimeSelected_lasttime = employeeShiftTimeSelected;
+        }
+
+        this.addAppointmentForm.appointmentTime = employeeShiftTimeSelected.substring(0,5);
         console.log("真正预约时间:"+this.addAppointmentForm.appointmentTime);
       },
       /**
@@ -705,6 +713,7 @@
           return;
         }
         let params = {
+          'shopId':this.selectedShopId,
           'appointmentId':this.updateAppointmentForm.appointmentId,
           'appointmentDate':formatDate_yyyyMMdd(this.updateAppointmentForm.appointmentDate),
           'appointmentTime':formatAppointmentTime2Str(this.updateAppointmentForm.appointmentTime),
