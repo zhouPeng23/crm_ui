@@ -157,7 +157,7 @@
                 {style:{
                     color:"orange"
                   }},
-                [ h('strong',"+"+formatCustomerIncomeAmount(this.findAppointmentProjectPriceById(params.row.introduceCustomerAppointmentId),0.1))]
+                [ h('strong',"+"+formatCustomerIncomeAmount(this.findAppointmentProjectPriceById(params.row.introduceCustomerAppointmentId),0.05))]
               )
             }
           },
