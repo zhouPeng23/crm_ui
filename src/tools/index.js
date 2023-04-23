@@ -237,8 +237,8 @@ export function validateAmount(amount) {
  * @returns {string}
  */
 export function formatAmount(amount) {
-  if (amount === "0" || amount === "0.0" || amount === "0.00") {
-    return "0.00";
+  if (parseFloat(amount).toFixed(2)<1) {
+    return amount;
   }
 
   // 先将金额转换为字符串，并去除前导零
