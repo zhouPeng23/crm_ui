@@ -237,6 +237,10 @@ export function validateAmount(amount) {
  * @returns {string}
  */
 export function formatAmount(amount) {
+  if (amount === "0" || amount === "0.0" || amount === "0.00") {
+    return "0.00";
+  }
+
   // 先将金额转换为字符串，并去除前导零
   amount = parseFloat(amount).toFixed(2).toString().replace(/^0+/, '');
 

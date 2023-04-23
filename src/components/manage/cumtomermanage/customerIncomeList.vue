@@ -203,12 +203,14 @@
           'pageSize':this.pageSize,
         };
         let res = await queryCustomerIncomeList(params);
-        this.data = res.data.records;
-        this.total = res.data.total;
-
-        //查询当前分页中预约单集合
-        this.queryCurrentPageAppointment();
-
+        if (res.code === '0000') {
+          this.data = res.data.records;
+          this.total = res.data.total;
+          //查询当前分页中预约单集合
+          this.queryCurrentPageAppointment();
+        }else {
+          this.$Message.error(res.msg);
+        }
       },
       queryCurrentPageAppointment:async function(){
         if (this.data.length === 0) {
