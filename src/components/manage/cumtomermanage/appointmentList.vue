@@ -146,7 +146,7 @@
         // 总数
         total:0,
         // 每页记录数
-        pageSize:20,
+        pageSize:40,
         // 当前页
         currentPageNo:1,
         searchPhoneNumber:"",
