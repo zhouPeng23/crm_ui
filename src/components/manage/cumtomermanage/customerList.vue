@@ -639,14 +639,14 @@
         this.updateCustomerForm.introducedByCustomerName = this.renderIntroducedNameByCustomerName(this.data[index].introducedByCustomerId);
         this.$refs.updateCustomerModalRef.showModal();
       },
-      // 显示修改顾客弹框
+      // 显示顾客预约记录弹框
       showAppointmentModal:function(index){
         this.appointment_phoneNumber = this.data[index].phoneNumber;
-        this.queryAppointmentList();
+        this.queryAppointmentList_byPhoneNumber();
         this.$refs.customerAppointmentModalRef.showModal();
       },
       //根据手机号查顾客预约记录
-      queryAppointmentList:async function(){
+      queryAppointmentList_byPhoneNumber:async function(){
         //组织入参
         let params = {
           //门店id - 少不了的参数
@@ -777,11 +777,11 @@
       },
       appointment_handleChange(pageNo){
         this.appointment_currentPageNo = pageNo;
-        this.queryAppointmentList();
+        this.queryAppointmentList_byPhoneNumber();
       },
       appointment_handlePageSizeChange(pageSize){
         this.appointment_pageSize = pageSize;
-        this.queryAppointmentList();
+        this.queryAppointmentList_byPhoneNumber();
       },
     },
     mounted:async function () {

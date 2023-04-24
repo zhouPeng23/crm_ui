@@ -23,9 +23,9 @@
         <Table border :columns="columns" :data="data">
           <template #action="{ row, index }">
             <Row>
-              <Col span="6">&nbsp;</Col>
               <Col span="6"><Button type="primary" @click="showUpdateModal(index)">修改</Button></Col>
               <Col span="6"><Button type="error" @click="showZuofeiModal(index)">作废</Button></Col>
+              <Col span="6"><Button type="success" icon="ios-search" @click="showAppointmentModal(index)">预约记录</Button></Col>
             </Row>
           </template>
         </Table>
@@ -123,6 +123,12 @@
     <!--确认作废预约弹框-->
     <confirmModal ref="zuofeiAppointmentModalRef" modal-title="提示:" :modal-width="260" @handleSubmit="zuofeiAppointment()">
       <div style="font-size: 14px;;">确认作废: “ <span style="color: red">{{zuofeiAppointmentForm.customerName}}</span> ” 的预约单?</div>
+    </confirmModal>
+
+    <!--顾客预约记录弹框-->
+    <confirmModal ref="customerAppointmentModalRef" modal-title="顾客预约记录:" :modal-width="1000">
+      <Table border :columns="appointment_columns" :data="appointment_data"></Table>
+      <Page :total="appointment_total" :page-size="appointment_pageSize" show-total show-sizer :styles="{'text-align': 'center','margin-top': '10px'}" @on-change="appointment_handleChange" @on-page-size-change="appointment_handlePageSizeChange"/>
     </confirmModal>
 
   </div>
@@ -322,6 +328,85 @@
             align: 'center',
             fixed: 'right'
           }
+        ],
+
+        //以下是顾客预约记录
+        appointment_data: [],
+        appointment_phoneNumber:"",
+        // 总数
+        appointment_total:0,
+        // 每页记录数
+        appointment_pageSize:10,
+        // 当前页
+        appointment_currentPageNo:1,
+        appointment_columns: [
+          {
+            title: '预约状态',
+            key: 'appointmentStatus',
+            width: 100,
+            render: (h,params)=>{
+              return h('div',
+                {style:{
+                    color:this.renderColorByAppointmentStatus(params.row.appointmentStatus)
+                  }},
+                [ h('strong',this.renderAppointmentStatus(params.row.appointmentStatus))]
+              )
+            }
+          },
+          {
+            title: '顾客姓名',
+            key: 'customerId',
+            width: 100,
+            render: (h, params) => {
+              return h('div', [
+                this.renderCustomerName(params.row.customerId)
+              ]);
+            }
+          },
+          {
+            title: '预约日期',
+            key: 'appointmentDate',
+            width: 120,
+            render: (h,params)=>{
+              return h('div',
+                {
+                  style:{color:this.renderColorByAppointmentDate(params.row.appointmentDate)}
+                },getDatePeriod(params.row.appointmentDate)
+              )
+            }
+          },
+          {
+            title: '预约时间',
+            key: 'appointmentTime',
+            width: 120,
+            render: (h,params)=>{
+              return h('div',
+                {
+                  style:{color:this.renderColorByAppointmentDate(params.row.appointmentDate)}
+                },getTimePeriod(params.row.appointmentDate, params.row.appointmentTime)
+              )
+            }
+          },
+          {
+            title: '预约员工',
+            key: 'employeeId',
+            width: 100,
+            render: (h,params)=>{
+              return h('div',
+                this.renderBelongToEmployeeName(params.row.employeeId)
+              )
+            }
+          },
+          {
+            title: '项目',
+            key: 'projectIds',
+            width: 300,
+            render: (h,params)=>{
+              return h('div',
+                this.renderProjectName(params.row.projectIds)
+              )
+            }
+          },
         ],
       }
     },
@@ -661,6 +746,30 @@
         this.zuofeiAppointmentForm.customerName = this.renderCustomerName(this.data[index].customerId);
         this.$refs.zuofeiAppointmentModalRef.showModal();
       },
+      // 显示顾客预约记录弹框
+      showAppointmentModal:function(index){
+        this.appointment_phoneNumber = this.renderPhoneNumberByCustomerId(this.data[index].customerId);
+        this.queryAppointmentList_byPhoneNumber();
+        this.$refs.customerAppointmentModalRef.showModal();
+      },
+      //根据手机号查顾客预约记录
+      queryAppointmentList_byPhoneNumber:async function(){
+        //组织入参
+        let params = {
+          //门店id - 少不了的参数
+          'shopId':this.selectedShopId,
+          //查询条件
+          'phoneNumber':this.appointment_phoneNumber,
+          //页码
+          'pageNo':this.appointment_currentPageNo,
+          'pageSize':this.appointment_pageSize,
+        };
+
+        //查询
+        let res = await queryAppointmentList(params);
+        this.appointment_data = res.data.records;
+        this.appointment_total = res.data.total;
+      },
       //添加预约
       addAppointment:async function(){
         if (!validateEmpty(this.addAppointmentForm.appointmentDate)) {
@@ -740,6 +849,14 @@
       handlePageSizeChange(pageSize){
         this.pageSize = pageSize;
         this.queryAppointmentList();
+      },
+      appointment_handleChange(pageNo){
+        this.appointment_currentPageNo = pageNo;
+        this.queryAppointmentList_byPhoneNumber();
+      },
+      appointment_handlePageSizeChange(pageSize){
+        this.appointment_pageSize = pageSize;
+        this.queryAppointmentList_byPhoneNumber();
       },
     },
     mounted:async function () {
