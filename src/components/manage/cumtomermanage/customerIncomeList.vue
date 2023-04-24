@@ -139,29 +139,6 @@
             }
           },
           {
-            title: '项目总金额',
-            key: 'introduceCustomerAppointmentId',
-            width: 100,
-            render: (h,params)=>{
-              return h('div',
-                formatAmount(this.findAppointmentProjectPriceById(params.row.introduceCustomerAppointmentId))
-              )
-            }
-          },
-          {
-            title: '本单收益金额',
-            key: 'introduceCustomerAppointmentId',
-            width: 120,
-            render: (h,params)=>{
-              return h('div',
-                {style:{
-                    color:"orange"
-                  }},
-                [ h('strong',"+"+formatCustomerIncomeAmount(this.findAppointmentProjectPriceById(params.row.introduceCustomerAppointmentId),0.05))]
-              )
-            }
-          },
-          {
             title: '创建时间',
             key: 'createTime',
             width: 200,

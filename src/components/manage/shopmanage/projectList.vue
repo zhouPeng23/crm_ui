@@ -13,9 +13,9 @@
         <Table border :columns="columns" :data="data">
           <template #action="{ row, index }">
             <Row>
-              <Col span="6">&nbsp;</Col>
+              <Col span="9">&nbsp;</Col>
               <Col span="6"><Button type="primary" @click="showUpdateModal(index)">修改</Button></Col>
-              <Col span="6"><Button type="error" @click="showDeleteModal(index)">删除</Button></Col>
+              <!--<Col span="6"><Button type="error" @click="showDeleteModal(index)">删除</Button></Col>-->
             </Row>
           </template>
         </Table>
