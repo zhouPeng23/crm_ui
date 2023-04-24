@@ -28,9 +28,6 @@
         <FormItem label="项目名称" prop="projectName" required>
           <Input type="text" v-model="addProjectForm.projectName"></Input>
         </FormItem>
-        <FormItem label="项目价格" prop="projectPrice" required>
-          <Input type="text" v-model="addProjectForm.projectPrice"></Input>
-        </FormItem>
       </Form>
     </confirmModal>
 
@@ -39,9 +36,6 @@
       <Form ref="updateProjectFormRef" :model="updateProjectForm" :label-width="100" @submit.native.prevent>
         <FormItem label="项目名称" prop="projectName" required>
           <Input type="text" v-model="updateProjectForm.projectName"></Input>
-        </FormItem>
-        <FormItem label="项目价格" prop="projectPrice" required>
-          <Input type="text" v-model="updateProjectForm.projectPrice"></Input>
         </FormItem>
       </Form>
     </confirmModal>
@@ -69,12 +63,10 @@
         data: [],
         addProjectForm:{
           projectName:"",
-          projectPrice:"",
         },
         updateProjectForm:{
           projectId:"",
           projectName:"",
-          projectPrice:"",
         },
         deleteProjectForm:{
           projectId:"",
@@ -88,31 +80,10 @@
             fixed: 'left',
           },
           {
-            title: '项目价格',
-            key: 'projectPrice',
-            width: 200,
-            render: (h,params)=>{
-              return h('div',
-                formatAmount(params.row.projectPrice)
-              )
-            }
-          },
-          // {
-          //   title: '项目id',
-          //   key: 'projectId',
-          //   width: 80,
-          // },
-          // {
-          //   title: '门店id',
-          //   key: 'shopId',
-          //   width: 80,
-          // },
-          {
             title: '操作',
             slot: 'action',
             width: 300,
             align: 'center',
-            // fixed: 'right'
           }
         ],
       }
@@ -134,7 +105,6 @@
       showUpdateModal:function(index){
         this.updateProjectForm.projectId = this.data[index].projectId;
         this.updateProjectForm.projectName = this.data[index].projectName;
-        this.updateProjectForm.projectPrice = this.data[index].projectPrice;
         this.$refs.updateProjectModalRef.showModal();
       },
       // 显示删除项目弹框
@@ -145,14 +115,9 @@
       },
       //添加项目
       addProject:async function(){
-        if (!validateAmount(this.addProjectForm.projectPrice)) {
-          this.$Message.error("金额格式错误");
-          return;
-        }
         let params = {
           'shopId':this.selectedShopId,
           'projectName':this.addProjectForm.projectName,
-          'projectPrice':this.addProjectForm.projectPrice,
         };
         let res = await addProject(params);
         if (res.code === '0000') {
@@ -165,15 +130,10 @@
       },
       //修改项目
       updateProject:async function () {
-        if (!validateAmount(this.updateProjectForm.projectPrice)) {
-          this.$Message.error("金额格式错误");
-          return;
-        }
         let params = {
           'shopId':this.selectedShopId,
           'projectId':this.updateProjectForm.projectId,
           'projectName':this.updateProjectForm.projectName,
-          'projectPrice':this.updateProjectForm.projectPrice,
         };
         let res = await updateProject(params);
         if (res.code === '0000') {

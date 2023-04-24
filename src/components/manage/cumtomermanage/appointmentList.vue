@@ -286,16 +286,6 @@
             }
           },
           {
-            title: '项目金额',
-            key: 'projectPrice',
-            width: 100,
-            render: (h,params)=>{
-              return h('div',
-                formatAmount(params.row.projectPrice)
-              )
-            }
-          },
-          {
             title: '创建人',
             key: 'createBy',
             width: 200,
