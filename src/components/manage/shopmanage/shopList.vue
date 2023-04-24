@@ -20,7 +20,7 @@
           <template #action="{ row, index }">
             <Row>
               <Col span="5"><Button type="primary" @click="showUpdateModal(index)">修改</Button></Col>
-              <Col span="6"><Button type="error" @click="showDeleteModal(index)">删除</Button></Col>
+              <Col span="6"><Button type="error" @click="showDeleteModal(index)" disabled>删除</Button></Col>
               <Col span="7">
                 <Button v-if="selectedShopId === data[index].shopId.toString()" type="success" ghost>已选择门店</Button>
                 <Button v-else type="success" @click="selectThisShop(index)">选择此门店</Button>

@@ -12,7 +12,7 @@
         <!--列表展示数据-->
         <Table border :columns="columns" :data="data">
           <template #action="{ row, index }">
-            <Button type="error" @click="showDeleteModal(index)">删除</Button>
+            <Button type="error" @click="showDeleteModal(index)" disabled>删除</Button>
           </template>
         </Table>
       </Col>
