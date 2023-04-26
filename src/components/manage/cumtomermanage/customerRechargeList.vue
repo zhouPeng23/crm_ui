@@ -67,7 +67,7 @@
 </template>
 
 <script>
-  import { formatDate_yyyyMMdd,formatStrDate_yymmddHHmmss,validateEmpty,validatePhoneNumber,formatAmount,formatHumanSexByNumber} from "../../../tools";
+  import { validateAmount,formatStrDate_yymmddHHmmss,validateEmpty,validatePhoneNumber,formatAmount,formatHumanSexByNumber} from "../../../tools";
   import {queryCustomerRechargeList,queryShopAllCustomer,queryCustomerByPhoneNumber,addCustomerRecharge} from "../../../api/ApiList";
   import confirmModal from "../../utils/modal/confirmModal";
   import * as md5 from "md5";
@@ -291,6 +291,10 @@
        * 添加充值
        */
       addCustomerRecharge:async function(){
+        if (!validateAmount(this.addCustomerRechargeForm.rechargeAmount)) {
+          this.$Message.warning("金额格式错误，请重新输入");
+          return;
+        }
         let params = {
           'shopId':this.selectedShopId,
           'phoneNumber':this.addCustomerRechargeForm.phoneNumber,
