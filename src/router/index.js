@@ -15,6 +15,7 @@ const employeeOverTimeList  = () => import('../components/manage/employeemanage/
 //顾客管理
 const appointmentList  = () => import('../components/manage/cumtomermanage/appointmentList');
 const customerList  = () => import('../components/manage/cumtomermanage/customerList');
+const customerRechargeList  = () => import('../components/manage/cumtomermanage/customerRechargeList');
 const customerIncomeList  = () => import('../components/manage/cumtomermanage/customerIncomeList');
 
 //登录管理
@@ -37,10 +38,11 @@ const employeeManageRouters = [
   {path:'employeeOverTimeList',component:employeeOverTimeList},
 ];
 
-//客户管理
+//顾客管理
 const customerManageRouters = [
   {path:'appointmentList',component:appointmentList},
   {path:'customerList',component:customerList},
+  {path:'customerRechargeList',component:customerRechargeList},
   {path:'customerIncomeList',component:customerIncomeList},
 ];
 
@@ -58,7 +60,7 @@ export default new Router({
   routes: [
     {path:'/manage/shopmanage',component:baseLayout,children:shopManageRouters},//门店管理
     {path:'/manage/employeemanage',component:baseLayout,children:employeeManageRouters},//员工管理
-    {path:'/manage/customermanage',component:baseLayout,children:customerManageRouters},//客户管理
+    {path:'/manage/customermanage',component:baseLayout,children:customerManageRouters},//顾客管理
     {path:'/manage/loginmanage',component:baseLayout,children:loginManageRouters},//登录管理
     {path: '/login', component:loginPage },
     {path: '*', component:loginPage },

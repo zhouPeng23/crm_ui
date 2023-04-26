@@ -1,10 +1,10 @@
 <template>
   <div>
 
-    <Row>
+    <Row style="margin: 10px 0 10px 0">
       <Col span="2">
         <!--添加员工按钮-->
-        <Button type="warning" style="margin: 10px 0 10px 0" @click="showAddModal">添加员工</Button>
+        <Button type="warning" @click="showAddModal">添加员工</Button>
       </Col>
     </Row>
     <Row>

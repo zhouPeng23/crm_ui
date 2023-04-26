@@ -48,6 +48,9 @@ export const deleteCustomer = (params) => POST(baseUrl+'/customer/deleteCustomer
 export const getAllCustomerMassLevelList = (params) => POST(baseUrl+'/customer/getAllCustomerMassLevelList',params);
 export const queryCustomerByPhoneNumber = (params) => POST(baseUrl+'/customer/queryCustomerByPhoneNumber',params);
 
+//顾客充值
+export const queryCustomerRechargeList = (params) => POST(baseUrl+'/customerRecharge/queryCustomerRechargeList',params);
+
 //顾客收益
 export const queryCustomerIncomeList = (params) => POST(baseUrl+'/customerIncome/queryCustomerIncomeList',params);
 

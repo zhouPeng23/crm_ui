@@ -42,7 +42,8 @@
               </template>
               <MenuItem name="3-1"><router-link to="/manage/customermanage/appointmentList">{{mainMenu3_01}}</router-link></MenuItem>
               <MenuItem name="3-2"><router-link to="/manage/customermanage/customerList">{{mainMenu3_02}}</router-link></MenuItem>
-              <MenuItem name="3-3"><router-link to="/manage/customermanage/customerIncomeList">{{mainMenu3_03}}</router-link></MenuItem>
+              <MenuItem name="3-3"><router-link to="/manage/customermanage/customerRechargeList">{{mainMenu3_03}}</router-link></MenuItem>
+              <MenuItem name="3-4"><router-link to="/manage/customermanage/customerIncomeList">{{mainMenu3_04}}</router-link></MenuItem>
             </Submenu>
             <Submenu name="4">
               <template slot="title">
@@ -90,7 +91,8 @@
         mainMenu3:'顾客管理',
           mainMenu3_01:'预约列表',
           mainMenu3_02:'顾客列表',
-          mainMenu3_03:'顾客收益',
+          mainMenu3_03:'充值记录',
+          mainMenu3_04:'顾客收益',
         mainMenu4:'登录管理',
           mainMenu4_01:'修改密码',
           mainMenu4_02:'安全退出',
