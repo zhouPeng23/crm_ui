@@ -47,6 +47,9 @@ export const updateCustomer = (params) => POST(baseUrl+'/customer/updateCustomer
 export const deleteCustomer = (params) => POST(baseUrl+'/customer/deleteCustomer',params);
 export const getAllCustomerMassLevelList = (params) => POST(baseUrl+'/customer/getAllCustomerMassLevelList',params);
 export const queryCustomerByPhoneNumber = (params) => POST(baseUrl+'/customer/queryCustomerByPhoneNumber',params);
+export const queryCustomerListByAppointmentIds = (params) => POST(baseUrl+'/customer/queryCustomerListByAppointmentIds',params);
+export const queryCustomerListByIds = (params) => POST(baseUrl+'/customer/queryCustomerListByIds',params);
+
 
 //顾客充值
 export const queryCustomerRechargeList = (params) => POST(baseUrl+'/customerRecharge/queryCustomerRechargeList',params);

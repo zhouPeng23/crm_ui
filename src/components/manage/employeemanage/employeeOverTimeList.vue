@@ -33,7 +33,7 @@
 <script>
   import { formatDate_yyyyMMdd,formatStrDate_yymmddHHmmss ,validateEmpty,addDays} from "../../../tools";
   import {queryEmployeeOverTimeList,queryShopNormalEmployeeList,queryAppointmentByIds,
-    queryShopAllCustomer,queryProjectList,queryAppointmentStatusList} from "../../../api/ApiList";
+    queryCustomerListByAppointmentIds,queryProjectList,queryAppointmentStatusList} from "../../../api/ApiList";
   import confirmModal from "../../utils/modal/confirmModal";
 
   export default {
@@ -162,9 +162,9 @@
 
           //批量查顾客
           params = {
-            "shopId": this.selectedShopId,
+            "appointmentIds": appointmentIds.slice(0, -1),
           };
-          let customerResult = await queryShopAllCustomer(params);
+          let customerResult = await queryCustomerListByAppointmentIds(params);
           this.customerList = customerResult.data;
         }
       },

@@ -30,7 +30,7 @@
 
 <script>
   import {formatStrDate_yymmddHHmmss,formatAmount} from "../../../tools";
-  import {queryCustomerIncomeList,queryShopAllCustomer,queryRechargeListByIds} from "../../../api/ApiList";
+  import {queryCustomerIncomeList,queryRechargeListByIds,queryCustomerListByIds} from "../../../api/ApiList";
   import confirmModal from "../../utils/modal/confirmModal";
 
   export default {
@@ -49,7 +49,7 @@
         currentPageNo:1,
         searchCustomerName:"",
         searchPhoneNumber:"",
-        allCustomerList: [],
+        customerList: [],
         rechargeList: [],
         columns: [
           {
@@ -173,16 +173,20 @@
           let result = await queryRechargeListByIds(params);
           this.rechargeList = result.data;
 
+          //批量查询顾客集合
+          let customerIds = "";
+          for(let i = 0; i < this.data.length; i++){
+            customerIds += this.data[i].customerId+","+this.data[i].introduceCustomerId+",";
+          }
+          params = {
+            "customerIds": customerIds.slice(0, -1),
+          };
+          let customerListRes = await queryCustomerListByIds(params);
+          this.customerList = customerListRes.data;
+
         }else {
           this.$Message.error(res.msg);
         }
-      },
-      queryShopAllCustomer:async function(){
-        let params = {
-          'shopId':this.selectedShopId,
-        };
-        let res = await queryShopAllCustomer(params);
-        this.allCustomerList = res.data;
       },
       resetQuery: function(){
         //查询条件设置为空
@@ -199,9 +203,9 @@
        * @returns {string}
        */
       renderCustomerNameByCustomerId : function(str){
-        for(let i = 0; i < this.allCustomerList.length; i++){
-          if (str === this.allCustomerList[i].customerId) {
-            return this.allCustomerList[i].customerName;
+        for(let i = 0; i < this.customerList.length; i++){
+          if (str === this.customerList[i].customerId) {
+            return this.customerList[i].customerName;
           }
         }
       },
@@ -211,9 +215,9 @@
        * @returns {string}
        */
       renderIntroduceCustomerNameByCustomerId : function(str){
-        for(let i = 0; i < this.allCustomerList.length; i++){
-          if (str === this.allCustomerList[i].customerId) {
-            return this.allCustomerList[i].customerName;
+        for(let i = 0; i < this.customerList.length; i++){
+          if (str === this.customerList[i].customerId) {
+            return this.customerList[i].customerName;
           }
         }
       },
@@ -223,9 +227,9 @@
        * @returns {string}
        */
       renderIntroduceCustomerPhoneNumberByCustomerId : function(str){
-        for(let i = 0; i < this.allCustomerList.length; i++){
-          if (str === this.allCustomerList[i].customerId) {
-            return this.allCustomerList[i].phoneNumber;
+        for(let i = 0; i < this.customerList.length; i++){
+          if (str === this.customerList[i].customerId) {
+            return this.customerList[i].phoneNumber;
           }
         }
       },
@@ -247,9 +251,9 @@
        * @returns {string}
        */
       renderPhoneNumberByCustomerId : function(str){
-        for(let i = 0; i < this.allCustomerList.length; i++){
-          if (str === this.allCustomerList[i].customerId) {
-            return this.allCustomerList[i].phoneNumber;
+        for(let i = 0; i < this.customerList.length; i++){
+          if (str === this.customerList[i].customerId) {
+            return this.customerList[i].phoneNumber;
           }
         }
       },
@@ -265,9 +269,6 @@
     mounted:async function () {
       this.selectedShopId = localStorage.getItem('selectedShopId');
       this.selectedShopName = localStorage.getItem('selectedShopName');
-
-      //查询所有顾客
-      this.queryShopAllCustomer();
 
       //查顾客收益
       this.queryCustomerIncomeList();
