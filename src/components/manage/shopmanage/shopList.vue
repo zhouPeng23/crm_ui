@@ -367,15 +367,17 @@
 
           let res = await updateShop(params);
           if (res.code === '0000') {
-            this.$refs.updateShopFormRef.resetFields();
             this.$Message.success(res.msg);
             this.queryShopList();
             if (this.updateShopForm.shopId.toString() === this.selectedShopId) {
+              localStorage.setItem('selectedShopId',this.updateShopForm.shopId);
+              localStorage.setItem('selectedShopName',this.updateShopForm.shopName);
               // 修改成功延迟 1s 刷新页面
               setTimeout(function () {
                 window.location.href = "/manage/shopmanage/shopList";
               }, 1000);
             }
+            this.$refs.updateShopFormRef.resetFields();
           }else {
             this.$Message.error(res.msg);
           }

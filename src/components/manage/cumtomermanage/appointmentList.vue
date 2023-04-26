@@ -161,7 +161,7 @@
         searchAppointmentStatus:"",
         shopAllemployeeList: [],
         shopNormalemployeeList:[],
-        customerList:[],
+        allCustomerList:[],
         projectList:[],
         allShiftTimeList:[],
         appointmentStatusList:[],
@@ -515,7 +515,7 @@
           'shopId': this.selectedShopId
         };
         let res = await queryShopAllCustomer(params);
-        this.customerList = res.data;
+        this.allCustomerList = res.data;
       },
       // 查询项目集合
       queryProjectList :async function () {
@@ -581,9 +581,9 @@
        * @returns {string}
        */
       renderCustomerName : function(str){
-        for(let i = 0; i < this.customerList.length; i++){
-          if (str === this.customerList[i].customerId) {
-            return this.customerList[i].customerName;
+        for(let i = 0; i < this.allCustomerList.length; i++){
+          if (str === this.allCustomerList[i].customerId) {
+            return this.allCustomerList[i].customerName;
           }
         }
       },
@@ -593,9 +593,9 @@
        * @returns {string}
        */
       getSexIdByCustomerId : function(str){
-        for(let i = 0; i < this.customerList.length; i++){
-          if (str === this.customerList[i].customerId) {
-            return this.customerList[i].sex;
+        for(let i = 0; i < this.allCustomerList.length; i++){
+          if (str === this.allCustomerList[i].customerId) {
+            return this.allCustomerList[i].sex;
           }
         }
       },
@@ -605,9 +605,9 @@
        * @returns {string}
        */
       renderSexByCustomerId : function(str){
-        for(let i = 0; i < this.customerList.length; i++){
-          if (str === this.customerList[i].customerId) {
-            return formatHumanSexByNumber(this.customerList[i].sex);
+        for(let i = 0; i < this.allCustomerList.length; i++){
+          if (str === this.allCustomerList[i].customerId) {
+            return formatHumanSexByNumber(this.allCustomerList[i].sex);
           }
         }
       },
@@ -629,9 +629,9 @@
        * @returns {string}
        */
       renderPhoneNumberByCustomerId : function(str){
-        for(let i = 0; i < this.customerList.length; i++){
-          if (str === this.customerList[i].customerId) {
-            return this.customerList[i].phoneNumber;
+        for(let i = 0; i < this.allCustomerList.length; i++){
+          if (str === this.allCustomerList[i].customerId) {
+            return this.allCustomerList[i].phoneNumber;
           }
         }
       },
