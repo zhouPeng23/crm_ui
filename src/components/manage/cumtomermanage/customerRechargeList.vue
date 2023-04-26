@@ -2,10 +2,10 @@
   <div>
 
     <Row style="margin: 10px 0 10px 0">
-      <Col span="4" >
+      <Col span="6" >
         <Button type="warning" @click="showAddModal">添加充值</Button>
       </Col>
-      <Col span="20">
+      <Col span="18">
         <Input v-model="searchCustomerName" placeholder="姓名" clearable style="width: 150px" />
         <Input v-model="searchPhoneNumber" placeholder="手机号" clearable style="width: 150px" :maxlength="11"/>
         <Button type="primary" shape="circle" icon="ios-search" @click="queryCustomerRechargeList">查询</Button>

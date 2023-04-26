@@ -25,19 +25,12 @@
       </Col>
     </Row>
 
-    <!--预约单详情-->
-    <confirmModal ref="showAppointmentDetailModalRef" modal-title="预约单详情:" :modal-width="600">
-      <Form :model="showAppointmentDetailForm" :label-width="120" @submit.native.prevent>
-
-      </Form>
-    </confirmModal>
-
   </div>
 </template>
 
 <script>
-  import { formatDate_yyyyMMdd,formatStrDate_yymmddHHmmss,validateEmpty,formatHumanSexByNumber,validatePhoneNumber,formatAmount,formatCustomerIncomeAmount} from "../../../tools";
-  import {queryCustomerIncomeList,queryShopAllCustomer,queryProjectList,queryAppointmentByIds,queryAppointmentStatusList} from "../../../api/ApiList";
+  import {formatStrDate_yymmddHHmmss,formatAmount} from "../../../tools";
+  import {queryCustomerIncomeList,queryShopAllCustomer,queryRechargeListByIds} from "../../../api/ApiList";
   import confirmModal from "../../utils/modal/confirmModal";
 
   export default {
@@ -57,18 +50,12 @@
         searchCustomerName:"",
         searchPhoneNumber:"",
         allCustomerList: [],
-        projectList:[],
-        currentPageAppointmentList:[],
-        appointmentStatusList:[],
-        showAppointmentDetailForm:{
-          customerName:"",
-        },
+        rechargeList: [],
         columns: [
           {
             title: '姓名',
             key: 'customerId',
             width: 100,
-            fixed: 'left',
             render: (h,params)=>{
               return h('div',
                 {style:{
@@ -88,16 +75,6 @@
               )
             }
           },
-          // {
-          //   title: '性别',
-          //   key: 'sex',
-          //   width: 70,
-          //   render: (h,params)=>{
-          //     return h('div',
-          //       formatHumanSexByNumber(this.renderSexByCustomerId(params.row.customerId))
-          //     )
-          //   }
-          // },
           {
             title: '介绍的顾客姓名',
             key: 'introduceCustomerId',
@@ -119,22 +96,38 @@
             }
           },
           {
-            title: '预约日期+时间',
-            key: 'introduceCustomerAppointmentId',
-            width: 160,
+            title: '介绍的顾客充值金额',
+            key: 'introduceCustomerRechargeId',
+            width: 150,
             render: (h,params)=>{
               return h('div',
-                this.findAppointmentDateById(params.row.introduceCustomerAppointmentId)
+                formatAmount(this.renderCustomerRechargeAmount(params.row.introduceCustomerRechargeId))
               )
             }
           },
           {
-            title: '预约单项目',
-            key: 'introduceCustomerAppointmentId',
-            width: 258,
+            title: '收益比例',
+            key: 'incomePoint',
+            width: 140,
             render: (h,params)=>{
               return h('div',
-                this.renderProjectNameByAppointmentId(params.row.introduceCustomerAppointmentId)
+                {style:{
+                    color:"orange"
+                  }},
+                [ h('strong',params.row.incomePoint+"%")]
+              )
+            }
+          },
+          {
+            title: '收益金额',
+            key: 'incomeAmount',
+            width: 140,
+            render: (h,params)=>{
+              return h('div',
+                {style:{
+                    color:"orange"
+                  }},
+                [ h('strong',"+"+formatAmount(params.row.incomeAmount))]
               )
             }
           },
@@ -145,21 +138,6 @@
             render: (h,params)=>{
               return h('div',
                 formatStrDate_yymmddHHmmss(params.row.createTime)
-              )
-            }
-          },
-          {
-            title: '预约单状态',
-            key: 'introduceCustomerAppointmentId',
-            width: 200,
-            align: 'center',
-            fixed: 'right',
-            render: (h,params)=>{
-              return h('div',
-                {style:{
-                    color:this.renderColorByAppointmentStatus(this.findAppointmentStatusById(params.row.introduceCustomerAppointmentId))
-                  }},
-                [ h('strong',this.renderAppointmentStatus(this.findAppointmentStatusById(params.row.introduceCustomerAppointmentId)))]
               )
             }
           },
@@ -183,27 +161,21 @@
         if (res.code === '0000') {
           this.data = res.data.records;
           this.total = res.data.total;
-          //查询当前分页中预约单集合
-          this.queryCurrentPageAppointment();
+
+          //批量查充值记录
+          let rechargeIds = "";
+          for(let i = 0; i < this.data.length; i++){
+            rechargeIds += this.data[i].introduceCustomerRechargeId+",";
+          }
+          params = {
+            "rechargeIds": rechargeIds.slice(0, -1),
+          };
+          let result = await queryRechargeListByIds(params);
+          this.rechargeList = result.data;
+
         }else {
           this.$Message.error(res.msg);
         }
-      },
-      queryCurrentPageAppointment:async function(){
-        if (this.data.length === 0) {
-          return;
-        }
-        let appointmentIds = "";
-        for (let i = 0; i < this.data.length; i++) {
-          appointmentIds += this.data[i].introduceCustomerAppointmentId+","
-        }
-        // 截取字符串，去掉最后一个字符
-        appointmentIds = appointmentIds.slice(0, -1);
-        let params = {
-          'appointmentIds':appointmentIds,
-        };
-        let res = await queryAppointmentByIds(params);
-        this.currentPageAppointmentList = res.data;
       },
       queryShopAllCustomer:async function(){
         let params = {
@@ -211,20 +183,6 @@
         };
         let res = await queryShopAllCustomer(params);
         this.allCustomerList = res.data;
-      },
-      // 查询项目集合
-      queryProjectList :async function () {
-        let params = {
-          'shopId': this.selectedShopId
-        };
-        let res = await queryProjectList(params);
-        this.projectList = res.data;
-      },
-      //查询预约状态集合
-      queryAppointmentStatusList:async function(){
-        let params = {};
-        let res = await queryAppointmentStatusList(params);
-        this.appointmentStatusList = res.data;
       },
       resetQuery: function(){
         //查询条件设置为空
@@ -272,6 +230,18 @@
         }
       },
       /**
+       * 渲染介绍的顾客充值金额
+       * @param rechargeId
+       * @returns {string}
+       */
+      renderCustomerRechargeAmount : function(rechargeId){
+        for(let i = 0; i < this.rechargeList.length; i++){
+          if (rechargeId === this.rechargeList[i].rechargeId) {
+            return this.rechargeList[i].rechargeAmount;
+          }
+        }
+      },
+      /**
        * 渲染顾客手机号
        * @param str
        * @returns {string}
@@ -282,127 +252,6 @@
             return this.allCustomerList[i].phoneNumber;
           }
         }
-      },
-      /**
-       * 渲染顾客性别
-       * @param str
-       * @returns {string}
-       */
-      renderSexByCustomerId : function(str){
-        for(let i = 0; i < this.allCustomerList.length; i++){
-          if (str === this.allCustomerList[i].customerId) {
-            return this.allCustomerList[i].sex;
-          }
-        }
-      },
-      /**
-       * 渲染预约状态
-       * @param str
-       * @returns {string}
-       */
-      renderAppointmentStatus : function(str){
-        for(let i = 0; i < this.appointmentStatusList.length; i++){
-          if (str === this.appointmentStatusList[i].code) {
-            return this.appointmentStatusList[i].msg;
-          }
-        }
-      },
-      /**
-       * 根据状态渲染颜色
-       * @param appointmentStatus
-       * @returns {string}
-       */
-      renderColorByAppointmentStatus : function(appointmentStatus){
-        if (appointmentStatus===1){
-          return "blue";
-        } else if (appointmentStatus === 2) {
-          return "chartreuse";
-        }else if (appointmentStatus === 3) {
-          return "black";
-        }
-      },
-      /**
-       * 根据预约id查找预约单projectIds
-       * @param appointmentId
-       * @returns {string}
-       */
-      findAppointmentProjectIdsById : function(appointmentId){
-        for(let i = 0; i < this.currentPageAppointmentList.length; i++){
-          if (appointmentId === this.currentPageAppointmentList[i].appointmentId) {
-            return this.currentPageAppointmentList[i].projectIds;
-          }
-        }
-      },
-      /**
-       * 根据预约id查找预约单projectPrice
-       * @param appointmentId
-       * @returns {string}
-       */
-      findAppointmentProjectPriceById : function(appointmentId){
-        for(let i = 0; i < this.currentPageAppointmentList.length; i++){
-          if (appointmentId === this.currentPageAppointmentList[i].appointmentId) {
-            return this.currentPageAppointmentList[i].projectPrice;
-          }
-        }
-      },
-      /**
-       * 根据预约id查找预约单status
-       * @param appointmentId
-       * @returns {string}
-       */
-      findAppointmentStatusById : function(appointmentId){
-        for(let i = 0; i < this.currentPageAppointmentList.length; i++){
-          if (appointmentId === this.currentPageAppointmentList[i].appointmentId) {
-            return this.currentPageAppointmentList[i].appointmentStatus;
-          }
-        }
-      },
-      /**
-       * 根据预约id查找预约单日期
-       * @param appointmentId
-       * @returns {string}
-       */
-      findAppointmentDateById : function(appointmentId){
-        for(let i = 0; i < this.currentPageAppointmentList.length; i++){
-          if (appointmentId === this.currentPageAppointmentList[i].appointmentId) {
-            return this.currentPageAppointmentList[i].appointmentDate+" "+this.currentPageAppointmentList[i].appointmentTime;
-          }
-        }
-      },
-      /**
-       * 根据预约单id，渲染项目名称
-       * @param appointmentId
-       * @returns {string}
-       */
-      renderProjectNameByAppointmentId : function(appointmentId){
-
-        let projectIds = "";
-        for(let i = 0; i < this.currentPageAppointmentList.length; i++){
-          if (appointmentId === this.currentPageAppointmentList[i].appointmentId) {
-            projectIds =  this.currentPageAppointmentList[i].projectIds;
-          }
-        }
-
-        let allProjectName = "";
-        //根据逗号分隔projectIds
-        let projectIdsArray = projectIds.split(",");
-        for (let i = 0; i < projectIdsArray.length; i++) {
-          for(let j = 0; j < this.projectList.length; j++){
-            if (projectIdsArray[i] === this.projectList[j].projectId.toString()) {
-              allProjectName += this.projectList[j].projectName + " ,";
-            }
-          }
-        }
-        //去掉最后一个逗号
-        if (allProjectName.endsWith(",")) {
-          allProjectName = allProjectName.slice(0, -1);
-        }
-        return allProjectName;
-      },
-      // 显示预约单详情
-      showAppointmentDetailModal:function(index){
-        this.showAppointmentDetailForm.customerName = this.data[index].customerName;
-        this.$refs.showAppointmentDetailModalRef.showModal();
       },
       handleChange(pageNo){
         this.currentPageNo = pageNo;
@@ -417,17 +266,11 @@
       this.selectedShopId = localStorage.getItem('selectedShopId');
       this.selectedShopName = localStorage.getItem('selectedShopName');
 
-      //查项目集合
-      this.queryProjectList();
-
       //查询所有顾客
       this.queryShopAllCustomer();
 
       //查顾客收益
       this.queryCustomerIncomeList();
-
-      //查询预约状态集合
-      this.queryAppointmentStatusList();
 
     }
   }

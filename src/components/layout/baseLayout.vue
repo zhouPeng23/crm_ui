@@ -91,7 +91,7 @@
         mainMenu3:'顾客管理',
           mainMenu3_01:'预约列表',
           mainMenu3_02:'顾客列表',
-          mainMenu3_03:'充值记录',
+          mainMenu3_03:'顾客充值',
           mainMenu3_04:'顾客收益',
         mainMenu4:'登录管理',
           mainMenu4_01:'修改密码',

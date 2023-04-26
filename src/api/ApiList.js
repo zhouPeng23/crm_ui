@@ -51,6 +51,7 @@ export const queryCustomerByPhoneNumber = (params) => POST(baseUrl+'/customer/qu
 //顾客充值
 export const queryCustomerRechargeList = (params) => POST(baseUrl+'/customerRecharge/queryCustomerRechargeList',params);
 export const addCustomerRecharge = (params) => POST(baseUrl+'/customerRecharge/addCustomerRecharge',params);
+export const queryRechargeListByIds = (params) => POST(baseUrl+'/customerRecharge/queryRechargeListByIds',params);
 
 //顾客收益
 export const queryCustomerIncomeList = (params) => POST(baseUrl+'/customerIncome/queryCustomerIncomeList',params);
