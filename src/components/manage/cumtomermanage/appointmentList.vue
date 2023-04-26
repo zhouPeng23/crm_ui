@@ -720,6 +720,8 @@
         let res = await queryCustomerByPhoneNumber(params);
         if (!validateEmpty(res.data)) {
           this.$Message.success("未查询到记录");
+          this.addAppointmentForm.customerName = "";
+          this.addAppointmentForm.sex = "";
         }else{
           this.$Message.success("老顾客");
           //设置顾客名称、性别

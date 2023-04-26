@@ -594,6 +594,8 @@
         let res = await queryCustomerByPhoneNumber(params);
         if (!validateEmpty(res.data)) {
           this.$Message.success("未查询到记录");
+          //设置顾客名称
+          this.addCustomerForm.introducedByCustomerName = "";
         }else{
           this.$Message.success("被介绍人存在");
           //设置顾客名称
@@ -614,6 +616,8 @@
         let res = await queryCustomerByPhoneNumber(params);
         if (!validateEmpty(res.data)) {
           this.$Message.success("未查询到记录");
+          //设置顾客名称
+          this.updateCustomerForm.introducedByCustomerName = "";
         }else{
           this.$Message.success("被介绍人存在");
           //设置顾客名称
