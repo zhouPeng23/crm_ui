@@ -6,6 +6,7 @@ const baseLayout = () => import('../components/layout/baseLayout');
 //门店管理
 const shopList  = () => import('../components/manage/shopmanage/shopList');
 const projectList  = () => import('../components/manage/shopmanage/projectList');
+const shopCustomerIncomeSettertList  = () => import('../components/manage/shopmanage/shopCustomerIncomeSettertList');
 
 //员工管理
 const shiftList  = () => import('../components/manage/employeemanage/shiftList');
@@ -29,6 +30,7 @@ Vue.use(Router);
 const shopManageRouters = [
   {path:'shopList',component:shopList},
   {path:'projectList',component:projectList},
+  {path:'shopCustomerIncomeSettertList',component:shopCustomerIncomeSettertList},
 ];
 
 //员工管理

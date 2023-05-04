@@ -13,6 +13,12 @@ export const addShop = (params) => POST(baseUrl+'/shop/addShop',params);
 export const deleteShop = (params) => POST(baseUrl+'/shop/deleteShop',params);
 export const updateShop = (params) => POST(baseUrl+'/shop/updateShop',params);
 
+//门店顾客收益设置
+export const selectShopCustomerIncomeSetterList = (params) => POST(baseUrl+'/shopCustomerIncomeSetter/selectShopCustomerIncomeSetterList',params);
+export const addShopCustomerIncomeSetter = (params) => POST(baseUrl+'/shopCustomerIncomeSetter/addShopCustomerIncomeSetter',params);
+export const updateShopCustomerIncomeSetter = (params) => POST(baseUrl+'/shopCustomerIncomeSetter/updateShopCustomerIncomeSetter',params);
+export const deleteShopCustomerIncomeSetter = (params) => POST(baseUrl+'/shopCustomerIncomeSetter/deleteShopCustomerIncomeSetter',params);
+
 //项目
 export const queryProjectList = (params) => POST(baseUrl+'/project/queryProjectList',params);
 export const addProject = (params) => POST(baseUrl+'/project/addProject',params);

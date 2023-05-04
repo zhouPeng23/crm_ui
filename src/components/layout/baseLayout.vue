@@ -25,6 +25,7 @@
               </template>
               <MenuItem name="1-1"><router-link to="/manage/shopmanage/shopList">{{mainMenu1_01}}</router-link></MenuItem>
               <MenuItem name="1-2"><router-link to="/manage/shopmanage/projectList">{{mainMenu1_02}}</router-link></MenuItem>
+              <MenuItem name="1-3"><router-link to="/manage/shopmanage/shopCustomerIncomeSettertList">{{mainMenu1_03}}</router-link></MenuItem>
             </Submenu>
             <Submenu name="2">
               <template slot="title">
@@ -84,6 +85,7 @@
         mainMenu1:'门店管理',
           mainMenu1_01:'门店列表',
           mainMenu1_02:'店内项目',
+          mainMenu1_03:'顾客收益设置',
         mainMenu2:'员工管理',
           mainMenu2_01:'班次列表',
           mainMenu2_02:'员工列表',

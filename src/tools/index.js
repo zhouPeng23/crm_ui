@@ -232,6 +232,17 @@ export function validateAmount(amount) {
 
 
 /**
+ * 校验百分比
+ * @param percentNumber
+ * @returns {boolean} 是否正确
+ */
+export function validatePercent(percentNumber) {
+  let reg = new RegExp("^([1-9]|[1-9]\\d|100)$");
+  return reg.test(percentNumber);
+}
+
+
+/**
  * 格式化金额
  * @param amount
  * @returns {string}
