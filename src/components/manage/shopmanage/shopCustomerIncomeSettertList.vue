@@ -98,11 +98,27 @@
             title: '首单收益点数',
             key: 'firstIncomePoint',
             width: 120,
+            render: (h,params)=>{
+              return h('div',
+                {style:{
+                    color:"orange"
+                  }},
+                [ h('strong',params.row.firstIncomePoint+"%")]
+              )
+            }
           },
           {
             title: '永久收益点数',
             key: 'foreverIncomePoint',
             width: 120,
+            render: (h,params)=>{
+              return h('div',
+                {style:{
+                    color:"orange"
+                  }},
+                [ h('strong',params.row.foreverIncomePoint+"%")]
+              )
+            }
           },
           {
             title: '创建人',
