@@ -13,7 +13,9 @@
         <Table border :columns="columns" :data="data">
           <template #action="{ row, index }">
             <Row>
-              <Col span="9">&nbsp;</Col>
+              <Col span="6">&nbsp;</Col>
+              <Col span="3"><Icon type="md-arrow-round-up" size="25" color="green" style="cursor: pointer" @click="thisProjectUp(index)"/></Col>
+              <Col span="3"><Icon type="md-arrow-round-down" size="25" color="green" style="cursor: pointer" @click="thisProjectDown(index)"/></Col>
               <Col span="6"><Button type="primary" @click="showUpdateModal(index)">修改</Button></Col>
               <Col span="6"><Button type="error" @click="showDeleteModal(index)" disabled>删除</Button></Col>
             </Row>
@@ -49,7 +51,7 @@
 </template>
 
 <script>
-  import {queryProjectList,addProject,deleteProject,updateProject} from "../../../api/ApiList";
+  import {queryProjectList,addProject,deleteProject,updateProject,thisProjectUp,thisProjectDown} from "../../../api/ApiList";
   import {validateAmount,formatAmount} from "../../../tools/index";
   import confirmModal from "../../utils/modal/confirmModal";
 
@@ -78,6 +80,11 @@
             key: 'projectName',
             width: 200,
             fixed: 'left',
+            render: (h, params) => {
+              return h('div', [
+                h('strong' ,params.row.projectName)
+              ]);
+            }
           },
           {
             title: '操作',
@@ -100,6 +107,42 @@
       // 显示添加项目弹框
       showAddModal:function(){
         this.$refs.addProjectModalRef.showModal();
+      },
+      //上移项目
+      thisProjectUp:async function(index){
+        if (index === 0) {
+          this.$Message.warning("已经在最上面了");
+          return;
+        }
+        let params = {
+          'shopId':this.selectedShopId,
+          'currentProjectId':this.data[index].projectId,
+          'upperProjectId':this.data[index-1].projectId,
+        };
+        let res = await thisProjectUp(params);
+        if (res.code==='0000'){
+          this.queryProjectList();
+        } else{
+          this.$Message.error(res.msg);
+        }
+      },
+      //下移项目
+      thisProjectDown:async function(index){
+        if (index === this.data.length-1) {
+          this.$Message.warning("已经在最下面了");
+          return;
+        }
+        let params = {
+          'shopId':this.selectedShopId,
+          'currentProjectId':this.data[index].projectId,
+          'downerProjectId':this.data[index+1].projectId,
+        };
+        let res = await thisProjectDown(params);
+        if (res.code==='0000'){
+          this.queryProjectList();
+        } else{
+          this.$Message.error(res.msg);
+        }
       },
       // 显示修改项目弹框
       showUpdateModal:function(index){

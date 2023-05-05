@@ -24,6 +24,8 @@ export const queryProjectList = (params) => POST(baseUrl+'/project/queryProjectL
 export const addProject = (params) => POST(baseUrl+'/project/addProject',params);
 export const updateProject = (params) => POST(baseUrl+'/project/updateProject',params);
 export const deleteProject = (params) => POST(baseUrl+'/project/deleteProject',params);
+export const thisProjectUp = (params) => POST(baseUrl+'/project/thisProjectUp',params);
+export const thisProjectDown = (params) => POST(baseUrl+'/project/thisProjectDown',params);
 
 //员工
 export const queryShopAllEmployeeList = (params) => POST(baseUrl+'/employee/queryShopAllEmployeeList',params);
