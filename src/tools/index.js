@@ -264,8 +264,9 @@ export function formatOperateType(operateType) {
  */
 export function formatAmount(amount) {
   if (amount<0.01){
-    return "";
+    return "0.00";
   }
+
   if (parseFloat(amount).toFixed(2)<1) {
     return amount;
   }
@@ -293,8 +294,8 @@ export function formatAmount(amount) {
  */
 export function formatAmount_add(amount) {
   let res = formatAmount(amount);
-  if (!validateEmpty(res)) {
-    return res;
+  if (res<0.01) {
+    return "";
   }else{
     return "+"+res;
   }
@@ -308,8 +309,8 @@ export function formatAmount_add(amount) {
  */
 export function formatAmount_sub(amount) {
   let res = formatAmount(amount);
-  if (!validateEmpty(res)) {
-    return res;
+  if (res<0.01) {
+    return "";
   }else{
     return "-"+res;
   }
