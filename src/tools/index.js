@@ -264,7 +264,7 @@ export function formatOperateType(operateType) {
  */
 export function formatAmount(amount) {
   if (amount<0.01){
-    return "-";
+    return " ";
   }
   if (parseFloat(amount).toFixed(2)<1) {
     return amount;

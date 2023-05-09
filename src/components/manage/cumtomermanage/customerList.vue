@@ -29,7 +29,7 @@
             <Row>
               <Col span="8"><Button type="primary" @click="showUpdateModal(index)">修改</Button></Col>
               <Col span="8"><Button type="success" icon="ios-search" @click="showAppointmentModal(index)">预约记录</Button></Col>
-              <Col span="8"><Button type="warning" icon="logo-usd" @click="showRechargeModal(index)">卡里余额</Button></Col>
+              <Col span="8"><Button type="warning" icon="logo-usd" @click="showRechargeListModal(index)">充值记录</Button></Col>
             </Row>
           </template>
         </Table>
@@ -132,7 +132,7 @@
     </confirmModal>
 
     <!--顾客卡里余额弹框-->
-    <confirmModal ref="customerRechargeModalRef" modal-title="充值记录" :modal-width="1500">
+    <confirmModal ref="customerRechargeListModalRef" modal-title="充值记录" :modal-width="1500">
       <span style="color: blue;font-size: 15px">当前卡里总金额:<span style="color: orange;font-size: 25px">{{totalAmount}}</span></span>
       <span style="margin-left: 20px;font-size: 15px">现金总金额:{{totalCashAmount}}</span>
       <span style="margin-left: 20px;font-size: 15px">代金券总金额:{{totalCouponAmount}}</span>
@@ -806,13 +806,13 @@
         this.$refs.customerAppointmentModalRef.showModal();
       },
       //显示充值记录弹框
-      showRechargeModal:function(index){
+      showRechargeListModal:function(index){
         this.recharge_phoneNumber = this.data[index].phoneNumber;
         this.totalCashAmount = formatAmount(this.data[index].totalCashAmount);
         this.totalCouponAmount = formatAmount(this.data[index].totalCouponAmount);
         this.totalAmount = formatAmount(this.data[index].totalCashAmount + this.data[index].totalCouponAmount);
         this.queryRechargeList_byPhoneNumber();
-        this.$refs.customerRechargeModalRef.showModal();
+        this.$refs.customerRechargeListModalRef.showModal();
       },
       //根据手机号查顾客预约记录
       queryAppointmentList_byPhoneNumber:async function(){
