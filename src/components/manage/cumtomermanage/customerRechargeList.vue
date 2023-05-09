@@ -74,10 +74,10 @@
         <FormItem label="消费金额" prop="consumeAmount" required>
           <Input type="text" v-model="addCustomerConsumeForm.consumeAmount" style="width: 200px"></Input>
         </FormItem>
-        <FormItem label="购买的项目" prop="rechargeCoupon">
+        <FormItem label="购买的项目" prop="consumeForProject">
           <Input type="text" v-model="addCustomerConsumeForm.consumeForProject" style="width: 200px"></Input>
         </FormItem>
-        <FormItem label="购买的产品" prop="rechargeCoupon">
+        <FormItem label="购买的产品" prop="consumeForProduct">
           <Input type="text" v-model="addCustomerConsumeForm.consumeForProduct" style="width: 200px"></Input>
         </FormItem>
         <FormItem label="操作员密码" prop="password" required>
