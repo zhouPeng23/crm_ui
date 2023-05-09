@@ -27,9 +27,9 @@
         <Table border :columns="columns" :data="data">
           <template #action="{ row, index }">
             <Row>
-              <Col span="6">&nbsp;</Col>
-              <Col span="6"><Button type="primary" @click="showUpdateModal(index)">修改</Button></Col>
-              <Col span="6"><Button type="success" icon="ios-search" @click="showAppointmentModal(index)">预约记录</Button></Col>
+              <Col span="8"><Button type="primary" @click="showUpdateModal(index)">修改</Button></Col>
+              <Col span="8"><Button type="success" icon="ios-search" @click="showAppointmentModal(index)">预约记录</Button></Col>
+              <Col span="8"><Button type="warning" icon="logo-usd" @click="showRechargeModal(index)">卡里余额</Button></Col>
             </Row>
           </template>
         </Table>
@@ -131,15 +131,24 @@
       <Page :total="appointment_total" :page-size="appointment_pageSize" show-total show-sizer :styles="{'text-align': 'center','margin-top': '10px'}" @on-change="appointment_handleChange" @on-page-size-change="appointment_handlePageSizeChange"/>
     </confirmModal>
 
+    <!--顾客卡里余额弹框-->
+    <confirmModal ref="customerRechargeModalRef" modal-title="充值记录" :modal-width="1500">
+      <span style="color: blue;font-size: 15px">当前卡里总金额:<span style="color: orange;font-size: 25px">{{totalAmount}}</span></span>
+      <span style="margin-left: 20px;font-size: 15px">现金总金额:{{totalCashAmount}}</span>
+      <span style="margin-left: 20px;font-size: 15px">代金券总金额:{{totalCouponAmount}}</span>
+      <Table border :columns="recharge_columns" :data="recharge_data"></Table>
+      <Page :total="recharge_total" :page-size="recharge_pageSize" show-total show-sizer :styles="{'text-align': 'center','margin-top': '10px'}" @on-change="recharge_handleChange" @on-page-size-change="recharge_handlePageSizeChange"/>
+    </confirmModal>
+
 
   </div>
 </template>
 
 <script>
-  import { formatDate_yyyyMMdd,formatStrDate_yymmddHHmmss,validateEmpty,formatHumanSexByNumber,validatePhoneNumber,getDatePeriod,
-    dateIsToday,getTimePeriod} from "../../../tools";
+  import { formatAmount,formatDate_yyyyMMdd,formatStrDate_yymmddHHmmss,validateEmpty,formatHumanSexByNumber,validatePhoneNumber,getDatePeriod,
+    dateIsToday,getTimePeriod,formatOperateType} from "../../../tools";
   import {queryShopAllEmployeeList,queryShopNormalEmployeeList,getAllCustomerMassLevelList,queryCustomerList,addCustomer,queryAppointmentStatusList,
-    updateCustomer,queryShopAllCustomer,queryCustomerByPhoneNumber,queryAppointmentList,queryProjectList} from "../../../api/ApiList";
+    updateCustomer,queryShopAllCustomer,queryCustomerByPhoneNumber,queryAppointmentList,queryProjectList,queryCustomerRechargeList} from "../../../api/ApiList";
   import confirmModal from "../../utils/modal/confirmModal";
 
   export default {
@@ -301,7 +310,7 @@
           {
             title: '操作',
             slot: 'action',
-            width: 300,
+            width: 350,
             align: 'center',
             fixed: 'right'
           }
@@ -383,6 +392,129 @@
             render: (h,params)=>{
               return h('div',
                 this.renderProjectName(params.row.projectIds)
+              )
+            }
+          },
+        ],
+        //以下是顾客卡里余额记录
+        recharge_phoneNumber:"",
+        totalAmount:"",
+        totalCashAmount:"",
+        totalCouponAmount:"",
+        //充值记录
+        recharge_data: [],
+        // 总数
+        recharge_total:0,
+        // 每页记录数
+        recharge_pageSize:10,
+        // 当前页
+        recharge_currentPageNo:1,
+        recharge_columns: [
+          {
+            title: '顾客姓名',
+            key: 'customerId',
+            width: 100,
+            render: (h, params) => {
+              return h('div', [
+                this.renderCustomerName(params.row.customerId)
+              ]);
+            }
+          },
+          {
+            title: '性别',
+            key: 'customerId',
+            width: 80,
+            render: (h,params)=>{
+              return h('div',
+                this.renderSexByCustomerId(params.row.customerId)
+              )
+            }
+          },
+          {
+            title: '手机号',
+            key: 'customerId',
+            width: 120,
+            render: (h,params)=>{
+              return h('div',
+                this.renderPhoneNumberByCustomerId(params.row.customerId)
+              )
+            }
+          },
+          {
+            title: '操作类型',
+            key: 'operateType',
+            width: 100,
+            render: (h,params)=>{
+              return h('div',
+                {style:{
+                    color:params.row.operateType===1?"orange":"green"
+                  }},
+                formatOperateType(params.row.operateType)
+              )
+            }
+          },
+          {
+            title: '充值金额',
+            key: 'rechargeAmount',
+            width: 100,
+            render: (h, params) => {
+              return h('div', [
+                formatAmount(params.row.rechargeAmount)
+              ]);
+            }
+          },
+          {
+            title: '代金券金额',
+            key: 'rechargeCoupon',
+            width: 100,
+            render: (h, params) => {
+              return h('div', [
+                formatAmount(params.row.rechargeCoupon)
+              ]);
+            }
+          },
+          {
+            title: '消费金额',
+            key: 'consumeAmount',
+            width: 100,
+            render: (h,params)=>{
+              return h('div',
+                formatAmount(params.row.consumeAmount)
+              )
+            }
+          },
+          {
+            title: '购买的项目',
+            key: 'consumeForProject',
+            width: 180,
+          },
+          {
+            title: '购买的产品',
+            key: 'consumeForProduct',
+            width: 180,
+          },
+          {
+            title: '当前卡里总金额',
+            key: 'currentCardTotalAmount',
+            width: 125,
+            render: (h,params)=>{
+              return h('div',
+                formatAmount(params.row.currentCardTotalAmount)
+              )
+            }
+          },
+          {
+            title: '操作员',
+            key: 'createBy',
+            width: 100,
+          },
+          {
+            title: '创建时间',
+            key: 'createTime',
+            width: 160,
+            render: (h,params)=>{
+              return h('div',
+                formatStrDate_yymmddHHmmss(params.row.createTime)
               )
             }
           },
@@ -492,6 +624,30 @@
        * @returns {string}
        */
       renderIntroducedPhoneNumberByCustomerName : function(str){
+        for(let i = 0; i < this.allCustomerList.length; i++){
+          if (str === this.allCustomerList[i].customerId) {
+            return this.allCustomerList[i].phoneNumber;
+          }
+        }
+      },
+      /**
+       * 渲染顾客性别
+       * @param str
+       * @returns {string}
+       */
+      renderSexByCustomerId : function(str){
+        for(let i = 0; i < this.allCustomerList.length; i++){
+          if (str === this.allCustomerList[i].customerId) {
+            return formatHumanSexByNumber(this.allCustomerList[i].sex);
+          }
+        }
+      },
+      /**
+       * 渲染顾客手机号
+       * @param str
+       * @returns {string}
+       */
+      renderPhoneNumberByCustomerId : function(str){
         for(let i = 0; i < this.allCustomerList.length; i++){
           if (str === this.allCustomerList[i].customerId) {
             return this.allCustomerList[i].phoneNumber;
@@ -649,6 +805,15 @@
         this.queryAppointmentList_byPhoneNumber();
         this.$refs.customerAppointmentModalRef.showModal();
       },
+      //显示充值记录弹框
+      showRechargeModal:function(index){
+        this.recharge_phoneNumber = this.data[index].phoneNumber;
+        this.totalCashAmount = formatAmount(this.data[index].totalCashAmount);
+        this.totalCouponAmount = formatAmount(this.data[index].totalCouponAmount);
+        this.totalAmount = formatAmount(this.data[index].totalCashAmount + this.data[index].totalCouponAmount);
+        this.queryRechargeList_byPhoneNumber();
+        this.$refs.customerRechargeModalRef.showModal();
+      },
       //根据手机号查顾客预约记录
       queryAppointmentList_byPhoneNumber:async function(){
         //组织入参
@@ -666,6 +831,24 @@
         let res = await queryAppointmentList(params);
         this.appointment_data = res.data.records;
         this.appointment_total = res.data.total;
+      },
+      //根据手机号查顾客充值记录
+      queryRechargeList_byPhoneNumber:async function(){
+        //组织入参
+        let params = {
+          //门店id - 少不了的参数
+          'shopId':this.selectedShopId,
+          //查询条件
+          'phoneNumber':this.recharge_phoneNumber,
+          //页码
+          'pageNo':this.recharge_currentPageNo,
+          'pageSize':this.recharge_pageSize,
+        };
+
+        //查询
+        let res = await queryCustomerRechargeList(params);
+        this.recharge_data = res.data.records;
+        this.recharge_total = res.data.total;
       },
       //添加顾客
       addCustomer:async function(){
@@ -786,6 +969,14 @@
       appointment_handlePageSizeChange(pageSize){
         this.appointment_pageSize = pageSize;
         this.queryAppointmentList_byPhoneNumber();
+      },
+      recharge_handleChange(pageNo){
+        this.recharge_currentPageNo = pageNo;
+        this.queryRechargeList_byPhoneNumber();
+      },
+      recharge_handlePageSizeChange(pageSize){
+        this.recharge_pageSize = pageSize;
+        this.queryRechargeList_byPhoneNumber();
       },
     },
     mounted:async function () {

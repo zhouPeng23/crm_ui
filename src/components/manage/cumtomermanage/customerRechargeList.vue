@@ -3,7 +3,8 @@
 
     <Row style="margin: 10px 0 10px 0">
       <Col span="6" >
-        <Button type="warning" @click="showAddModal">添加充值</Button>
+        <Button type="warning" @click="showRechargeModal">卡充值</Button>
+        <Button type="success" @click="showConsumeModal">卡消费</Button>
       </Col>
       <Col span="18">
         <Input v-model="searchCustomerName" placeholder="姓名" clearable style="width: 150px" />
@@ -27,10 +28,10 @@
 
     <!--添加充值弹框-->
     <confirmModal ref="addCustomerRechargeModalRef" modal-title="添加充值:" :modal-width="600" @handleSubmit="addCustomerRecharge()">
-      <Form ref="addCustomerRechargeFormRef" :model="addCustomerRechargeForm" :label-width="100" @submit.native.prevent>
+      <Form ref="addCustomerRechargeFormRef" :model="addCustomerRechargeForm" :label-width="120" @submit.native.prevent>
         <FormItem label="顾客手机号码" prop="phoneNumber" required>
           <Input type="text" v-model="addCustomerRechargeForm.phoneNumber" :maxlength="11" style="width: 200px"></Input>
-          <Button type="primary" ghost @click="queryCustomerByPhoneNumber">查询</Button>
+          <Button type="primary" ghost @click="queryCustomerByPhoneNumber_recharge">查询</Button>
         </FormItem>
         <FormItem label="顾客姓名" prop="customerName" required>
           <Input type="text" v-model="addCustomerRechargeForm.customerName" style="width: 200px" disabled></Input>
@@ -43,22 +44,41 @@
         <FormItem label="充值金额" prop="rechargeAmount" required>
           <Input type="text" v-model="addCustomerRechargeForm.rechargeAmount" style="width: 200px"></Input>
         </FormItem>
-        <FormItem label="备注" prop="remark" required>
-          <Select v-model="addCustomerRechargeForm.remark" style="width:400px">
-            <Option value="仅充值">仅充值</Option>
-            <Option value="仅购买项目">仅购买项目</Option>
-            <Option value="仅购买产品">仅购买产品</Option>
-            <Option value="购买项目+产品">购买项目+产品</Option>
-          </Select>
-        </FormItem>
-        <FormItem label="购买的项目" prop="rechargeForProject">
-          <Input type="text" v-model="addCustomerRechargeForm.rechargeForProject" style="width: 400px"></Input>
-        </FormItem>
-        <FormItem label="购买的产品" prop="rechargeForProduct">
-          <Input type="text" v-model="addCustomerRechargeForm.rechargeForProduct" style="width: 400px"></Input>
+        <FormItem label="代金券金额" prop="rechargeCoupon">
+          <Input type="text" v-model="addCustomerRechargeForm.rechargeCoupon" style="width: 200px"></Input>
         </FormItem>
         <FormItem label="操作员密码" prop="password" required>
           <Input v-model="addCustomerRechargeForm.password" size="large" placeholder="您的登录密码" :maxlength="20" style="width: 200px" type="password"/>
+        </FormItem>
+      </Form>
+    </confirmModal>
+
+    <!--添加消费弹框-->
+    <confirmModal ref="addCustomerConsumeModalRef" modal-title="添加消费:" :modal-width="600" @handleSubmit="addCustomerConsume()">
+      <Form ref="addCustomerConsumeFormRef" :model="addCustomerConsumeForm" :label-width="120" @submit.native.prevent>
+        <FormItem label="顾客手机号码" prop="phoneNumber" required>
+          <Input type="text" v-model="addCustomerConsumeForm.phoneNumber" :maxlength="11" style="width: 200px"></Input>
+          <Button type="primary" ghost @click="queryCustomerByPhoneNumber_consume">查询</Button>
+        </FormItem>
+        <FormItem label="顾客姓名" prop="customerName" required>
+          <Input type="text" v-model="addCustomerConsumeForm.customerName" style="width: 200px" disabled></Input>
+        </FormItem>
+        <FormItem label="性别" prop="sex" required>
+          <Select v-model="addCustomerConsumeForm.sex" style="width:100px" disabled>
+            <Option v-for="item in sexList" :value="item.value" :key="item.value">{{ item.label }}</Option>
+          </Select>
+        </FormItem>
+        <FormItem label="消费金额" prop="consumeAmount" required>
+          <Input type="text" v-model="addCustomerConsumeForm.consumeAmount" style="width: 200px"></Input>
+        </FormItem>
+        <FormItem label="购买的项目" prop="rechargeCoupon">
+          <Input type="text" v-model="addCustomerConsumeForm.consumeForProject" style="width: 200px"></Input>
+        </FormItem>
+        <FormItem label="购买的产品" prop="rechargeCoupon">
+          <Input type="text" v-model="addCustomerConsumeForm.consumeForProduct" style="width: 200px"></Input>
+        </FormItem>
+        <FormItem label="操作员密码" prop="password" required>
+          <Input v-model="addCustomerConsumeForm.password" size="large" placeholder="您的登录密码" :maxlength="20" style="width: 200px" type="password"/>
         </FormItem>
       </Form>
     </confirmModal>
@@ -67,8 +87,8 @@
 </template>
 
 <script>
-  import { validateAmount,formatStrDate_yymmddHHmmss,validateEmpty,validatePhoneNumber,formatAmount,formatHumanSexByNumber} from "../../../tools";
-  import {queryCustomerRechargeList,queryCustomerByPhoneNumber,addCustomerRecharge,queryCustomerListByIds} from "../../../api/ApiList";
+  import { validateAmount,formatStrDate_yymmddHHmmss,validateEmpty,validatePhoneNumber,formatAmount,formatHumanSexByNumber,formatOperateType} from "../../../tools";
+  import {queryCustomerRechargeList,queryCustomerByPhoneNumber,addCustomerRecharge,queryCustomerListByIds,addCustomerConsume} from "../../../api/ApiList";
   import confirmModal from "../../utils/modal/confirmModal";
   import * as md5 from "md5";
 
@@ -94,9 +114,16 @@
           customerName:"",
           sex:"",
           rechargeAmount:"",
-          rechargeForProject:"",
-          rechargeForProduct:"",
-          remark:"",
+          rechargeCoupon:"",
+          password:"",
+        },
+        addCustomerConsumeForm:{
+          phoneNumber:"",
+          customerName:"",
+          sex:"",
+          consumeAmount:"",
+          consumeForProject:"",
+          consumeForProduct:"",
           password:"",
         },
         sexList: [
@@ -145,6 +172,19 @@
             }
           },
           {
+            title: '操作类型',
+            key: 'operateType',
+            width: 100,
+            render: (h,params)=>{
+              return h('div',
+                {style:{
+                    color:params.row.operateType===1?"orange":"green"
+                  }},
+                formatOperateType(params.row.operateType)
+              )
+            }
+          },
+          {
             title: '充值金额',
             key: 'rechargeAmount',
             width: 100,
@@ -155,19 +195,44 @@
             }
           },
           {
-            title: '备注',
-            key: 'remark',
-            width: 150,
+            title: '代金券金额',
+            key: 'rechargeCoupon',
+            width: 100,
+            render: (h,params)=>{
+              return h('div',
+                formatAmount(params.row.rechargeCoupon)
+              )
+            }
+          },
+          {
+            title: '消费金额',
+            key: 'consumeAmount',
+            width: 100,
+            render: (h,params)=>{
+              return h('div',
+                formatAmount(params.row.consumeAmount)
+              )
+            }
           },
           {
             title: '购买的项目',
-            key: 'rechargeForProject',
-            width: 258,
+            key: 'consumeForProject',
+            width: 180,
           },
           {
             title: '购买的产品',
-            key: 'rechargeForProduct',
-            width: 258,
+            key: 'consumeForProduct',
+            width: 180,
+          },
+          {
+            title: '当前卡里总金额',
+            key: 'currentCardTotalAmount',
+            width: 150,
+            render: (h,params)=>{
+              return h('div',
+                formatAmount(params.row.currentCardTotalAmount)
+              )
+            }
           },
           {
             title: '操作员',
@@ -221,8 +286,12 @@
         }
       },
       // 显示添加充值弹框
-      showAddModal:function(){
+      showRechargeModal:function(){
         this.$refs.addCustomerRechargeModalRef.showModal();
+      },
+      // 显示添加消费弹框
+      showConsumeModal:function(){
+        this.$refs.addCustomerConsumeModalRef.showModal();
       },
       resetQuery: function(){
         //查询条件设置为空
@@ -272,7 +341,7 @@
       /**
        * 根据手机号查询顾客，如果能查到则补充姓名、性别
        */
-      queryCustomerByPhoneNumber: async function(){
+      queryCustomerByPhoneNumber_recharge: async function(){
         if (!validatePhoneNumber(this.addCustomerRechargeForm.phoneNumber)) {
           this.$Message.warning("手机号格式错误");
           return;
@@ -293,6 +362,29 @@
         }
       },
       /**
+       * 根据手机号查询顾客，如果能查到则补充姓名、性别
+       */
+      queryCustomerByPhoneNumber_consume: async function(){
+        if (!validatePhoneNumber(this.addCustomerConsumeForm.phoneNumber)) {
+          this.$Message.warning("手机号格式错误");
+          return;
+        }
+        let params = {
+          'phoneNumber':this.addCustomerConsumeForm.phoneNumber,
+        };
+        let res = await queryCustomerByPhoneNumber(params);
+        if (!validateEmpty(res.data)) {
+          this.$Message.success("未查询到记录");
+          this.addCustomerConsumeForm.customerName = "";
+          this.addCustomerConsumeForm.sex = "";
+        }else{
+          this.$Message.success("老顾客");
+          //设置顾客名称、性别
+          this.addCustomerConsumeForm.customerName = res.data.customerName;
+          this.addCustomerConsumeForm.sex = res.data.sex;
+        }
+      },
+      /**
        * 添加充值
        */
       addCustomerRecharge:async function(){
@@ -306,14 +398,41 @@
           'customerName':this.addCustomerRechargeForm.customerName,
           'sex':this.addCustomerRechargeForm.sex,
           'rechargeAmount':this.addCustomerRechargeForm.rechargeAmount,
-          'remark':this.addCustomerRechargeForm.remark,
-          'rechargeForProject':this.addCustomerRechargeForm.rechargeForProject,
-          'rechargeForProduct':this.addCustomerRechargeForm.rechargeForProduct,
+          'rechargeCoupon':this.addCustomerRechargeForm.rechargeCoupon,
           //操作员手机号和密码
           'loginUserPhoneNumber':localStorage.getItem("loginUserPhoneNumber"),
           'password':md5(this.addCustomerRechargeForm.password),
         };
         let res = await addCustomerRecharge(params);
+        if (res.code === '0000') {
+          this.$Message.success(res.msg);
+          this.$refs.addCustomerRechargeFormRef.resetFields();
+          this.queryCustomerRechargeList();
+        }else{
+          this.$Message.error(res.msg);
+        }
+      },
+      /**
+       * 添加消费
+       */
+      addCustomerConsume:async function(){
+        if (!validateAmount(this.addCustomerConsumeForm.consumeAmount)) {
+          this.$Message.warning("金额格式错误，请重新输入");
+          return;
+        }
+        let params = {
+          'shopId':this.selectedShopId,
+          'phoneNumber':this.addCustomerConsumeForm.phoneNumber,
+          'customerName':this.addCustomerConsumeForm.customerName,
+          'sex':this.addCustomerConsumeForm.sex,
+          'consumeAmount':this.addCustomerConsumeForm.consumeAmount,
+          'consumeForProject':this.addCustomerConsumeForm.consumeForProject,
+          'consumeForProduct':this.addCustomerConsumeForm.consumeForProduct,
+          //操作员手机号和密码
+          'loginUserPhoneNumber':localStorage.getItem("loginUserPhoneNumber"),
+          'password':md5(this.addCustomerConsumeForm.password),
+        };
+        let res = await addCustomerConsume(params);
         if (res.code === '0000') {
           this.$Message.success(res.msg);
           this.$refs.addCustomerRechargeFormRef.resetFields();

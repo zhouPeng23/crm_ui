@@ -243,11 +243,29 @@ export function validatePercent(percentNumber) {
 
 
 /**
+ * 格式化操作类型
+ * @param operateType
+ * @returns {string}
+ */
+export function formatOperateType(operateType) {
+  if (operateType === 1) {
+    return "充值";
+  }else if (operateType === -1) {
+    return "消费";
+  }
+  return "";
+}
+
+
+/**
  * 格式化金额
  * @param amount
  * @returns {string}
  */
 export function formatAmount(amount) {
+  if (amount<0.01){
+    return "-";
+  }
   if (parseFloat(amount).toFixed(2)<1) {
     return amount;
   }
