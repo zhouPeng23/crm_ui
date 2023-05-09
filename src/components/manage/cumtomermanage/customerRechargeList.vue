@@ -595,7 +595,7 @@
         let res = await addCustomerConsume(params);
         if (res.code === '0000') {
           this.$Message.success(res.msg);
-          this.$refs.addCustomerRechargeFormRef.resetFields();
+          this.$refs.addCustomerConsumeFormRef.resetFields();
           this.queryCustomerRechargeList();
         }else{
           this.$Message.error(res.msg);
