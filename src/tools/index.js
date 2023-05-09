@@ -264,7 +264,7 @@ export function formatOperateType(operateType) {
  */
 export function formatAmount(amount) {
   if (amount<0.01){
-    return " ";
+    return "";
   }
   if (parseFloat(amount).toFixed(2)<1) {
     return amount;
@@ -283,6 +283,36 @@ export function formatAmount(amount) {
 
   // 返回格式化后的金额
   return integerPart + decimalPart;
+}
+
+
+/**
+ * 格式化金额
+ * @param amount
+ * @returns {string}
+ */
+export function formatAmount_add(amount) {
+  let res = formatAmount(amount);
+  if (!validateEmpty(res)) {
+    return res;
+  }else{
+    return "+"+res;
+  }
+}
+
+
+/**
+ * 格式化金额
+ * @param amount
+ * @returns {string}
+ */
+export function formatAmount_sub(amount) {
+  let res = formatAmount(amount);
+  if (!validateEmpty(res)) {
+    return res;
+  }else{
+    return "-"+res;
+  }
 }
 
 

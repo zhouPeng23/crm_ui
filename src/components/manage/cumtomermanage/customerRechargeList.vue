@@ -99,7 +99,7 @@
 </template>
 
 <script>
-  import { validateAmount,formatStrDate_yymmddHHmmss,validateEmpty,validatePhoneNumber,formatAmount,formatHumanSexByNumber,formatOperateType} from "../../../tools";
+  import { validateAmount,formatStrDate_yymmddHHmmss,validateEmpty,validatePhoneNumber,formatAmount,formatAmount_add,formatAmount_sub,formatHumanSexByNumber,formatOperateType} from "../../../tools";
   import {queryCustomerRechargeList,queryCustomerByPhoneNumber,addCustomerRecharge,queryCustomerListByIds,addCustomerConsume} from "../../../api/ApiList";
   import confirmModal from "../../utils/modal/confirmModal";
   import * as md5 from "md5";
@@ -202,7 +202,7 @@
             width: 100,
             render: (h,params)=>{
               return h('div',
-                formatAmount(params.row.rechargeAmount)
+                formatAmount_add(params.row.rechargeAmount)
               )
             }
           },
@@ -212,7 +212,7 @@
             width: 100,
             render: (h,params)=>{
               return h('div',
-                formatAmount(params.row.rechargeCoupon)
+                formatAmount_add(params.row.rechargeCoupon)
               )
             }
           },
@@ -222,7 +222,7 @@
             width: 100,
             render: (h,params)=>{
               return h('div',
-                formatAmount(params.row.consumeAmount)
+                formatAmount_sub(params.row.consumeAmount)
               )
             }
           },
@@ -332,7 +332,7 @@
             width: 100,
             render: (h, params) => {
               return h('div', [
-                formatAmount(params.row.rechargeAmount)
+                formatAmount_add(params.row.rechargeAmount)
               ]);
             }
           },
@@ -342,7 +342,7 @@
             width: 100,
             render: (h, params) => {
               return h('div', [
-                formatAmount(params.row.rechargeCoupon)
+                formatAmount_add(params.row.rechargeCoupon)
               ]);
             }
           },
@@ -352,7 +352,7 @@
             width: 100,
             render: (h,params)=>{
               return h('div',
-                formatAmount(params.row.consumeAmount)
+                formatAmount_sub(params.row.consumeAmount)
               )
             }
           },

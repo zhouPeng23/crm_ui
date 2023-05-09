@@ -145,7 +145,7 @@
 </template>
 
 <script>
-  import { formatAmount,formatDate_yyyyMMdd,formatStrDate_yymmddHHmmss,validateEmpty,formatHumanSexByNumber,validatePhoneNumber,getDatePeriod,
+  import { formatAmount,formatAmount_add,formatAmount_sub,formatDate_yyyyMMdd,formatStrDate_yymmddHHmmss,validateEmpty,formatHumanSexByNumber,validatePhoneNumber,getDatePeriod,
     dateIsToday,getTimePeriod,formatOperateType} from "../../../tools";
   import {queryShopAllEmployeeList,queryShopNormalEmployeeList,getAllCustomerMassLevelList,queryCustomerList,addCustomer,queryAppointmentStatusList,
     updateCustomer,queryShopAllCustomer,queryCustomerByPhoneNumber,queryAppointmentList,queryProjectList,queryCustomerRechargeList} from "../../../api/ApiList";
@@ -459,7 +459,7 @@
             width: 100,
             render: (h, params) => {
               return h('div', [
-                formatAmount(params.row.rechargeAmount)
+                formatAmount_add(params.row.rechargeAmount)
               ]);
             }
           },
@@ -469,7 +469,7 @@
             width: 100,
             render: (h, params) => {
               return h('div', [
-                formatAmount(params.row.rechargeCoupon)
+                formatAmount_add(params.row.rechargeCoupon)
               ]);
             }
           },
@@ -479,7 +479,7 @@
             width: 100,
             render: (h,params)=>{
               return h('div',
-                formatAmount(params.row.consumeAmount)
+                formatAmount_sub(params.row.consumeAmount)
               )
             }
           },
