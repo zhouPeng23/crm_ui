@@ -71,6 +71,9 @@
             <Option v-for="item in sexList" :value="item.value" :key="item.value">{{ item.label }}</Option>
           </Select>
         </FormItem>
+        <FormItem label="当前卡里总金额" prop="currentCardTotalAmount" required>
+          <Input type="text" v-model="addCustomerConsumeForm.currentCardTotalAmount" style="width: 200px;font-size: 20px;color: orange" disabled></Input>
+        </FormItem>
         <FormItem label="消费金额" prop="consumeAmount" required>
           <Input type="text" v-model="addCustomerConsumeForm.consumeAmount" style="width: 200px"></Input>
         </FormItem>
@@ -133,6 +136,7 @@
           phoneNumber:"",
           customerName:"",
           sex:"",
+          currentCardTotalAmount:"",
           consumeAmount:"",
           consumeForProject:"",
           consumeForProduct:"",
@@ -537,11 +541,13 @@
           this.$Message.success("未查询到记录");
           this.addCustomerConsumeForm.customerName = "";
           this.addCustomerConsumeForm.sex = "";
+          this.addCustomerConsumeForm.currentCardTotalAmount = "";
         }else{
           this.$Message.success("老顾客");
           //设置顾客名称、性别
           this.addCustomerConsumeForm.customerName = res.data.customerName;
           this.addCustomerConsumeForm.sex = res.data.sex;
+          this.addCustomerConsumeForm.currentCardTotalAmount = formatAmount(res.data.totalCashAmount + res.data.totalCouponAmount);
         }
       },
       /**
