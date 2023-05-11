@@ -132,7 +132,7 @@
     </confirmModal>
 
     <!--顾客卡里余额弹框-->
-    <confirmModal ref="customerRechargeListModalRef" modal-title="充值记录" :modal-width="1500">
+    <confirmModal ref="customerRechargeListModalRef" modal-title="充值记录" :modal-width="90">
       <span style="color: blue;font-size: 15px">当前卡里总金额:<span style="color: orange;font-size: 25px">{{totalAmount}}</span></span>
       <span style="margin-left: 20px;font-size: 15px">现金总金额:{{totalCashAmount}}</span>
       <span style="margin-left: 20px;font-size: 15px">代金券总金额:{{totalCouponAmount}}</span>
