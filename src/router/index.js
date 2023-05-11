@@ -56,8 +56,8 @@ const loginManageRouters = [
 
 //==============================================引入一级模块============================================================
 export default new Router({
-  //去掉#号
-  mode:'history',
+  //去掉#号 使用mode:'history'
+  mode:'hash',
   base:'crm_ui',
   routes: [
     {path:'/manage/shopmanage',component:baseLayout,children:shopManageRouters},//门店管理
