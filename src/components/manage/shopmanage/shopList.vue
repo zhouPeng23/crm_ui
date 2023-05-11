@@ -295,7 +295,7 @@
 
           // 选择成功延迟 1 毫秒 刷新页面
           setTimeout(function () {
-            window.location.href = "/manage/shopmanage/shopList";
+            window.location.reload();
           }, 1);
         },
         //添加门店
@@ -374,7 +374,7 @@
               localStorage.setItem('selectedShopName',this.updateShopForm.shopName);
               // 修改成功延迟 1s 刷新页面
               setTimeout(function () {
-                window.location.href = "/manage/shopmanage/shopList";
+                window.location.reload();
               }, 1000);
             }
             this.$refs.updateShopFormRef.resetFields();
